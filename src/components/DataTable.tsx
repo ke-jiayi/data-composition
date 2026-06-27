@@ -110,17 +110,17 @@ const DataTable: React.FC<DataTableProps> = ({
   const renderSortIcon = (field: string) => {
     if (!sortParams || sortParams.field !== field) {
       return (
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-[#a3a3a3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
       );
     }
     return sortParams.order === 'asc' ? (
-      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-[#3b82f6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
       </svg>
     ) : (
-      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-[#3b82f6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
     );
@@ -134,19 +134,19 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="w-full bg-[#171717] rounded-lg shadow-md overflow-hidden border border-[#303030]">
       {/* 头部：标题和搜索 */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-[#303030]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* 标题和统计信息 */}
           <div>
-            {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
-            <p className="text-sm text-gray-500 mt-1">
-              共 <span className="font-medium text-gray-700">{stats.totalRows}</span> 行，
-              <span className="font-medium text-gray-700">{stats.totalColumns}</span> 列
+            {title && <h3 className="text-lg font-semibold text-[#fafafa]">{title}</h3>}
+            <p className="text-sm text-[#a3a3a3] mt-1">
+              共 <span className="font-medium text-[#fafafa]">{stats.totalRows}</span> 行，
+              <span className="font-medium text-[#fafafa]">{stats.totalColumns}</span> 列
               {searchTerm && (
                 <span className="ml-2">
-                  （筛选后：<span className="font-medium text-blue-600">{stats.filteredRows}</span> 行）
+                  （筛选后：<span className="font-medium text-[#3b82f6]">{stats.filteredRows}</span> 行）
                 </span>
               )}
             </p>
@@ -159,10 +159,10 @@ const DataTable: React.FC<DataTableProps> = ({
               placeholder="搜索..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full sm:w-64 px-3 py-2 pl-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full sm:w-64 px-3 py-2 pl-10 text-sm border border-[#303030] rounded-md bg-[#0a0a0a] text-[#fafafa] placeholder-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent"
             />
             <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#a3a3a3]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -172,7 +172,7 @@ const DataTable: React.FC<DataTableProps> = ({
             {searchTerm && (
               <button
                 onClick={() => handleSearch('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#a3a3a3] hover:text-[#fafafa]"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -186,14 +186,14 @@ const DataTable: React.FC<DataTableProps> = ({
       {/* 表格 */}
       <div className="overflow-x-auto">
         {paginatedData.length > 0 ? (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-[#303030]">
+            <thead className="bg-[#171717]">
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column}
                     onClick={() => handleSort(column)}
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none transition-colors"
+                    className="px-4 py-3 text-left text-xs font-medium text-[#a3a3a3] uppercase tracking-wider cursor-pointer hover:bg-[#262626] select-none transition-colors"
                   >
                     <div className="flex items-center gap-1">
                       <span>{column}</span>
@@ -203,13 +203,13 @@ const DataTable: React.FC<DataTableProps> = ({
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-[#0a0a0a] divide-y divide-[#303030]">
               {paginatedData.map((row, rowIndex) => (
-                <tr key={rowIndex} className="hover:bg-gray-50 transition-colors">
+                <tr key={rowIndex} className="hover:bg-[#262626] transition-colors">
                   {columns.map((column) => (
                     <td
                       key={column}
-                      className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap"
+                      className="px-4 py-3 text-sm text-[#fafafa] whitespace-nowrap"
                     >
                       {formatCellValue(row[column])}
                     </td>
@@ -219,8 +219,8 @@ const DataTable: React.FC<DataTableProps> = ({
             </tbody>
           </table>
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-            <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col items-center justify-center py-12 text-[#a3a3a3]">
+            <svg className="w-12 h-12 text-[#303030] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <p className="text-sm">
@@ -229,7 +229,7 @@ const DataTable: React.FC<DataTableProps> = ({
             {searchTerm && (
               <button
                 onClick={() => handleSearch('')}
-                className="mt-2 text-sm text-blue-500 hover:text-blue-600"
+                className="mt-2 text-sm text-[#3b82f6] hover:text-[#60a5fa]"
               >
                 清除搜索
               </button>

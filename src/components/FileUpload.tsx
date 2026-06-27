@@ -113,8 +113,8 @@ export const FileUpload = ({
           relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
           transition-all duration-200 ease-in-out
           ${isDragging
-            ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'}
+            ? 'border-[#3b82f6] bg-[#3b82f6]/10'
+            : 'border-[#303030] hover:border-[#a3a3a3] hover:bg-[#262626]'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         `}
         onDragEnter={handleDragEnter}
@@ -134,7 +134,7 @@ export const FileUpload = ({
 
         <div className="flex flex-col items-center justify-center space-y-4">
           {/* 上传图标 */}
-          <div className="w-16 h-16 mx-auto text-gray-400">
+          <div className="w-16 h-16 mx-auto text-[#a3a3a3]">
             <svg
               fill="none"
               stroke="currentColor"
@@ -152,10 +152,10 @@ export const FileUpload = ({
 
           {/* 提示文字 */}
           <div>
-            <p className="text-base font-medium text-gray-700">
+            <p className="text-base font-medium text-[#fafafa]">
               {isDragging ? '释放文件以上传' : '拖拽文件到此处或点击上传'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[#a3a3a3] mt-1">
               支持 CSV、JSON 和 Excel 格式，最大 {maxSize}MB
             </p>
           </div>
@@ -164,9 +164,9 @@ export const FileUpload = ({
           <button
             type="button"
             className={`
-              px-4 py-2 bg-blue-500 text-white rounded-md
-              hover:bg-blue-600 transition-colors duration-200
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              px-4 py-2 bg-[#3b82f6] text-white rounded-md
+              hover:bg-[#60a5fa] transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 focus:ring-offset-[#171717]
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             disabled={disabled}
@@ -182,7 +182,7 @@ export const FileUpload = ({
 
       {/* 错误提示 */}
       {error && (
-        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+        <div className="mt-3 p-3 bg-[#262626] border border-[#303030] rounded-md">
           <div className="flex items-center">
             <svg
               className="w-5 h-5 text-red-500 mr-2"
@@ -197,7 +197,7 @@ export const FileUpload = ({
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm text-red-700">{error}</span>
+            <span className="text-sm text-red-500">{error}</span>
           </div>
         </div>
       )}

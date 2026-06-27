@@ -67,8 +67,8 @@ export function ProjectDetailPage() {
       <Layout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">正在加载项目...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3b82f6] mx-auto mb-4"></div>
+            <p className="text-[#a3a3a3]">正在加载项目...</p>
           </div>
         </div>
       </Layout>
@@ -156,11 +156,11 @@ export function ProjectDetailPage() {
         <div className="mb-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{project.name}</h1>
+              <h1 className="text-3xl font-bold text-[#fafafa]">{project.name}</h1>
               {project.description && (
-                <p className="mt-2 text-gray-600 dark:text-gray-400">{project.description}</p>
+                <p className="mt-2 text-[#a3a3a3]">{project.description}</p>
               )}
-              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[#a3a3a3]">
                 <span>创建于 {formatDate(project.createdAt)}</span>
                 {project.updatedAt !== project.createdAt && (
                   <span>· 更新于 {formatDate(project.updatedAt)}</span>
@@ -171,7 +171,7 @@ export function ProjectDetailPage() {
                   {project.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30"
                     >
                       {tag}
                     </span>
@@ -183,68 +183,68 @@ export function ProjectDetailPage() {
         </div>
         
         {/* 项目信息展示区域 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+        <div className="bg-[#171717] rounded-lg border border-[#303030] shadow-sm mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">项目信息</h2>
+            <h2 className="text-lg font-semibold text-[#fafafa] mb-4">项目信息</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* 数据来源 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">数据来源</h3>
-                <p className="text-gray-900 dark:text-white">{project.dataSource || '未指定'}</p>
+                <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">数据来源</h3>
+                <p className="text-[#fafafa]">{project.dataSource || '未指定'}</p>
               </div>
               
               {/* 数据量 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">原始数据量</h3>
-                <p className="text-gray-900 dark:text-white">{formatNumber(project.rowCount)} 行</p>
+                <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">原始数据量</h3>
+                <p className="text-[#fafafa]">{formatNumber(project.rowCount)} 行</p>
               </div>
               
               {/* 清洗后数据量 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">清洗后数据量</h3>
-                <p className="text-gray-900 dark:text-white">{formatNumber(project.cleanedRowCount)} 行</p>
+                <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">清洗后数据量</h3>
+                <p className="text-[#fafafa]">{formatNumber(project.cleanedRowCount)} 行</p>
               </div>
               
               {/* 项目背景 */}
               {project.background && (
                 <div className="md:col-span-2 lg:col-span-3">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">项目背景</h3>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{project.background}</p>
+                  <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">项目背景</h3>
+                  <p className="text-[#fafafa] whitespace-pre-wrap">{project.background}</p>
                 </div>
               )}
               
               {/* 采集方式 */}
               {project.collectionMethod && (
                 <div className="md:col-span-2 lg:col-span-3">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">采集方式</h3>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{project.collectionMethod}</p>
+                  <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">采集方式</h3>
+                  <p className="text-[#fafafa] whitespace-pre-wrap">{project.collectionMethod}</p>
                 </div>
               )}
               
               {/* 字段说明 */}
               {project.fieldDescription && (
                 <div className="md:col-span-2 lg:col-span-3">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">字段说明</h3>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{project.fieldDescription}</p>
+                  <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">字段说明</h3>
+                  <p className="text-[#fafafa] whitespace-pre-wrap">{project.fieldDescription}</p>
                 </div>
               )}
               
               {/* 清洗步骤 */}
               {project.cleaningSteps && (
                 <div className="md:col-span-2 lg:col-span-3">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">清洗步骤</h3>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{project.cleaningSteps}</p>
+                  <h3 className="text-sm font-medium text-[#a3a3a3] mb-1">清洗步骤</h3>
+                  <p className="text-[#fafafa] whitespace-pre-wrap">{project.cleaningSteps}</p>
                 </div>
               )}
               
               {/* Insights */}
               {project.insights && project.insights.length > 0 && (
                 <div className="md:col-span-2 lg:col-span-3">
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">核心分析结论</h3>
+                  <h3 className="text-sm font-medium text-[#a3a3a3] mb-2">核心分析结论</h3>
                   <ul className="space-y-2">
                     {project.insights.map((insight, index) => (
-                      <li key={index} className="flex items-start text-gray-900 dark:text-white">
-                        <svg className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <li key={index} className="flex items-start text-[#fafafa]">
+                        <svg className="w-5 h-5 text-[#3b82f6] mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                         {insight}
@@ -274,24 +274,24 @@ export function ProjectDetailPage() {
             <div className="space-y-6">
               {/* 清洗操作日志 */}
               {cleaningLogs.length > 0 && (
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">清洗操作日志</h3>
+                <div className="bg-[#171717] rounded-lg border border-[#303030] shadow-sm p-6">
+                  <h3 className="text-lg font-semibold text-[#fafafa] mb-4">清洗操作日志</h3>
                   <div className="space-y-3">
                     {cleaningLogs.map((log) => (
-                      <div key={log.id} className="flex items-start border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0 last:pb-0">
+                      <div key={log.id} className="flex items-start border-b border-[#303030] pb-3 last:border-0 last:pb-0">
                         <div className="flex-shrink-0 mt-0.5">
-                          <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-5 h-5 text-[#3b82f6]" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                           </svg>
                         </div>
                         <div className="ml-3 flex-1">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{log.operation}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">{log.details}</p>
+                          <p className="text-sm font-medium text-[#fafafa]">{log.operation}</p>
+                          <p className="text-sm text-[#a3a3a3]">{log.details}</p>
                           {log.affectedRows && (
-                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">影响行数: {log.affectedRows}</p>
+                            <p className="text-xs text-[#a3a3a3] mt-1">影响行数: {log.affectedRows}</p>
                           )}
                         </div>
-                        <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                        <span className="text-xs text-[#a3a3a3] whitespace-nowrap">
                           {new Date(log.timestamp).toLocaleDateString('zh-CN')}
                         </span>
                       </div>
@@ -330,9 +330,9 @@ export function ProjectDetailPage() {
                   </ChartContainer>
                 ))
               ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-12 text-center">
+                <div className="bg-[#171717] rounded-lg border border-[#303030] shadow-sm p-12 text-center">
                   <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
+                    className="mx-auto h-12 w-12 text-[#303030]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -344,8 +344,8 @@ export function ProjectDetailPage() {
                       d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">暂无图表</h3>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  <h3 className="mt-2 text-sm font-medium text-[#fafafa]">暂无图表</h3>
+                  <p className="mt-1 text-sm text-[#a3a3a3]">
                     该项目尚未创建可视化图表
                   </p>
                 </div>

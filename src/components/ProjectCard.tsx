@@ -9,8 +9,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('zh-CN', {
       year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      month: 'short',
     });
   };
 
@@ -24,55 +23,88 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
       to={`/project/${project.id}`}
-      className="block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+      className="block rounded-lg p-5 transition-all duration-200"
+      style={{
+        backgroundColor: 'var(--surface)',
+        border: '1px solid var(--border)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = '0 10px 20px -5px rgba(0, 0, 0, 0.3)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = 'var(--surface)';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
     >
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-            {project.name}
-          </h3>
-          <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
-            {formatDate(project.createdAt)}
+      <div className="flex items-start justify-between mb-3">
+        <h3
+          className="text-lg font-semibold line-clamp-1"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {project.name}
+        </h3>
+        <span
+          className="text-xs whitespace-nowrap ml-2"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {formatDate(project.createdAt)}
+        </span>
+      </div>
+
+      {project.description && (
+        <p
+          className="text-sm line-clamp-2 mb-4"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {project.description}
+        </p>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="text-sm">
+          <span style={{ color: 'var(--text-secondary)' }}>数据来源：</span>
+          <span style={{ color: 'var(--text-primary)' }}>
+            {project.dataSource || '未指定'}
           </span>
         </div>
-
-        {project.description && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-            {project.description}
-          </p>
-        )}
-
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="text-sm">
-            <span className="text-gray-500">数据来源：</span>
-            <span className="text-gray-900">{project.dataSource || '未指定'}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-gray-500">数据量：</span>
-            <span className="text-gray-900 font-medium">
-              {formatNumber(project.rowCount)} 行
-            </span>
-          </div>
+        <div className="text-sm">
+          <span style={{ color: 'var(--text-secondary)' }}>数据量：</span>
+          <span
+            className="font-medium"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {formatNumber(project.rowCount)} 行
+          </span>
         </div>
-
-        {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {project.tags.slice(0, 4).map((tag, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-              >
-                {tag}
-              </span>
-            ))}
-            {project.tags.length > 4 && (
-              <span className="text-xs text-gray-500 self-center">
-                +{project.tags.length - 4}
-              </span>
-            )}
-          </div>
-        )}
       </div>
+
+      {project.tags && project.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {project.tags.slice(0, 4).map((tag, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium"
+              style={{
+                backgroundColor: 'color-mix(in srgb, var(--accent) 10%, transparent)',
+                color: 'var(--accent)',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+          {project.tags.length > 4 && (
+            <span
+              className="text-xs self-center"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              +{project.tags.length - 4}
+            </span>
+          )}
+        </div>
+      )}
     </Link>
   );
 }

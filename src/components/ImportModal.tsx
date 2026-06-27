@@ -115,27 +115,27 @@ export const ImportModal = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* 背景遮罩 */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-70 transition-opacity"
         onClick={handleClose}
       />
 
       {/* 模态框 */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="relative bg-[#171717] rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-[#303030]">
           {/* 头部 */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#303030] bg-[#171717]">
             <div className="flex items-center space-x-3">
               {step === 'preview' && (
                 <button
                   onClick={handleBack}
-                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                  className="text-[#a3a3a3] hover:text-[#fafafa] transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
               )}
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-[#fafafa]">
                 {step === 'upload' && '导入数据'}
                 {step === 'preview' && '预览数据'}
                 {step === 'importing' && '正在导入...'}
@@ -145,7 +145,7 @@ export const ImportModal = ({
             </div>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-[#a3a3a3] hover:text-[#fafafa] transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -158,7 +158,7 @@ export const ImportModal = ({
             {/* 上传步骤 */}
             {step === 'upload' && (
               <div className="space-y-6">
-                <p className="text-gray-600">
+                <p className="text-[#a3a3a3]">
                   上传 CSV 或 JSON 文件以创建新的数据项目。系统将自动检测列名和数据类型。
                 </p>
                 <FileUpload onFileSelect={handleFileSelect} />
@@ -179,7 +179,7 @@ export const ImportModal = ({
             {step === 'importing' && (
               <div className="flex flex-col items-center justify-center py-12">
                 <svg
-                  className="animate-spin h-12 w-12 text-blue-500 mb-4"
+                  className="animate-spin h-12 w-12 text-[#3b82f6] mb-4"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -198,25 +198,25 @@ export const ImportModal = ({
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                <p className="text-lg text-gray-700">正在导入数据，请稍候...</p>
+                <p className="text-lg text-[#fafafa]">正在导入数据，请稍候...</p>
               </div>
             )}
 
             {/* 成功状态 */}
             {step === 'success' && createdProject && (
               <div className="flex flex-col items-center justify-center py-12">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-[#262626] rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-[#3b82f6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">数据导入成功！</h3>
-                <p className="text-gray-600 mb-4">
-                  已成功导入 <span className="font-medium">{createdProject.name}</span>，共 {createdProject.rowCount.toLocaleString()} 行数据
+                <h3 className="text-xl font-semibold text-[#fafafa] mb-2">数据导入成功！</h3>
+                <p className="text-[#a3a3a3] mb-4">
+                  已成功导入 <span className="font-medium text-[#fafafa]">{createdProject.name}</span>，共 {createdProject.rowCount.toLocaleString()} 行数据
                 </p>
                 <button
                   onClick={handleClose}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                  className="px-6 py-2 bg-[#3b82f6] text-white rounded-md hover:bg-[#60a5fa] transition-colors"
                 >
                   开始分析
                 </button>
@@ -226,23 +226,23 @@ export const ImportModal = ({
             {/* 错误状态 */}
             {step === 'error' && error && (
               <div className="flex flex-col items-center justify-center py-12">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-[#262626] rounded-full flex items-center justify-center mb-4">
                   <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">导入失败</h3>
-                <p className="text-red-600 mb-4">{error}</p>
+                <h3 className="text-xl font-semibold text-[#fafafa] mb-2">导入失败</h3>
+                <p className="text-red-500 mb-4">{error}</p>
                 <div className="flex space-x-3">
                   <button
                     onClick={handleBack}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2 border border-[#303030] rounded-md text-[#a3a3a3] hover:bg-[#262626] transition-colors"
                   >
                     重新上传
                   </button>
                   <button
                     onClick={handleClose}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                    className="px-4 py-2 text-[#a3a3a3] hover:text-[#fafafa] transition-colors"
                   >
                     关闭
                   </button>
