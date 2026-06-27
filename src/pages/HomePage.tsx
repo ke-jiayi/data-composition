@@ -118,7 +118,7 @@ export function HomePage() {
             <h3 className="mt-4 text-lg font-medium text-gray-900">暂无数据集</h3>
             <p className="mt-2 text-sm text-gray-500">导入您的第一个数据集开始分析</p>
             <button
-              onClick={onImportClick}
+              onClick={openModal}
               className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

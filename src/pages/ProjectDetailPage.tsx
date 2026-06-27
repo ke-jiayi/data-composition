@@ -7,20 +7,19 @@ import DataCleaning from '../components/DataCleaning';
 import { ChartPanel } from '../components/charts';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
-import type { Dataset, DataRow, ChartConfig } from '../utils/db';
+import type { Dataset, DataRow } from '../utils/db';
 
 type TabType = 'table' | 'clean' | 'chart';
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { getDataset, getData, getCharts, saveData } = useDB();
+  const { getDataset, getData, saveData } = useDB();
   const { openModal } = useImportModal();
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [rawData, setRawData] = useState<DataRow[]>([]);
   const [cleanedData, setCleanedData] = useState<DataRow[]>([]);
-  const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,16 +36,14 @@ export function ProjectDetailPage() {
     Promise.all([
       getDataset(id),
       getData(id),
-      getCharts(id),
     ])
-      .then(([datasetData, data, chartConfigs]) => {
+      .then(([datasetData, data]) => {
         if (!datasetData) {
           setError('数据集未找到');
         } else {
           setDataset(datasetData);
           setRawData(data);
           setCleanedData(data); // 初始化清洗后数据为原始数据
-          setCharts(chartConfigs);
         }
       })
       .catch((err) => {
