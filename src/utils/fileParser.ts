@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 import type { ImportData, DataRow } from '../types';
 
 /**
@@ -245,30 +246,130 @@ export function parseJSON(file: File): Promise<ImportData> {
 }
 
 /**
+ * 解析 Excel 文件
+ */
+export function parseExcel(file: File): Promise<ImportData> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result as ArrayBuffer;
+        const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+
+        const firstSheetName = workbook.SheetNames[0];
+        if (!firstSheetName) {
+          reject(new Error('Excel 文件为空'));
+          return;
+        }
+
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json<any[]>(worksheet, {
+          header: 1,
+          defval: '',
+        });
+
+        if (jsonData.length === 0) {
+          reject(new Error('Excel 文件为空'));
+          return;
+        }
+
+        const headers = jsonData[0].map(h => String(h || ''));
+        const dataRows = jsonData.slice(1);
+
+        if (dataRows.length === 0) {
+          reject(new Error('Excel 文件为空'));
+          return;
+        }
+
+        const columns = headers.filter(h => h !== '');
+
+        const dataArray: Record<string, unknown>[] = dataRows.map(row => {
+          const obj: Record<string, unknown> = {};
+          headers.forEach((header, index) => {
+            if (header !== '') {
+              const value = row[index];
+              if (value instanceof Date) {
+                obj[header] = value.toISOString().split('T')[0];
+              } else {
+                obj[header] = value;
+              }
+            }
+          });
+          return obj;
+        });
+
+        const detectedTypes: Record<string, 'string' | 'number' | 'boolean' | 'date'> = {};
+        for (const column of columns) {
+          const values = dataArray.map(item => item[column]);
+          detectedTypes[column] = detectColumnType(values);
+        }
+
+        const rows: DataRow[] = dataArray.map(item => {
+          const convertedRow: DataRow = {};
+          for (const column of columns) {
+            convertedRow[column] = convertValue(item[column], detectedTypes[column]);
+          }
+          return convertedRow;
+        });
+
+        const fileName = file.name.toLowerCase();
+        const fileType: 'xlsx' | 'xls' = fileName.endsWith('.xlsx') ? 'xlsx' : 'xls';
+
+        resolve({
+          fileName: file.name,
+          fileType,
+          columns,
+          rows,
+          rowCount: rows.length,
+          detectedTypes,
+        });
+      } catch (error) {
+        reject(new Error(`Excel 解析失败: ${error instanceof Error ? error.message : '未知错误'}`));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error('文件读取失败'));
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+/**
  * 根据文件类型自动选择解析器
  */
 export function parseFile(file: File): Promise<ImportData> {
   const fileName = file.name.toLowerCase();
   const isCSV = fileName.endsWith('.csv');
   const isJSON = fileName.endsWith('.json');
+  const isXLSX = fileName.endsWith('.xlsx');
+  const isXLS = fileName.endsWith('.xls');
 
-  if (!isCSV && !isJSON) {
-    return Promise.reject(new Error('不支持的文件格式，仅支持 CSV 和 JSON 文件'));
+  if (!isCSV && !isJSON && !isXLSX && !isXLS) {
+    return Promise.reject(new Error('不支持的文件格式，仅支持 CSV、JSON、XLSX 和 XLS 文件'));
   }
 
   if (isCSV) {
     return parseCSV(file);
   }
 
-  return parseJSON(file);
+  if (isJSON) {
+    return parseJSON(file);
+  }
+
+  return parseExcel(file);
 }
 
 /**
  * 获取文件类型
  */
-export function getFileType(file: File): 'csv' | 'json' | null {
+export function getFileType(file: File): 'csv' | 'json' | 'xlsx' | 'xls' | null {
   const fileName = file.name.toLowerCase();
   if (fileName.endsWith('.csv')) return 'csv';
   if (fileName.endsWith('.json')) return 'json';
+  if (fileName.endsWith('.xlsx')) return 'xlsx';
+  if (fileName.endsWith('.xls')) return 'xls';
   return null;
 }

@@ -49,7 +49,7 @@ export interface ChartConfig {
 // 导入数据类型
 export interface ImportData {
   fileName: string;
-  fileType: 'csv' | 'json';
+  fileType: 'csv' | 'json' | 'xlsx' | 'xls';
   columns: string[];
   rows: DataRow[];
   rowCount: number;

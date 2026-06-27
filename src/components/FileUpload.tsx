@@ -10,7 +10,7 @@ interface FileUploadProps {
 
 export const FileUpload = ({
   onFileSelect,
-  acceptedFormats = '.csv,.json',
+  acceptedFormats = '.csv,.json,.xlsx,.xls',
   maxSize = 10,
   disabled = false,
 }: FileUploadProps) => {
@@ -22,9 +22,9 @@ export const FileUpload = ({
     (file: File): string | null => {
       // 检查文件类型
       const fileName = file.name.toLowerCase();
-      const isValidFormat = fileName.endsWith('.csv') || fileName.endsWith('.json');
+      const isValidFormat = fileName.endsWith('.csv') || fileName.endsWith('.json') || fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
       if (!isValidFormat) {
-        return '仅支持 CSV 和 JSON 格式的文件';
+        return '仅支持 CSV、JSON 和 Excel 格式的文件';
       }
 
       // 检查文件大小
@@ -156,7 +156,7 @@ export const FileUpload = ({
               {isDragging ? '释放文件以上传' : '拖拽文件到此处或点击上传'}
             </p>
             <p className="text-sm text-gray-500 mt-1">
-              支持 CSV 和 JSON 格式，最大 {maxSize}MB
+              支持 CSV、JSON 和 Excel 格式，最大 {maxSize}MB
             </p>
           </div>
 
