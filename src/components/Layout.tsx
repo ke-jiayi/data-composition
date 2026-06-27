@@ -11,7 +11,7 @@ export function Layout({ children }: LayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
+    <div className="min-h-screen bg-gray-50">
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar />

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
-export type TabType = 'raw' | 'cleaned' | 'charts';
+export type TabType = 'table' | 'clean' | 'chart';
 
 interface TabItem {
   key: TabType;
@@ -16,36 +16,36 @@ interface TabNavigationProps {
 
 const tabs: TabItem[] = [
   {
-    key: 'raw',
-    label: '原始数据',
+    key: 'table',
+    label: '数据表格',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+          d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
         />
       </svg>
     ),
   },
   {
-    key: 'cleaned',
-    label: '清洗后数据',
+    key: 'clean',
+    label: '数据清洗',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
         />
       </svg>
     ),
   },
   {
-    key: 'charts',
-    label: '可视化看板',
+    key: 'chart',
+    label: '可视化图表',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -69,7 +69,7 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   };
 
   return (
-    <div className="border-b border-[#303030] bg-[#171717]">
+    <div className="border-b border-gray-200 bg-white">
       <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
         {tabs.map((tab) => (
           <button
@@ -79,8 +79,8 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
               flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors
               ${
                 activeTab === tab.key
-                  ? 'border-[#3b82f6] text-[#3b82f6]'
-                  : 'border-transparent text-[#a3a3a3] hover:text-[#fafafa] hover:border-[#303030]'
+                  ? 'border-[#1e3a5f] text-[#1e3a5f]'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }
             `}
             aria-current={activeTab === tab.key ? 'page' : undefined}
@@ -95,12 +95,12 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
 }
 
 // Hook for managing tab state with URL sync
-export function useTabState(defaultTab: TabType = 'raw'): [TabType, (tab: TabType) => void] {
+export function useTabState(defaultTab: TabType = 'table'): [TabType, (tab: TabType) => void] {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const tabFromUrl = searchParams.get('tab') as TabType | null;
   const activeTab: TabType =
-    tabFromUrl && ['raw', 'cleaned', 'dashboard'].includes(tabFromUrl)
+    tabFromUrl && ['table', 'clean', 'chart'].includes(tabFromUrl)
       ? tabFromUrl
       : defaultTab;
 

@@ -1,48 +1,48 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Project, DataRow, CleaningLog, ChartConfig } from '../types';
+import type { Dataset, DataRow, CleaningLog, ChartConfig } from '../utils/db';
 import {
   initDB,
-  createProject,
-  getProject,
-  getAllProjects,
-  updateProject,
-  deleteProject,
-  saveRawData,
-  getRawData,
-  saveCleanedData,
-  getCleanedData,
+  createDataset,
+  getDataset,
+  getAllDatasets,
+  updateDataset,
+  deleteDataset,
+  saveData,
+  getData,
+  saveCleaningLog,
   getCleaningLogs,
-  saveCleaningLogs,
+  saveChart,
   getCharts,
-  saveCharts,
+  updateChart,
   deleteChart,
   isDBEmpty,
 } from '../utils/db';
+
+type DatabaseOperation = (...args: never[]) => Promise<unknown>;
 
 interface UseDBReturn {
   isLoading: boolean;
   error: Error | null;
 
-  // 项目操作
-  createProject: (project: Project) => Promise<void>;
-  getProject: (id: string) => Promise<Project | undefined>;
-  getAllProjects: () => Promise<Project[]>;
-  updateProject: (project: Project) => Promise<void>;
-  deleteProject: (id: string) => Promise<void>;
+  // 数据集操作
+  createDataset: (dataset: Omit<Dataset, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Dataset>;
+  getDataset: (id: string) => Promise<Dataset | undefined>;
+  getAllDatasets: () => Promise<Dataset[]>;
+  updateDataset: (dataset: Dataset) => Promise<void>;
+  deleteDataset: (id: string) => Promise<void>;
 
   // 数据操作
-  saveRawData: (projectId: string, data: DataRow[]) => Promise<void>;
-  getRawData: (projectId: string) => Promise<DataRow[]>;
-  saveCleanedData: (projectId: string, data: DataRow[]) => Promise<void>;
-  getCleanedData: (projectId: string) => Promise<DataRow[]>;
+  saveData: (datasetId: string, data: DataRow[]) => Promise<void>;
+  getData: (datasetId: string) => Promise<DataRow[]>;
 
   // 清洗日志操作
-  getCleaningLogs: (projectId: string) => Promise<CleaningLog[]>;
-  saveCleaningLogs: (projectId: string, logs: CleaningLog[]) => Promise<void>;
+  saveCleaningLog: (log: Omit<CleaningLog, 'id' | 'timestamp'>) => Promise<CleaningLog>;
+  getCleaningLogs: (datasetId: string) => Promise<CleaningLog[]>;
 
   // 图表操作
-  getCharts: (projectId: string) => Promise<ChartConfig[]>;
-  saveCharts: (projectId: string, charts: ChartConfig[]) => Promise<void>;
+  saveChart: (chart: Omit<ChartConfig, 'id' | 'createdAt'>) => Promise<ChartConfig>;
+  getCharts: (datasetId: string) => Promise<ChartConfig[]>;
+  updateChart: (chart: ChartConfig) => Promise<void>;
   deleteChart: (chartId: string) => Promise<void>;
 
   // 其他
@@ -58,50 +58,46 @@ export function useDB(): UseDBReturn {
     initDB()
       .then(() => setIsLoading(false))
       .catch((err) => {
-        setError(err);
+        setError(err instanceof Error ? err : new Error(String(err)));
         setIsLoading(false);
       });
   }, []);
 
   // 包装所有数据库操作，添加错误处理
-  const wrapOperation = useCallback(
-    <T extends (...args: any[]) => Promise<any>>(operation: T): T => {
-      return (async (...args: any[]) => {
-        try {
-          return await operation(...args);
-        } catch (err) {
-          setError(err instanceof Error ? err : new Error(String(err)));
-          throw err;
-        }
-      }) as T;
-    },
-    []
-  );
+  const wrapOperation = useCallback(<T extends DatabaseOperation>(operation: T): T => {
+    return (async (...args: Parameters<T>) => {
+      try {
+        return await operation(...args);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error(String(err)));
+        throw err;
+      }
+    }) as T;
+  }, []);
 
   return {
     isLoading,
     error,
 
-    // 项目操作
-    createProject: wrapOperation(createProject),
-    getProject: wrapOperation(getProject),
-    getAllProjects: wrapOperation(getAllProjects),
-    updateProject: wrapOperation(updateProject),
-    deleteProject: wrapOperation(deleteProject),
+    // 数据集操作
+    createDataset: wrapOperation(createDataset),
+    getDataset: wrapOperation(getDataset),
+    getAllDatasets: wrapOperation(getAllDatasets),
+    updateDataset: wrapOperation(updateDataset),
+    deleteDataset: wrapOperation(deleteDataset),
 
     // 数据操作
-    saveRawData: wrapOperation(saveRawData),
-    getRawData: wrapOperation(getRawData),
-    saveCleanedData: wrapOperation(saveCleanedData),
-    getCleanedData: wrapOperation(getCleanedData),
+    saveData: wrapOperation(saveData),
+    getData: wrapOperation(getData),
 
     // 清洗日志操作
+    saveCleaningLog: wrapOperation(saveCleaningLog),
     getCleaningLogs: wrapOperation(getCleaningLogs),
-    saveCleaningLogs: wrapOperation(saveCleaningLogs),
 
     // 图表操作
+    saveChart: wrapOperation(saveChart),
     getCharts: wrapOperation(getCharts),
-    saveCharts: wrapOperation(saveCharts),
+    updateChart: wrapOperation(updateChart),
     deleteChart: wrapOperation(deleteChart),
 
     // 其他

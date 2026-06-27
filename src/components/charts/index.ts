@@ -19,6 +19,12 @@ export type { LineChartProps } from './LineChart';
 export { PieChart } from './PieChart';
 export type { PieChartProps } from './PieChart';
 
+export { MapChart, detectRegionField } from './MapChart';
+export type { MapChartProps } from './MapChart';
+
+export { ChartPanel } from './ChartPanel';
+export type { ChartPanelProps, ChartType } from './ChartPanel';
+
 // 配置面板
 export { ChartConfigPanel } from './ChartConfigPanel';
 

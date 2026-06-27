@@ -6,6 +6,7 @@ interface FileUploadProps {
   acceptedFormats?: string;
   maxSize?: number; // MB
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
 export const FileUpload = ({
@@ -13,6 +14,7 @@ export const FileUpload = ({
   acceptedFormats = '.csv,.json,.xlsx,.xls',
   maxSize = 10,
   disabled = false,
+  isLoading = false,
 }: FileUploadProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,11 @@ export const FileUpload = ({
     (file: File): string | null => {
       // 检查文件类型
       const fileName = file.name.toLowerCase();
-      const isValidFormat = fileName.endsWith('.csv') || fileName.endsWith('.json') || fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+      const isValidFormat = 
+        fileName.endsWith('.csv') || 
+        fileName.endsWith('.json') || 
+        fileName.endsWith('.xlsx') || 
+        fileName.endsWith('.xls');
       if (!isValidFormat) {
         return '仅支持 CSV、JSON 和 Excel 格式的文件';
       }
@@ -54,10 +60,10 @@ export const FileUpload = ({
   const handleDragEnter = useCallback((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!disabled) {
+    if (!disabled && !isLoading) {
       setIsDragging(true);
     }
-  }, [disabled]);
+  }, [disabled, isLoading]);
 
   const handleDragLeave = useCallback((e: DragEvent) => {
     e.preventDefault();
@@ -76,14 +82,14 @@ export const FileUpload = ({
       e.stopPropagation();
       setIsDragging(false);
 
-      if (disabled) return;
+      if (disabled || isLoading) return;
 
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         handleFile(files[0]);
       }
     },
-    [disabled, handleFile]
+    [disabled, isLoading, handleFile]
   );
 
   const handleInputChange = useCallback(
@@ -101,21 +107,21 @@ export const FileUpload = ({
   );
 
   const handleClick = useCallback(() => {
-    if (!disabled && fileInputRef.current) {
+    if (!disabled && !isLoading && fileInputRef.current) {
       fileInputRef.current.click();
     }
-  }, [disabled]);
+  }, [disabled, isLoading]);
 
   return (
     <div className="w-full">
       <div
         className={`
-          relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
+          relative border-2 border-dashed rounded-xl p-10 text-center cursor-pointer
           transition-all duration-200 ease-in-out
           ${isDragging
-            ? 'border-[#3b82f6] bg-[#3b82f6]/10'
-            : 'border-[#303030] hover:border-[#a3a3a3] hover:bg-[#262626]'}
-          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            ? 'border-blue-500 bg-blue-50'
+            : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'}
+          ${disabled || isLoading ? 'opacity-60 cursor-not-allowed' : ''}
         `}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -129,33 +135,57 @@ export const FileUpload = ({
           accept={acceptedFormats}
           onChange={handleInputChange}
           className="hidden"
-          disabled={disabled}
+          disabled={disabled || isLoading}
         />
 
         <div className="flex flex-col items-center justify-center space-y-4">
           {/* 上传图标 */}
-          <div className="w-16 h-16 mx-auto text-[#a3a3a3]">
-            <svg
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
+          <div className="w-16 h-16 mx-auto text-gray-400">
+            {isLoading ? (
+              <svg
+                className="animate-spin"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+            )}
           </div>
 
           {/* 提示文字 */}
           <div>
-            <p className="text-base font-medium text-[#fafafa]">
-              {isDragging ? '释放文件以上传' : '拖拽文件到此处或点击上传'}
+            <p className="text-base font-medium text-gray-700">
+              {isLoading ? '正在处理...' : isDragging ? '释放文件以上传' : '拖拽文件到此处或点击上传'}
             </p>
-            <p className="text-sm text-[#a3a3a3] mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               支持 CSV、JSON 和 Excel 格式，最大 {maxSize}MB
             </p>
           </div>
@@ -164,28 +194,28 @@ export const FileUpload = ({
           <button
             type="button"
             className={`
-              px-4 py-2 bg-[#3b82f6] text-white rounded-md
-              hover:bg-[#60a5fa] transition-colors duration-200
-              focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 focus:ring-offset-[#171717]
-              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+              px-5 py-2.5 bg-blue-500 text-white rounded-lg font-medium
+              hover:bg-blue-600 transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
             `}
-            disabled={disabled}
+            disabled={disabled || isLoading}
             onClick={(e) => {
               e.stopPropagation();
               handleClick();
             }}
           >
-            选择文件
+            {isLoading ? '处理中...' : '选择文件'}
           </button>
         </div>
       </div>
 
       {/* 错误提示 */}
       {error && (
-        <div className="mt-3 p-3 bg-[#262626] border border-[#303030] rounded-md">
+        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center">
             <svg
-              className="w-5 h-5 text-red-500 mr-2"
+              className="w-5 h-5 text-red-500 mr-2 flex-shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -197,7 +227,7 @@ export const FileUpload = ({
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm text-red-500">{error}</span>
+            <span className="text-sm text-red-600">{error}</span>
           </div>
         </div>
       )}
