@@ -1,15 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
-import type { Dataset } from '../utils/db';
+import type { Dataset, DataRow } from '../utils/db';
 
 export function HomePage() {
   const { getAllDatasets, deleteDataset, isLoading: dbLoading } = useDB();
   const { openModal } = useImportModal();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [parsedData, setParsedData] = useState<DataRow[]>([]);
+  const [importColumns, setImportColumns] = useState<string[]>([]);
+  const [importFileName, setImportFileName] = useState('');
+  const [isParsing, setIsParsing] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadDatasets = useCallback(async () => {
     try {
@@ -77,8 +86,95 @@ export function HomePage() {
     );
   }
 
+  const handleImport = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsParsing(true);
+    setImportError(null);
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+    if (fileExtension === 'csv') {
+      Papa.parse<DataRow>(file, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: false,
+        complete: (results) => {
+          const data = results.data;
+          const columns = results.meta.fields || [];
+          setParsedData(data);
+          setImportColumns(columns);
+          setImportFileName(file.name);
+          setIsParsing(false);
+        },
+        error: (error) => {
+          setImportError(error.message);
+          setIsParsing(false);
+        },
+      });
+    } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json<DataRow>(worksheet, { header: 1 });
+
+          if (jsonData.length > 0) {
+            const headers = jsonData[0] as unknown as string[];
+            const rows = jsonData.slice(1) as DataRow[];
+            const formattedData = rows.map((row) => {
+              const obj: DataRow = {};
+              headers.forEach((header, index) => {
+                obj[header] = row[index as keyof DataRow] ?? null;
+              });
+              return obj;
+            });
+            setParsedData(formattedData);
+            setImportColumns(headers);
+            setImportFileName(file.name);
+          } else {
+            setParsedData([]);
+            setImportColumns([]);
+            setImportFileName(file.name);
+          }
+          setIsParsing(false);
+        } catch (err) {
+          setImportError(err instanceof Error ? err.message : '解析 Excel 文件失败');
+          setIsParsing(false);
+        }
+      };
+      reader.onerror = () => {
+        setImportError('读取文件失败');
+        setIsParsing(false);
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      setImportError('不支持的文件格式');
+      setIsParsing(false);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <Layout>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".csv,.xlsx"
+        className="hidden"
+        onChange={handleFileChange}
+      />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 页面标题和导入按钮 */}
         <div className="flex items-center justify-between mb-8">
@@ -89,7 +185,7 @@ export function HomePage() {
             </p>
           </div>
           <button
-            onClick={openModal}
+            onClick={handleImport}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,6 +194,94 @@ export function HomePage() {
             导入数据
           </button>
         </div>
+
+        {/* 数据预览区域 */}
+        {(isParsing || importError || parsedData.length > 0) && (
+          <div className="mb-8">
+            {/* 加载状态 */}
+            {isParsing && (
+              <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1e3a5f]"></div>
+                  <span className="text-gray-600">正在解析文件...</span>
+                </div>
+              </div>
+            )}
+
+            {/* 错误信息 */}
+            {importError && !isParsing && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <h3 className="text-sm font-medium text-red-800">解析失败</h3>
+                    <p className="text-sm text-red-700 mt-1">{importError}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 数据表格 */}
+            {parsedData.length > 0 && !isParsing && !importError && (
+              <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-gray-900">数据预览</h2>
+                    <div className="text-sm text-gray-500">
+                      <span className="font-medium text-gray-700">{importFileName}</span>
+                      <span className="mx-2">·</span>
+                      <span>共 {formatNumber(parsedData.length)} 行数据</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                          #
+                        </th>
+                        {importColumns.map((col) => (
+                          <th
+                            key={col}
+                            className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 whitespace-nowrap"
+                          >
+                            {col}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {parsedData.slice(0, 100).map((row, rowIndex) => (
+                        <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 border-r border-gray-100">
+                            {rowIndex + 1}
+                          </td>
+                          {importColumns.map((col) => (
+                            <td
+                              key={col}
+                              className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 max-w-xs truncate"
+                              title={String(row[col] ?? '')}
+                            >
+                              {row[col] ?? ''}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {parsedData.length > 100 && (
+                  <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 text-sm text-gray-500 text-center">
+                    仅显示前 100 行
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* 空状态 */}
         {datasets.length === 0 ? (
@@ -118,7 +302,7 @@ export function HomePage() {
             <h3 className="mt-4 text-lg font-medium text-gray-900">暂无数据集</h3>
             <p className="mt-2 text-sm text-gray-500">导入您的第一个数据集开始分析</p>
             <button
-              onClick={openModal}
+              onClick={handleImport}
               className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
