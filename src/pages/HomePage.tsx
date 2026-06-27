@@ -4,12 +4,10 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
-import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow } from '../utils/db';
 
 export function HomePage() {
   const { getAllDatasets, deleteDataset, isLoading: dbLoading } = useDB();
-  const { openModal } = useImportModal();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [parsedData, setParsedData] = useState<DataRow[]>([]);
