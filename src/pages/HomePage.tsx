@@ -2,14 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
+import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset } from '../utils/db';
 
-interface HomePageProps {
-  onImportClick?: () => void;
-}
-
-export function HomePage({ onImportClick }: HomePageProps) {
+export function HomePage() {
   const { getAllDatasets, deleteDataset, isLoading: dbLoading } = useDB();
+  const { openModal } = useImportModal();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,7 +89,7 @@ export function HomePage({ onImportClick }: HomePageProps) {
             </p>
           </div>
           <button
-            onClick={onImportClick}
+            onClick={openModal}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

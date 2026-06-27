@@ -34,7 +34,7 @@ export const ChartPanel = ({
   data,
   fields,
   className = '',
-  height = 400,
+  height = 300,
 }: ChartPanelProps) => {
   const chartRef = useRef<ReactECharts>(null);
   const [config, setConfig] = useState<ConfigState>({
@@ -214,8 +214,8 @@ export const ChartPanel = ({
   return (
     <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
       {/* 配置区域 */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-3 border-b border-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* 图表类型 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -309,22 +309,22 @@ export const ChartPanel = ({
 
         {/* 提示信息 */}
         {fields.length === 0 && (
-          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-            <p className="text-sm text-yellow-700">
+          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+            <p className="text-xs text-yellow-700">
               暂无字段可选，请先上传数据
             </p>
           </div>
         )}
         {!config.xField && config.yField && (
-          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-700">
+          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-xs text-blue-700">
               请选择 X 轴字段（分类字段）
             </p>
           </div>
         )}
         {config.xField && !config.yField && (
-          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-700">
+          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-xs text-blue-700">
               请选择 Y 轴字段（数值字段）
             </p>
           </div>
@@ -332,7 +332,7 @@ export const ChartPanel = ({
       </div>
 
       {/* 图表展示区域 */}
-      <div className="p-4">
+      <div className="p-3">
         {chartOption ? (
           <ReactECharts
             ref={chartRef}

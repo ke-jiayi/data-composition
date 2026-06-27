@@ -4,7 +4,9 @@ import { Layout } from '../components/Layout';
 import { TabNavigation } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
+import { ChartPanel } from '../components/charts';
 import { useDB } from '../hooks/useDB';
+import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow, ChartConfig } from '../utils/db';
 
 type TabType = 'table' | 'clean' | 'chart';
@@ -13,6 +15,7 @@ export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const { getDataset, getData, getCharts, saveData } = useDB();
+  const { openModal } = useImportModal();
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [rawData, setRawData] = useState<DataRow[]>([]);
@@ -183,6 +186,15 @@ export function ProjectDetailPage() {
                 </div>
               )}
             </div>
+            <button
+              onClick={openModal}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              导入数据
+            </button>
           </div>
         </div>
 
@@ -245,21 +257,12 @@ export function ProjectDetailPage() {
 
           {/* Tab 3: 可视化图表 */}
           {activeTab === 'chart' && (
-            <div className="space-y-6">
-              {charts.length > 0 ? (
-                charts.map((chart) => (
-                  <div
-                    key={chart.id}
-                    className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
-                  >
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{chart.title}</h3>
-                    <p className="text-sm text-gray-500">图表类型: {chart.chartType}</p>
-                    {/* 图表渲染区域 */}
-                    <div className="mt-4 h-64 bg-gray-50 rounded flex items-center justify-center">
-                      <p className="text-gray-400">图表配置加载中...</p>
-                    </div>
-                  </div>
-                ))
+            <div className="space-y-4">
+              {cleanedData.length > 0 ? (
+                <ChartPanel
+                  data={cleanedData}
+                  fields={dataset.columns}
+                />
               ) : (
                 <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
                   <svg

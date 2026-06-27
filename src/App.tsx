@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HomePage, ProjectDetailPage } from './pages';
 import PowerBIPage from './pages/PowerBIPage';
 import { ImportModal } from './components';
 import { useDB } from './hooks/useDB';
+import { ImportModalProvider, useImportModal } from './contexts/ImportModalContext';
 
-function App() {
+function AppContent() {
   const { isLoading, error, createDataset, saveData } = useDB();
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const { isOpen, closeModal } = useImportModal();
 
   // 显示加载状态
   if (isLoading) {
@@ -44,11 +44,7 @@ function App() {
         {/* 首页 */}
         <Route
           path="/"
-          element={
-            <HomePage
-              onImportClick={() => setIsImportModalOpen(true)}
-            />
-          }
+          element={<HomePage />}
         />
         {/* 项目详情页 */}
         <Route path="/project/:id" element={<ProjectDetailPage />} />
@@ -60,13 +56,21 @@ function App() {
 
       {/* 数据导入模态框 */}
       <ImportModal
-        isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
-        onImportSuccess={() => setIsImportModalOpen(false)}
+        isOpen={isOpen}
+        onClose={closeModal}
+        onImportSuccess={() => closeModal()}
         saveData={saveData}
         createDataset={createDataset}
       />
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <ImportModalProvider>
+      <AppContent />
+    </ImportModalProvider>
   );
 }
 
