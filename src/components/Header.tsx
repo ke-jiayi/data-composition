@@ -17,7 +17,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 text-[#1e3a5f] hover:text-[#2d4a6f] transition-colors">
             <span className="text-xl">✈️</span>
-            <span className="text-lg font-semibold">数据作品集</span>
+            <span className="text-lg font-semibold">导航</span>
           </Link>
 
           {/* Navigation Links */}
