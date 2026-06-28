@@ -4,12 +4,11 @@ import { Layout } from '../components/Layout';
 import { TabNavigation } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
-import { ChartPanel } from '../components/charts';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow } from '../utils/db';
 
-type TabType = 'table' | 'clean' | 'chart';
+type TabType = 'table' | 'clean';
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -248,39 +247,6 @@ export function ProjectDetailPage() {
                   projectId={id}
                   onDataChange={handleCleanedDataChange}
                 />
-              )}
-            </div>
-          )}
-
-          {/* Tab 3: 可视化图表 */}
-          {activeTab === 'chart' && (
-            <div className="space-y-4">
-              {cleanedData.length > 0 ? (
-                <ChartPanel
-                  data={cleanedData}
-                  fields={dataset.columns}
-                  height={200}
-                />
-              ) : (
-                <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
-                  <svg
-                    className="mx-auto h-12 w-12 text-gray-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">暂无图表</h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    该数据集尚未创建可视化图表
-                  </p>
-                </div>
               )}
             </div>
           )}
