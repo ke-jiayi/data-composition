@@ -1,0 +1,15 @@
+- [x] HomePage 组件中声明了 parsedData、columns、fileName、isParsing、error 等 state
+- [x] HomePage 组件中有 hidden file input 元素，accept 属性包含 .csv 和 .xlsx
+- [x] handleImport 函数能正确触发 file input 的文件选择对话框
+- [x] CSV 文件使用 papaparse 库进行解析
+- [x] Excel (.xlsx) 文件使用 xlsx 库进行解析
+- [x] 解析成功后数据保存到组件 state 中
+- [x] 解析过程中显示加载状态
+- [x] 解析失败时显示错误提示信息
+- [x] "导入数据"按钮的 onClick 绑定到 handleImport 函数
+- [x] 页面上有数据表格展示区域，显示列名和数据行
+- [x] 表格显示文件名和数据行数统计信息
+- [x] 表格支持横向滚动
+- [x] 最多展示前 100 行数据，避免大文件性能问题
+- [x] TypeScript 编译无错误
+- [x] 代码符合项目的代码风格和命名规范

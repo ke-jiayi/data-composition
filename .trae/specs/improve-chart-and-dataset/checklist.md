@@ -1,0 +1,12 @@
+- [x] ChartPanel 组件添加了 isCollapsed state 和折叠/展开切换按钮
+- [x] ChartPanel 折叠时只显示配置区域，隐藏图表展示区域
+- [x] ChartPanel 展开时显示完整的配置和图表区域
+- [x] ChartPanel 空数据时图表区域显示简洁提示，高度自适应
+- [x] ChartPanel 移除固定高度，改为自适应内容
+- [x] HomePage 的 handleFileChange 导入成功后调用 createDataset 创建新数据集
+- [x] HomePage 的 handleFileChange 导入成功后调用 saveData 保存数据行
+- [x] HomePage 的 handleFileChange 导入成功后调用 loadDatasets 刷新列表
+- [x] 首页展示所有已导入的数据集卡片，显示名称、行数、导入时间
+- [x] 用户可以删除单个数据集
+- [x] TypeScript 编译无错误
+- [x] 代码符合项目的代码风格和命名规范
