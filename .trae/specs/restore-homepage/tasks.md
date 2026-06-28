@@ -23,7 +23,7 @@
   - `programmatic` TR-2.1: 运行 `npx tsc --noEmit` 命令，确认返回码为 0（无错误）
 - **Notes**: 这是部署前的必要步骤，确保代码符合 TypeScript 规范
 
-## [/] Task 3: 提交并推送代码到 GitHub
+## [x] Task 3: 提交并推送代码到 GitHub
 - **Priority**: medium
 - **Depends On**: Task 2
 - **Description**: 
@@ -34,7 +34,7 @@
   - `programmatic` TR-3.1: 运行 `git push` 命令，确认成功推送到远程仓库
 - **Notes**: 代码提交后 Cloudflare Pages 会自动部署更新
 
-## [ ] Task 4: 验证部署结果
+## [x] Task 4: 验证部署结果
 - **Priority**: medium
 - **Depends On**: Task 3
 - **Description**: 

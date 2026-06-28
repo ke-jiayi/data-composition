@@ -1,10 +1,10 @@
-- [ ] Checkpoint 1: HomePage.tsx 仅包含"我的数据集"标题、数据集数量统计和导入按钮
-- [ ] Checkpoint 2: HomePage.tsx 不包含统计卡片、搜索框、排序下拉菜单或动画区域等额外元素
-- [ ] Checkpoint 3: 数据集列表以卡片形式展示，每张卡片包含名称、数据行数和导入时间
-- [ ] Checkpoint 4: 点击数据集卡片可跳转到 ProjectDetailPage 详情页
-- [ ] Checkpoint 5: 无数据集时显示空状态提示，包含导入按钮
-- [ ] Checkpoint 6: 导入数据功能正常，支持 CSV 和 Excel 文件
-- [ ] Checkpoint 7: TypeScript 类型检查通过（`npx tsc --noEmit` 返回码为 0）
-- [ ] Checkpoint 8: 代码已提交并推送到 GitHub 远程仓库
-- [ ] Checkpoint 9: Cloudflare Pages 部署成功，网站可正常访问
-- [ ] Checkpoint 10: 首页已恢复到简化版本，仅显示数据集列表和导入按钮
+- [x] Checkpoint 1: HomePage.tsx 仅包含"我的数据集"标题、数据集数量统计和导入按钮
+- [x] Checkpoint 2: HomePage.tsx 不包含统计卡片、搜索框、排序下拉菜单或动画区域等额外元素
+- [x] Checkpoint 3: 数据集列表以卡片形式展示，每张卡片包含名称、数据行数和导入时间
+- [x] Checkpoint 4: 点击数据集卡片可跳转到 ProjectDetailPage 详情页
+- [x] Checkpoint 5: 无数据集时显示空状态提示，包含导入按钮
+- [x] Checkpoint 6: 导入数据功能正常，支持 CSV 和 Excel 文件
+- [x] Checkpoint 7: TypeScript 类型检查通过（`npx tsc --noEmit` 返回码为 0）
+- [x] Checkpoint 8: 代码已提交并推送到 GitHub 远程仓库
+- [x] Checkpoint 9: Cloudflare Pages 部署成功，网站可正常访问
+- [x] Checkpoint 10: 首页已恢复到简化版本，仅显示数据集列表和导入按钮

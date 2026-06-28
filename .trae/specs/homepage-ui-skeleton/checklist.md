@@ -1,0 +1,11 @@
+- [ ] Checkpoint 1: 顶部左侧显示"📊 数据作品集"标题
+- [ ] Checkpoint 2: 顶部右侧显示当前日期（格式：当地时间：xxxx-xx-xx）
+- [ ] Checkpoint 3: 顶部右侧显示"导入数据"按钮（仅 UI，不绑定功能）
+- [ ] Checkpoint 4: 显示三个水平排列的统计卡片
+- [ ] Checkpoint 5: 统计卡片分别显示"0 个数据集"、"0 行"、"暂无数据"
+- [ ] Checkpoint 6: 数据集列表显示 2-3 个示例卡片
+- [ ] Checkpoint 7: 每个数据集卡片显示名称和行数
+- [ ] Checkpoint 8: 代码中不包含任何功能逻辑（搜索、排序、跳转、动画等）
+- [ ] Checkpoint 9: 使用 Tailwind CSS 进行样式设计
+- [ ] Checkpoint 10: TypeScript 类型检查通过（`npx tsc --noEmit` 返回码为 0）
+- [ ] Checkpoint 11: 代码已提交并推送到 GitHub 远程仓库
