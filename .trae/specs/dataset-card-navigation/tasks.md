@@ -1,6 +1,6 @@
 # 数据集卡片点击跳转功能 - 实现计划
 
-## [ ] Task 1: 修复路由路径
+## [x] Task 1: 修复路由路径
 - **Priority**: high
 - **Depends On**: None
 - **Description**: 
@@ -11,7 +11,7 @@
   - `human-judgment` TR-1.1: 点击卡片跳转到正确路径
 - **Notes**: 确保路径与 App.tsx 中的路由配置一致
 
-## [ ] Task 2: 添加悬停视觉反馈
+## [x] Task 2: 添加悬停视觉反馈
 - **Priority**: medium
 - **Depends On**: Task 1
 - **Description**: 
@@ -23,7 +23,7 @@
   - `human-judgment` TR-2.1: 悬停时有明显视觉反馈
 - **Notes**: 现有代码已有 hover:shadow-md，确保效果明显
 
-## [ ] Task 3: 验证新导入卡片支持跳转
+## [x] Task 3: 验证新导入卡片支持跳转
 - **Priority**: medium
 - **Depends On**: Task 2
 - **Description**: 
@@ -34,7 +34,7 @@
   - `human-judgment` TR-3.1: 新导入的卡片支持点击跳转
 - **Notes**: 新卡片使用 filteredDatasets.map 渲染，与现有卡片逻辑一致
 
-## [ ] Task 4: 验证 TypeScript 编译并提交推送
+## [x] Task 4: 验证 TypeScript 编译并提交推送
 - **Priority**: high
 - **Depends On**: Task 3
 - **Description**: 

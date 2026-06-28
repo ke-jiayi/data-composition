@@ -1,0 +1,11 @@
+- [ ] 正确导入 motion 和 useInView hooks
+- [ ] Footer 显示"© 2026 数据作品集 | 用数据记录成长"
+- [ ] Footer 位于页面最底部（Layout 内部）
+- [ ] 使用 motion.div 包装 Footer 内容
+- [ ] 动画初始状态：opacity: 0, y: 30
+- [ ] 动画结束状态：opacity: 1, y: 0
+- [ ] 动画持续时间：0.6s
+- [ ] 动画缓动函数：easeOut
+- [ ] 动画只触发一次（once: true）
+- [ ] TypeScript 编译无错误（npx tsc --noEmit 返回码为 0）
+- [ ] 代码已提交并推送到 GitHub 远程仓库

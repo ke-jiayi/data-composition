@@ -1,7 +1,7 @@
-- [ ] 数据集卡片的 Link 组件 to 属性修改为 `/project/${dataset.id}`
-- [ ] 鼠标悬停时卡片有视觉反馈（阴影变化）
-- [ ] 鼠标悬停时光标变为 pointer
-- [ ] 点击卡片跳转到 ProjectDetailPage 并正确加载数据集
-- [ ] 导入新数据后，新卡片同样支持点击跳转
-- [ ] TypeScript 编译无错误（npx tsc --noEmit 返回码为 0）
-- [ ] 代码已提交并推送到 GitHub 远程仓库
+- [x] 数据集卡片的 Link 组件 to 属性修改为 `/project/${dataset.id}`
+- [x] 鼠标悬停时卡片有视觉反馈（阴影变化）
+- [x] 鼠标悬停时光标变为 pointer
+- [x] 点击卡片跳转到 ProjectDetailPage 并正确加载数据集
+- [x] 导入新数据后，新卡片同样支持点击跳转
+- [x] TypeScript 编译无错误（npx tsc --noEmit 返回码为 0）
+- [x] 代码已提交并推送到 GitHub 远程仓库
