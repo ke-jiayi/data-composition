@@ -1,6 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "../**/*.{js,ts,jsx,tsx,html}";
+
+@theme {
+  --color-primary: #1e3a5f;
+  --color-secondary: #3182ce;
+  --color-background: #f7fafc;
+  --color-surface: #ffffff;
+  --color-text: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-border: #e2e8f0;
+  --color-accent: #3182ce;
+  --color-accent-hover: #2c5282;
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --width-sidebar: 280px;
+  --max-width-content: 900px;
+  --animate-fade-in: fade-in 300ms ease-out;
+  --animate-slide-in: slide-in 200ms ease-out;
+  --keyframes-fade-in: 0% { opacity: 0; } 100% { opacity: 1; };
+  --keyframes-slide-in: 0% { transform: translateX(-10px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; };
+}
 
 /* CSS Custom Properties for light theme */
 :root {
