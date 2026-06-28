@@ -34,7 +34,7 @@ export const ChartPanel = ({
   data,
   fields,
   className = '',
-  height = 300,
+  height = 200,
 }: ChartPanelProps) => {
   const chartRef = useRef<ReactECharts>(null);
   const [config, setConfig] = useState<ConfigState>({
@@ -219,8 +219,8 @@ export const ChartPanel = ({
   return (
     <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
       {/* 配置区域 */}
-      <div className="p-3 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-3">
+      <div className="p-2 border-b border-gray-200">
+        <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-700">图表配置</span>
           <button
             onClick={toggleCollapse}
@@ -242,7 +242,7 @@ export const ChartPanel = ({
             </svg>
           </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           {/* 图表类型 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -336,21 +336,21 @@ export const ChartPanel = ({
 
         {/* 提示信息 */}
         {fields.length === 0 && (
-          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+          <div className="mt-1.5 p-1.5 bg-yellow-50 border border-yellow-200 rounded-md">
             <p className="text-xs text-yellow-700">
               暂无字段可选，请先上传数据
             </p>
           </div>
         )}
         {!config.xField && config.yField && (
-          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+          <div className="mt-1.5 p-1.5 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-xs text-blue-700">
               请选择 X 轴字段（分类字段）
             </p>
           </div>
         )}
         {config.xField && !config.yField && (
-          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+          <div className="mt-1.5 p-1.5 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-xs text-blue-700">
               请选择 Y 轴字段（数值字段）
             </p>
@@ -360,9 +360,9 @@ export const ChartPanel = ({
 
       {/* 图表展示区域 */}
       {!isCollapsed && (
-        <div className="p-3">
+        <div className="p-2">
           {data.length === 0 ? (
-            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-48">
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-32">
               <div className="text-center p-4">
                 <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -381,7 +381,7 @@ export const ChartPanel = ({
               opts={{ renderer: 'canvas', locale: 'ZH' }}
             />
           ) : (
-            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-48">
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-32">
               <div className="text-center p-4">
                 <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
