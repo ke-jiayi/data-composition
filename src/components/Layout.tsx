@@ -12,7 +12,7 @@ export function Layout({ children }: LayoutProps) {
       <Header />
 
       {/* Main Content */}
-      <main className="pt-16 min-h-screen">
+      <main className="pt-20 min-h-screen">
         <div className="p-6 md:p-10">{children}</div>
       </main>
     </div>
