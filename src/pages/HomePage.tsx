@@ -25,7 +25,17 @@ export function HomePage() {
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 根据搜索关键词过滤数据集
+  const filteredDatasets = searchQuery
+    ? datasets.filter(
+        (d) =>
+          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.fileName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : datasets;
 
   // 加载数据集列表
   useEffect(() => {
@@ -166,21 +176,38 @@ export function HomePage() {
           </div>
         </div>
 
+        {/* 搜索输入框 */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="请输入你要查找的内容"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
+          />
+        </div>
+
         {/* 数据集列表 */}
         {datasets.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {datasets.map((dataset) => (
-              <Link
-                key={dataset.id}
-                to={`/dataset/${dataset.id}`}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{dataset.name}</h3>
-                <p className="text-sm text-gray-500">{formatNumber(dataset.rowCount)} 行</p>
-                <p className="text-xs text-gray-400 mt-2">导入于 {formatDate(dataset.createdAt)}</p>
-              </Link>
-            ))}
-          </div>
+          filteredDatasets.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredDatasets.map((dataset) => (
+                <Link
+                  key={dataset.id}
+                  to={`/dataset/${dataset.id}`}
+                  className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{dataset.name}</h3>
+                  <p className="text-sm text-gray-500">{formatNumber(dataset.rowCount)} 行</p>
+                  <p className="text-xs text-gray-400 mt-2">导入于 {formatDate(dataset.createdAt)}</p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500">未找到匹配的数据集</p>
+            </div>
+          )
         ) : (
           <div className="text-center py-16">
             <div className="text-gray-400 text-6xl mb-4">📁</div>
