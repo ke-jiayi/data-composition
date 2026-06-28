@@ -194,8 +194,8 @@ export function HomePage() {
               {filteredDatasets.map((dataset) => (
                 <Link
                   key={dataset.id}
-                  to={`/dataset/${dataset.id}`}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
+                  to={`/project/${dataset.id}`}
+                  className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-lg hover:border-[#1e3a5f]/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
                 >
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{dataset.name}</h3>
                   <p className="text-sm text-gray-500">{formatNumber(dataset.rowCount)} 行</p>

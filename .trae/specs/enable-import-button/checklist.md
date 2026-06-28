@@ -1,0 +1,17 @@
+- [x] HomePage.tsx 正确导入 useDB hook 和 parseFile 函数
+- [x] HomePage.tsx 正确声明所有必需的状态变量（datasets、isImporting、importError、importSuccess）
+- [x] HomePage.tsx 有 hidden file input 元素，accept 属性包含 .csv 和 .xlsx
+- [x] 点击"导入数据"按钮弹出文件选择对话框
+- [x] CSV 文件使用 parseFile 函数正确解析
+- [x] Excel (.xlsx) 文件使用 parseFile 函数正确解析
+- [x] 解析成功后调用 createDataset 创建数据集记录
+- [x] 调用 saveData 将数据保存到 IndexedDB
+- [x] 导入成功后调用 getAllDatasets 刷新数据集列表
+- [x] 统计卡片显示真实数据（数据集数量、总行数、最近更新时间）
+- [x] 数据集列表显示真实数据集（从 IndexedDB 获取）
+- [x] 导入过程中显示加载状态
+- [x] 导入成功时显示成功提示
+- [x] 导入失败时显示错误提示
+- [x] "导入数据"按钮的 onClick 正确绑定到 handleImport 函数
+- [x] TypeScript 编译无错误（npx tsc --noEmit 返回码为 0）
+- [x] 代码已提交并推送到 GitHub 远程仓库
