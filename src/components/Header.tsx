@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type MouseEvent } from 'react';
+import { useState, useRef, useEffect, type MouseEvent as ReactMouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navLinks = [
@@ -26,7 +26,7 @@ export function Header() {
     };
   }, []);
 
-  const toggleMenu = (e: MouseEvent) => {
+  const toggleMenu = (e: ReactMouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
