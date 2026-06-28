@@ -1,0 +1,8 @@
+- [ ] 顶部左侧显示纸飞机图标（✈️）和"数据作品集"文字
+- [ ] 顶部左侧没有多余的图标或元素
+- [ ] 纸飞机图标和文字水平对齐
+- [ ] 统计卡片样式为 bg-white rounded-lg shadow-sm border border-gray-200 p-4
+- [ ] 统计卡片内容居中显示
+- [ ] 三个卡片水平均匀排列
+- [ ] TypeScript 编译无错误（npx tsc --noEmit 返回码为 0）
+- [ ] 代码已提交并推送到 GitHub 远程仓库

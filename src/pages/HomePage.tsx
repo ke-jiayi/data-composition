@@ -157,19 +157,19 @@ export function HomePage() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
             <p className="text-sm text-gray-500 mb-2">总数据集数量</p>
             <p className="text-2xl font-bold text-gray-900">
               {formatNumber(datasets.length)} 个数据集
             </p>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
             <p className="text-sm text-gray-500 mb-2">总数据行数</p>
             <p className="text-2xl font-bold text-gray-900">
               {formatNumber(datasets.reduce((sum, d) => sum + d.rowCount, 0))} 行
             </p>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
             <p className="text-sm text-gray-500 mb-2">最近更新时间</p>
             <p className="text-2xl font-bold text-gray-900">
               {datasets.length > 0 ? formatDate(datasets[0].updatedAt) : '暂无数据'}
