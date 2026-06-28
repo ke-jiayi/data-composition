@@ -259,6 +259,7 @@ export function ProjectDetailPage() {
                 <ChartPanel
                   data={cleanedData}
                   fields={dataset.columns}
+                  height={200}
                 />
               ) : (
                 <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
