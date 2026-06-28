@@ -1,6 +1,6 @@
 # 首页底部滚动触发动画 - 实现计划
 
-## [ ] Task 1: 导入 framer-motion hooks
+## [x] Task 1: 导入 framer-motion hooks
 - **Priority**: high
 - **Depends On**: None
 - **Description**: 
@@ -11,7 +11,7 @@
   - `programmatic` TR-1.1: 导入语句正确无误
 - **Notes**: framer-motion 已安装，无需额外安装
 
-## [ ] Task 2: 创建 Footer ref
+## [x] Task 2: 创建 Footer ref
 - **Priority**: high
 - **Depends On**: Task 1
 - **Description**: 
@@ -22,7 +22,7 @@
   - `programmatic` TR-2.1: ref 正确创建和绑定
 - **Notes**: 确保 ref 与 useInView 配合使用
 
-## [ ] Task 3: 添加 Footer UI 和动画
+## [x] Task 3: 添加 Footer UI 和动画
 - **Priority**: high
 - **Depends On**: Task 2
 - **Description**: 
@@ -41,7 +41,7 @@
   - `human-judgment` TR-3.3: 动画只播放一次
 - **Notes**: 样式简洁，与页面整体风格一致
 
-## [ ] Task 4: 验证 TypeScript 编译并提交推送
+## [x] Task 4: 验证 TypeScript 编译并提交推送
 - **Priority**: high
 - **Depends On**: Task 3
 - **Description**: 

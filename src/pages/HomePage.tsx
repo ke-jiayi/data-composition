@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
 import { parseFile } from '../utils/fileParser';
@@ -28,8 +28,6 @@ export function HomePage() {
   const [importSuccess, setImportSuccess] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
-  const isFooterInView = useInView(footerRef, { once: true });
 
   // 根据搜索关键词过滤数据集
   const filteredDatasets = searchQuery
@@ -228,9 +226,9 @@ export function HomePage() {
 
       {/* Footer */}
       <motion.div
-        ref={footerRef}
         initial={{ opacity: 0, y: 30 }}
-        animate={isFooterInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="mt-16 py-8 text-center text-sm text-gray-500 border-t border-gray-200"
       >
