@@ -7,7 +7,7 @@ import { useDB } from '../hooks/useDB';
 import type { Dataset, DataRow } from '../utils/db';
 
 export function HomePage() {
-  const { getAllDatasets, deleteDataset, isLoading: dbLoading } = useDB();
+  const { getAllDatasets, deleteDataset, createDataset, saveData, isLoading: dbLoading } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [parsedData, setParsedData] = useState<DataRow[]>([]);
@@ -15,6 +15,7 @@ export function HomePage() {
   const [importFileName, setImportFileName] = useState('');
   const [isParsing, setIsParsing] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [importSuccess, setImportSuccess] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,27 +89,52 @@ export function HomePage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsParsing(true);
     setImportError(null);
+    setImportSuccess(false);
 
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
 
     if (fileExtension === 'csv') {
       Papa.parse<DataRow>(file, {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: false,
-        complete: (results) => {
-          const data = results.data;
-          const columns = results.meta.fields || [];
-          setParsedData(data);
-          setImportColumns(columns);
-          setImportFileName(file.name);
-          setIsParsing(false);
+        complete: async (results) => {
+          try {
+            const data = results.data;
+            const columns = results.meta.fields || [];
+
+            const newDataset: Omit<Dataset, 'id' | 'createdAt' | 'updatedAt'> = {
+              name: fileNameWithoutExt,
+              fileName: file.name,
+              fileType: 'csv',
+              columns,
+              rowCount: data.length,
+            };
+
+            const dataset = await createDataset(newDataset);
+            await saveData(dataset.id, data);
+
+            setImportSuccess(true);
+            loadDatasets();
+
+            setTimeout(() => {
+              setImportSuccess(false);
+            }, 3000);
+          } catch (err) {
+            setImportError(err instanceof Error ? err.message : '保存数据失败');
+          } finally {
+            setParsedData([]);
+            setImportColumns([]);
+            setImportFileName('');
+            setIsParsing(false);
+          }
         },
         error: (error) => {
           setImportError(error.message);
@@ -117,7 +143,7 @@ export function HomePage() {
       });
     } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const data = new Uint8Array(e.target?.result as ArrayBuffer);
           const workbook = XLSX.read(data, { type: 'array' });
@@ -125,27 +151,44 @@ export function HomePage() {
           const worksheet = workbook.Sheets[firstSheetName];
           const jsonData = XLSX.utils.sheet_to_json<DataRow>(worksheet, { header: 1 });
 
+          let formattedData: DataRow[] = [];
+          let headers: string[] = [];
+
           if (jsonData.length > 0) {
-            const headers = jsonData[0] as unknown as string[];
+            headers = jsonData[0] as unknown as string[];
             const rows = jsonData.slice(1) as DataRow[];
-            const formattedData = rows.map((row) => {
+            formattedData = rows.map((row) => {
               const obj: DataRow = {};
               headers.forEach((header, index) => {
                 obj[header] = row[index as keyof DataRow] ?? null;
               });
               return obj;
             });
-            setParsedData(formattedData);
-            setImportColumns(headers);
-            setImportFileName(file.name);
-          } else {
-            setParsedData([]);
-            setImportColumns([]);
-            setImportFileName(file.name);
           }
-          setIsParsing(false);
+
+          const newDataset: Omit<Dataset, 'id' | 'createdAt' | 'updatedAt'> = {
+            name: fileNameWithoutExt,
+            fileName: file.name,
+            fileType: fileExtension === 'xlsx' ? 'xlsx' : 'xls',
+            columns: headers,
+            rowCount: formattedData.length,
+          };
+
+          const dataset = await createDataset(newDataset);
+          await saveData(dataset.id, formattedData);
+
+          setImportSuccess(true);
+          loadDatasets();
+
+          setTimeout(() => {
+            setImportSuccess(false);
+          }, 3000);
         } catch (err) {
-          setImportError(err instanceof Error ? err.message : '解析 Excel 文件失败');
+          setImportError(err instanceof Error ? err.message : '保存数据失败');
+        } finally {
+          setParsedData([]);
+          setImportColumns([]);
+          setImportFileName('');
           setIsParsing(false);
         }
       };
@@ -194,7 +237,7 @@ export function HomePage() {
         </div>
 
         {/* 数据预览区域 */}
-        {(isParsing || importError || parsedData.length > 0) && (
+        {(isParsing || importError || importSuccess || parsedData.length > 0) && (
           <div className="mb-8">
             {/* 加载状态 */}
             {isParsing && (
@@ -216,6 +259,21 @@ export function HomePage() {
                   <div>
                     <h3 className="text-sm font-medium text-red-800">解析失败</h3>
                     <p className="text-sm text-red-700 mt-1">{importError}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 成功提示 */}
+            {importSuccess && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <h3 className="text-sm font-medium text-green-800">导入成功</h3>
+                    <p className="text-sm text-green-700 mt-1">数据集已成功保存到数据库</p>
                   </div>
                 </div>
               </div>

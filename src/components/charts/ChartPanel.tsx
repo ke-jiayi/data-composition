@@ -43,6 +43,11 @@ export const ChartPanel = ({
     yField: '',
   });
   const [generated, setGenerated] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const toggleCollapse = useCallback(() => {
+    setIsCollapsed((prev) => !prev);
+  }, []);
 
   // 数值字段筛选
   const numericFields = useMemo(() => {
@@ -215,6 +220,28 @@ export const ChartPanel = ({
     <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
       {/* 配置区域 */}
       <div className="p-3 border-b border-gray-200">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm font-medium text-gray-700">图表配置</span>
+          <button
+            onClick={toggleCollapse}
+            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+            title={isCollapsed ? '展开' : '折叠'}
+          >
+            <svg
+              className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${isCollapsed ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* 图表类型 */}
           <div>
@@ -332,31 +359,40 @@ export const ChartPanel = ({
       </div>
 
       {/* 图表展示区域 */}
-      <div className="p-3">
-        {chartOption ? (
-          <ReactECharts
-            ref={chartRef}
-            option={chartOption}
-            style={{ height, width: '100%' }}
-            notMerge={true}
-            lazyUpdate={true}
-            opts={{ renderer: 'canvas', locale: 'ZH' }}
-          />
-        ) : (
-          <div
-            className="flex items-center justify-center bg-gray-50 rounded-lg"
-            style={{ height }}
-          >
-            <div className="text-center text-gray-500">
-              <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <p>选择字段后点击"生成图表"按钮</p>
+      {!isCollapsed && (
+        <div className="p-3">
+          {data.length === 0 ? (
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-48">
+              <div className="text-center p-4">
+                <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <p className="text-sm text-gray-500">暂无数据，请先上传数据</p>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : chartOption ? (
+            <ReactECharts
+              ref={chartRef}
+              option={chartOption}
+              style={{ height, width: '100%' }}
+              notMerge={true}
+              lazyUpdate={true}
+              opts={{ renderer: 'canvas', locale: 'ZH' }}
+            />
+          ) : (
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg min-h-48">
+              <div className="text-center p-4">
+                <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <p className="text-sm text-gray-500">选择字段后点击"生成图表"按钮</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
