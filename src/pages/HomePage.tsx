@@ -1,23 +1,39 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
 import type { Dataset, DataRow } from '../utils/db';
 
+type SortOption = 'date-desc' | 'name-asc' | 'rowCount-desc';
+
 export function HomePage() {
-  const { getAllDatasets, deleteDataset, createDataset, saveData, isLoading: dbLoading } = useDB();
+  const { getAllDatasets, createDataset, saveData, isLoading: dbLoading } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [parsedData, setParsedData] = useState<DataRow[]>([]);
-  const [importColumns, setImportColumns] = useState<string[]>([]);
-  const [importFileName, setImportFileName] = useState('');
   const [isParsing, setIsParsing] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState<SortOption>('date-desc');
+  const [currentDate, setCurrentDate] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const updateDate = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      setCurrentDate(`${year}-${month}-${day}`);
+    };
+    updateDate();
+    const interval = setInterval(updateDate, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const loadDatasets = useCallback(async () => {
     try {
@@ -36,54 +52,54 @@ export function HomePage() {
     }
   }, [dbLoading, loadDatasets]);
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (confirm('确定要删除这个数据集吗？此操作不可撤销。')) {
-      try {
-        await deleteDataset(id);
-        loadDatasets();
-      } catch (err) {
-        console.error('删除数据集失败:', err);
-      }
-    }
-  };
-
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('zh-CN');
   };
 
-  const getFileTypeBadgeColor = (fileType: string) => {
-    const colors: Record<string, string> = {
-      csv: 'bg-green-100 text-green-700 border-green-200',
-      xlsx: 'bg-blue-100 text-blue-700 border-blue-200',
-      xls: 'bg-blue-100 text-blue-700 border-blue-200',
-      json: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    };
-    return colors[fileType.toLowerCase()] || 'bg-gray-100 text-gray-700 border-gray-200';
-  };
+  const totalRowCount = useMemo(() => {
+    return datasets.reduce((sum, ds) => sum + ds.rowCount, 0);
+  }, [datasets]);
 
-  if (isLoading || dbLoading) {
-    return (
-      <Layout>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1e3a5f]"></div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  const lastImportDate = useMemo(() => {
+    if (datasets.length === 0) return null;
+    const latest = datasets.reduce((max, ds) => (ds.createdAt > max.createdAt ? ds : max), datasets[0]);
+    return formatDate(latest.createdAt);
+  }, [datasets]);
+
+  const filteredAndSortedDatasets = useMemo(() => {
+    let result = [...datasets];
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (ds) =>
+          ds.name.toLowerCase().includes(query) ||
+          (ds.description?.toLowerCase().includes(query) ?? false)
+      );
+    }
+
+    switch (sortOption) {
+      case 'date-desc':
+        result.sort((a, b) => b.createdAt - a.createdAt);
+        break;
+      case 'name-asc':
+        result.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+        break;
+      case 'rowCount-desc':
+        result.sort((a, b) => b.rowCount - a.rowCount);
+        break;
+    }
+
+    return result;
+  }, [datasets, searchQuery, sortOption]);
 
   const handleImport = () => {
     fileInputRef.current?.click();
@@ -130,9 +146,6 @@ export function HomePage() {
           } catch (err) {
             setImportError(err instanceof Error ? err.message : '保存数据失败');
           } finally {
-            setParsedData([]);
-            setImportColumns([]);
-            setImportFileName('');
             setIsParsing(false);
           }
         },
@@ -186,9 +199,6 @@ export function HomePage() {
         } catch (err) {
           setImportError(err instanceof Error ? err.message : '保存数据失败');
         } finally {
-          setParsedData([]);
-          setImportColumns([]);
-          setImportFileName('');
           setIsParsing(false);
         }
       };
@@ -207,6 +217,18 @@ export function HomePage() {
     }
   };
 
+  if (isLoading || dbLoading) {
+    return (
+      <Layout>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1e3a5f]"></div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <input
@@ -216,18 +238,17 @@ export function HomePage() {
         className="hidden"
         onChange={handleFileChange}
       />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 页面标题和导入按钮 */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 顶部区域 */}
         <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">手动测试：我改了这里</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              已导入 {datasets.length} 个数据集
-            </p>
+          <div className="text-xl font-bold text-[#1e3a5f]">数据作品集</div>
+          <div className="text-sm text-gray-500 hidden sm:block">
+            当地时间：{currentDate}
           </div>
           <button
             onClick={handleImport}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
+            disabled={isParsing}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -236,20 +257,17 @@ export function HomePage() {
           </button>
         </div>
 
-        {/* 数据预览区域 */}
-        {(isParsing || importError || importSuccess || parsedData.length > 0) && (
-          <div className="mb-8">
-            {/* 加载状态 */}
+        {/* 导入状态提示 */}
+        {(isParsing || importError || importSuccess) && (
+          <div className="mb-6">
             {isParsing && (
-              <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+              <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
                 <div className="flex items-center justify-center gap-3">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1e3a5f]"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#1e3a5f]"></div>
                   <span className="text-gray-600">正在解析文件...</span>
                 </div>
               </div>
             )}
-
-            {/* 错误信息 */}
             {importError && !isParsing && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
@@ -263,8 +281,6 @@ export function HomePage() {
                 </div>
               </div>
             )}
-
-            {/* 成功提示 */}
             {importSuccess && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
@@ -278,70 +294,70 @@ export function HomePage() {
                 </div>
               </div>
             )}
-
-            {/* 数据表格 */}
-            {parsedData.length > 0 && !isParsing && !importError && (
-              <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900">数据预览</h2>
-                    <div className="text-sm text-gray-500">
-                      <span className="font-medium text-gray-700">{importFileName}</span>
-                      <span className="mx-2">·</span>
-                      <span>共 {formatNumber(parsedData.length)} 行数据</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                          #
-                        </th>
-                        {importColumns.map((col) => (
-                          <th
-                            key={col}
-                            className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 whitespace-nowrap"
-                          >
-                            {col}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {parsedData.slice(0, 100).map((row, rowIndex) => (
-                        <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 border-r border-gray-100">
-                            {rowIndex + 1}
-                          </td>
-                          {importColumns.map((col) => (
-                            <td
-                              key={col}
-                              className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 max-w-xs truncate"
-                              title={String(row[col] ?? '')}
-                            >
-                              {row[col] ?? ''}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {parsedData.length > 100 && (
-                  <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 text-sm text-gray-500 text-center">
-                    仅显示前 100 行
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
 
-        {/* 空状态 */}
-        {datasets.length === 0 ? (
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
+        {/* 欢迎语 */}
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">手动测试：我改了这里</h1>
+        </div>
+
+        {/* 统计卡片区 */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="text-sm text-gray-500 mb-2">总数据集数量</div>
+            <div className="text-3xl font-bold text-[#1e3a5f]">{datasets.length} 个数据集</div>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="text-sm text-gray-500 mb-2">总数据行数</div>
+            <div className="text-3xl font-bold text-[#1e3a5f]">{formatNumber(totalRowCount)} 行</div>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="text-sm text-gray-500 mb-2">最近导入时间</div>
+            <div className="text-3xl font-bold text-[#1e3a5f]">
+              {lastImportDate ? `上次更新：${lastImportDate}` : '暂无'}
+            </div>
+          </div>
+        </div>
+
+        {/* 搜索与排序区 */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex-1 relative">
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              placeholder="请输入你要查找的内容"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f] text-sm"
+            />
+          </div>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as SortOption)}
+            className="px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f] text-sm text-gray-700 cursor-pointer"
+          >
+            <option value="date-desc">导入时间（最新）</option>
+            <option value="name-asc">名称 A-Z</option>
+            <option value="rowCount-desc">数据量（最多）</option>
+          </select>
+        </div>
+
+        {/* 数据集列表 */}
+        {filteredAndSortedDatasets.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center mb-8">
             <svg
               className="mx-auto h-16 w-16 text-gray-300"
               fill="none"
@@ -355,70 +371,22 @@ export function HomePage() {
                 d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">暂无数据集</h3>
-            <p className="mt-2 text-sm text-gray-500">导入您的第一个数据集开始分析</p>
-            <button
-              onClick={handleImport}
-              className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              导入您的第一个数据集
-            </button>
+            <h3 className="mt-4 text-lg font-medium text-gray-900">暂无数据，点击右上角导入</h3>
           </div>
         ) : (
-          /* 数据集卡片网格 */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {datasets.map((dataset) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {filteredAndSortedDatasets.map((dataset) => (
               <Link
                 key={dataset.id}
                 to={`/project/${dataset.id}`}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1e3a5f]/30 transition-all group"
+                className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1e3a5f]/30 transition-all group"
               >
                 <div className="p-6">
-                  {/* 卡片头部 */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a5f] truncate">
-                        {dataset.name}
-                      </h3>
-                      {dataset.description && (
-                        <p className="mt-1 text-sm text-gray-500 line-clamp-2">
-                          {dataset.description}
-                        </p>
-                      )}
-                    </div>
-                    <button
-                      onClick={(e) => handleDelete(dataset.id, e)}
-                      className="ml-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
-                      title="删除数据集"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* 文件类型标签 */}
-                  <div className="mb-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium border ${getFileTypeBadgeColor(
-                        dataset.fileType
-                      )}`}
-                    >
-                      {dataset.fileType.toUpperCase()}
-                    </span>
-                  </div>
-
-                  {/* 统计信息 */}
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm">
+                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a5f] truncate mb-4">
+                    {dataset.name}
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center text-gray-600">
                       <svg
                         className="w-4 h-4 text-gray-400 mr-2"
                         fill="none"
@@ -432,11 +400,9 @@ export function HomePage() {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      <span className="text-gray-600">
-                        <span className="font-medium text-gray-900">{formatNumber(dataset.rowCount)}</span> 条数据
-                      </span>
+                      <span className="font-medium text-gray-900">{formatNumber(dataset.rowCount)}</span> 行数据
                     </div>
-                    <div className="flex items-center text-sm">
+                    <div className="flex items-center text-gray-500">
                       <svg
                         className="w-4 h-4 text-gray-400 mr-2"
                         fill="none"
@@ -450,21 +416,25 @@ export function HomePage() {
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      <span className="text-gray-500">{formatDate(dataset.createdAt)}</span>
+                      {formatDate(dataset.createdAt)}
                     </div>
-                  </div>
-
-                  {/* 文件名字段 */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <p className="text-xs text-gray-400 truncate">
-                      文件: {dataset.fileName}
-                    </p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
         )}
+
+        {/* 底部动画区域 */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="bg-gray-100 rounded-[32px] p-12 text-center"
+        >
+          <p className="text-gray-500 text-lg">（UI界面，还没想好，不用导入）</p>
+        </motion.div>
       </div>
     </Layout>
   );
