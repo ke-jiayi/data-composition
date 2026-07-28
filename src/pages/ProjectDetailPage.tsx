@@ -12,42 +12,30 @@ import type { Dataset, DataRow } from '../utils/db';
 
 const PYTHON_CODE = `import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.rcParams['font.sans-serif'] = ['SimHei']
-matplotlib.rcParams['axes.unicode_minus'] = False
 
-# 1. 读取数据
-df = pd.read_csv('城市居民消费价格指数.csv')
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
 
-# 2. 数据清洗
-# 检查缺失值
-print("缺失值统计：")
-print(df.isnull().sum())
+# 读取数据
+df = pd.read_excel('城市1.xlsx', header=1)
 
-# 删除包含缺失值的行
-df_clean = df.dropna()
+# 转换数据：把月份从列变成行
+df_plot = df.set_index(df.columns[0]).dropna(how='all')
+df_plot_T = df_plot.T
 
-# 转换日期格式
-df_clean['日期'] = pd.to_datetime(df_clean['日期'])
-
-# 按日期排序
-df_clean = df_clean.sort_values('日期')
-
-# 3. 数据探索
-print("数据概览：")
-print(df_clean.describe())
-
-# 4. 可视化：城市居民消费价格指数趋势图
+# 绘制折线图
 plt.figure(figsize=(12, 6))
-plt.plot(df_clean['日期'], df_clean['CPI指数'], 
-         marker='o', linewidth=2, markersize=4)
-plt.title('城市居民消费价格指数趋势图', fontsize=16)
-plt.xlabel('日期', fontsize=12)
-plt.ylabel('CPI指数', fontsize=12)
+for col in df_plot_T.columns[:5]:
+    plt.plot(df_plot_T.index, df_plot_T[col], marker='o', label=col)
+
+plt.title('城市居民消费价格指数趋势', fontsize=14)
+plt.xlabel('月份')
+plt.ylabel('指数')
+plt.legend(loc='best')
 plt.grid(True, alpha=0.3)
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig('城市价格指数趋势图.png', dpi=150, bbox_inches='tight')
+
+# 保存图片
+plt.savefig('折线图.png', dpi=300, bbox_inches='tight')
 plt.show()`;
 
 export function ProjectDetailPage() {
