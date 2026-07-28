@@ -10,6 +10,46 @@ import type { Dataset, DataRow } from '../utils/db';
 
 // TabType 已从 TabNavigation 导入
 
+const PYTHON_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+matplotlib.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取数据
+df = pd.read_csv('城市居民消费价格指数.csv')
+
+# 2. 数据清洗
+# 检查缺失值
+print("缺失值统计：")
+print(df.isnull().sum())
+
+# 删除包含缺失值的行
+df_clean = df.dropna()
+
+# 转换日期格式
+df_clean['日期'] = pd.to_datetime(df_clean['日期'])
+
+# 按日期排序
+df_clean = df_clean.sort_values('日期')
+
+# 3. 数据探索
+print("数据概览：")
+print(df_clean.describe())
+
+# 4. 可视化：城市居民消费价格指数趋势图
+plt.figure(figsize=(12, 6))
+plt.plot(df_clean['日期'], df_clean['CPI指数'], 
+         marker='o', linewidth=2, markersize=4)
+plt.title('城市居民消费价格指数趋势图', fontsize=16)
+plt.xlabel('日期', fontsize=12)
+plt.ylabel('CPI指数', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('城市价格指数趋势图.png', dpi=150, bbox_inches='tight')
+plt.show()`;
+
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +61,7 @@ export function ProjectDetailPage() {
   const [cleanedData, setCleanedData] = useState<DataRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [codeExpanded, setCodeExpanded] = useState(false);
 
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
@@ -240,7 +281,7 @@ export function ProjectDetailPage() {
 
           {/* Tab 2: 数据清洗 */}
           {activeTab === 'clean' && (
-            <div>
+            <div className="space-y-4">
               {id && (
                 <DataCleaning
                   data={cleanedData}
@@ -248,6 +289,29 @@ export function ProjectDetailPage() {
                   onDataChange={handleCleanedDataChange}
                 />
               )}
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <button
+                  onClick={() => setCodeExpanded(!codeExpanded)}
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                >
+                  <span className="text-sm font-medium text-gray-900">📊 数据清洗与可视化代码</span>
+                  <svg
+                    className={`w-5 h-5 text-gray-500 transition-transform ${codeExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {codeExpanded && (
+                  <div className="border-t border-gray-200">
+                    <pre className="bg-gray-900 text-gray-100 p-4 overflow-x-auto text-sm font-mono leading-relaxed">
+                      <code>{PYTHON_CODE}</code>
+                    </pre>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
