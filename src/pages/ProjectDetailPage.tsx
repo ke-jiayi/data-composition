@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
-import { TabNavigation } from '../components/TabNavigation';
+import { TabNavigation, type TabType } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
+import { ChartPanel } from '../components/charts';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow } from '../utils/db';
 
-type TabType = 'table' | 'clean';
+// TabType 已从 TabNavigation 导入
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -248,6 +249,17 @@ export function ProjectDetailPage() {
                   onDataChange={handleCleanedDataChange}
                 />
               )}
+            </div>
+          )}
+
+          {/* Tab 3: 可视化分析 */}
+          {activeTab === 'chart' && (
+            <div>
+              <ChartPanel 
+                data={cleanedData.length > 0 ? cleanedData : rawData}
+                fields={dataset?.columns || []}
+                height={280}
+              />
             </div>
           )}
         </div>

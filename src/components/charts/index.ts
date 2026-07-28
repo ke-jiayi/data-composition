@@ -23,7 +23,7 @@ export { MapChart, detectRegionField } from './MapChart';
 export type { MapChartProps } from './MapChart';
 
 export { ChartPanel } from './ChartPanel';
-export type { ChartPanelProps, ChartType } from './ChartPanel';
+export type { ChartPanelProps, ChartType, AggregationType } from './ChartPanel';
 
 // 配置面板
 export { ChartConfigPanel } from './ChartConfigPanel';
