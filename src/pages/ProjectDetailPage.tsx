@@ -4,7 +4,6 @@ import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
-import { ChartPanel } from '../components/charts';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow } from '../utils/db';
@@ -254,23 +253,16 @@ export function ProjectDetailPage() {
 
           {/* Tab 3: 可视化分析 */}
           {activeTab === 'chart' && (
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">城市居民消费价格指数趋势图</h3>
-                <div className="flex justify-center">
-                  <img
-                    src="/images/城市价格指数趋势图.png.png"
-                    alt="城市居民消费价格指数趋势图"
-                    className="w-full max-h-[500px] object-contain rounded"
-                  />
-                </div>
-                <p className="text-sm text-gray-500 mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">城市居民消费价格指数趋势图</h3>
+              <div className="flex justify-center">
+                <img
+                  src="/images/城市价格指数趋势图.png.png"
+                  alt="城市居民消费价格指数趋势图"
+                  className="w-full max-h-[500px] object-contain rounded"
+                />
               </div>
-              <ChartPanel 
-                data={cleanedData.length > 0 ? cleanedData : rawData}
-                fields={dataset?.columns || []}
-                height={280}
-              />
+              <p className="text-sm text-gray-500 mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
             </div>
           )}
         </div>
