@@ -130,9 +130,6 @@ export const ChartPanel = ({
           itemStyle: { color: CHART_COLORS[0] },
           emphasis: { focus: 'series' },
           selectedMode: 'single',
-          selected: selectedCategory
-            ? { dataIndex: xAxisData.indexOf(selectedCategory) }
-            : undefined,
         }],
       };
     }
@@ -156,9 +153,6 @@ export const ChartPanel = ({
           areaStyle: { opacity: 0.3 },
           emphasis: { focus: 'series' },
           selectedMode: 'single',
-          selected: selectedCategory
-            ? { dataIndex: xAxisData.indexOf(selectedCategory) }
-            : undefined,
         }],
       };
     }
