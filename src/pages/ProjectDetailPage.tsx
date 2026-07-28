@@ -315,7 +315,48 @@ export function ProjectDetailPage() {
             </div>
           )}
 
-          {/* Tab 3: 可视化分析 */}
+          {/* Tab 3: 分析结论 */}
+          {activeTab === 'conclusion' && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                  <span className="text-xl">💡</span>
+                  数据分析结论
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex gap-4 p-4 bg-red-50 border border-red-100 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      1
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">食品烟酒类价格波动最大</h4>
+                      <p className="text-sm text-gray-600">是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 bg-orange-50 border border-orange-100 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      2
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">衣着类价格呈现持续上涨趋势</h4>
+                      <p className="text-sm text-gray-600">1-5月累计上涨 1.8%，涨幅较为明显，需关注后续价格走势</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 bg-green-50 border border-green-100 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      3
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">居住类价格保持稳定</h4>
+                      <p className="text-sm text-gray-600">波动幅度最小，是稳定物价的重要支撑因素</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 4: 可视化分析 */}
           {activeTab === 'chart' && (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">城市居民消费价格指数趋势图</h3>
