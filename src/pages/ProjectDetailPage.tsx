@@ -254,7 +254,18 @@ export function ProjectDetailPage() {
 
           {/* Tab 3: 可视化分析 */}
           {activeTab === 'chart' && (
-            <div>
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">城市居民消费价格指数趋势图</h3>
+                <div className="flex justify-center">
+                  <img
+                    src="/images/城市价格指数趋势图.png.png"
+                    alt="城市居民消费价格指数趋势图"
+                    className="w-full max-h-[500px] object-contain rounded"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
+              </div>
               <ChartPanel 
                 data={cleanedData.length > 0 ? cleanedData : rawData}
                 fields={dataset?.columns || []}
