@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
+import { SmartAnalysis } from '../components/SmartAnalysis';
 import { useDB } from '../hooks/useDB';
 import { useImportModal } from '../contexts/ImportModalContext';
 import type { Dataset, DataRow } from '../utils/db';
@@ -342,6 +343,11 @@ export function ProjectDetailPage() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Tab: 智能分析 */}
+          {activeTab === 'smart' && (
+            <SmartAnalysis data={cleanedData.length > 0 ? cleanedData : rawData} columns={dataset?.columns || []} />
           )}
 
           {/* Tab 4: 可视化分析 */}

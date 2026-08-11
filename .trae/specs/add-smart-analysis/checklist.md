@@ -1,0 +1,10 @@
+- [ ] SmartAnalysis.tsx 组件存在，能自动检测列类型
+- [ ] 根据列类型推荐合适图表（折线/柱状/饼/雷达）
+- [ ] 生成 3-5 张图表，卡片网格展示
+- [ ] 每张图表右上角有类型切换按钮
+- [ ] 图表高度 280px，使用 ECharts 渲染
+- [ ] 数据<3行时显示提示
+- [ ] TabNavigation 包含 'smart' Tab
+- [ ] ProjectDetailPage 包含智能分析渲染块
+- [ ] TypeScript 编译通过
+- [ ] 代码已提交并推送

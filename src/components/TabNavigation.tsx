@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
-export type TabType = 'table' | 'clean' | 'conclusion' | 'chart';
+export type TabType = 'table' | 'clean' | 'conclusion' | 'chart' | 'smart';
 
 interface TabItem {
   key: TabType;
@@ -56,6 +56,11 @@ const tabs: TabItem[] = [
         />
       </svg>
     ),
+  },
+  {
+    key: 'smart' as TabType,
+    label: '智能分析',
+    icon: <span className="text-lg leading-5">🤖</span>,
   },
   {
     key: 'chart',
@@ -114,7 +119,7 @@ export function useTabState(defaultTab: TabType = 'table'): [TabType, (tab: TabT
 
   const tabFromUrl = searchParams.get('tab') as TabType | null;
   const activeTab: TabType =
-    tabFromUrl && ['table', 'clean', 'conclusion', 'chart'].includes(tabFromUrl)
+    tabFromUrl && ['table', 'clean', 'conclusion', 'chart', 'smart'].includes(tabFromUrl)
       ? tabFromUrl
       : defaultTab;
 
