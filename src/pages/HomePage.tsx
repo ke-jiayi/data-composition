@@ -45,12 +45,13 @@ export function HomePage() {
   const today = new Date();
   const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets } = useDB();
+  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [deleteTarget, setDeleteTarget] = useState<Dataset | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const datasetsRef = useRef<HTMLDivElement>(null);
 
@@ -81,6 +82,17 @@ export function HomePage() {
       setDatasets(allDatasets);
     } catch (error) {
       console.error('加载数据集失败:', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await deleteDataset(deleteTarget.id);
+      await loadDatasets();
+      setDeleteTarget(null);
+    } catch (error) {
+      console.error('删除数据集失败:', error);
     }
   };
 
@@ -369,6 +381,31 @@ export function HomePage() {
                     to={`/project/${dataset.id}`}
                     className="group relative overflow-hidden bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:shadow-cyan-500/5 hover:border-cyan-300/40 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                   >
+                    {/* 删除按钮 */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDeleteTarget(dataset);
+                      }}
+                      className="absolute top-3 right-3 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                      aria-label="删除数据集"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
                     {/* 卡片顶部色条 */}
                     <div
                       className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity"
@@ -461,6 +498,34 @@ export function HomePage() {
           <p>© 2026 Data Portfolio · 用数据记录成长 · Crafted with React & Python</p>
         </motion.div>
       </section>
+
+      {/* 删除确认对话框 */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 p-6">
+            <h3 className="text-lg font-semibold text-gray-900">确认删除</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              确定要删除 {deleteTarget.name} 吗？此操作不可撤销。
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+              >
+                确认删除
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
