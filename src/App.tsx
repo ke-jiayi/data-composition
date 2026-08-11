@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { HomePage, ProjectDetailPage, ProjectListPage, AboutPage } from './pages';
+import { HomePage, ProjectDetailPage, ProjectListPage, AboutPage, DashboardPage } from './pages';
 import PowerBIPage from './pages/PowerBIPage';
 import { ImportModal } from './components';
 import { useDB } from './hooks/useDB';
@@ -54,6 +54,8 @@ function AppContent() {
         <Route path="/about" element={<AboutPage />} />
         {/* Power BI 看板页面 */}
         <Route path="/powerbi" element={<PowerBIPage />} />
+        {/* 数据大屏页面 */}
+        <Route path="/dashboard" element={<DashboardPage />} />
         {/* 其他路由重定向到首页 */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
