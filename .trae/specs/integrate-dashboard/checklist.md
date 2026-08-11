@@ -1,7 +1,7 @@
-- [ ] DashboardPage.tsx 组件存在，使用 Layout 包裹并 iframe 嵌入 /dashboard.html
-- [ ] src/pages/index.ts 导出 DashboardPage
-- [ ] App.tsx 包含 /dashboard 路由
-- [ ] HomePage 包含"📊 数据大屏"入口卡片，点击跳转到 /dashboard
-- [ ] 卡片样式与首页风格一致（渐变色、hover 效果）
-- [ ] TypeScript 编译通过（npx tsc --noEmit 无错误）
-- [ ] 代码已提交并推送到 GitHub
+- [x] DashboardPage.tsx 组件存在，使用 Layout 包裹并 iframe 嵌入 /dashboard.html
+- [x] src/pages/index.ts 导出 DashboardPage
+- [x] App.tsx 包含 /dashboard 路由
+- [x] HomePage 包含"📊 数据大屏"入口卡片，点击跳转到 /dashboard
+- [x] 卡片样式与首页风格一致（渐变色、hover 效果）
+- [x] TypeScript 编译通过（npx tsc --noEmit 无错误）
+- [x] 代码已提交并推送到 GitHub
