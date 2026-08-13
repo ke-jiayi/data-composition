@@ -39,6 +39,12 @@ plt.grid(True, alpha=0.3)
 plt.savefig('折线图.png', dpi=300, bbox_inches='tight')
 plt.show()`;
 
+const DEFAULT_CONCLUSIONS = [
+  '食品烟酒类价格波动最大，是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著',
+  '衣着类价格呈现持续上涨趋势，1-5月累计上涨 1.8%，涨幅较为明显，需关注后续价格走势',
+  '居住类价格保持稳定，波动幅度最小，是稳定物价的重要支撑因素',
+];
+
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,6 +58,9 @@ export function ProjectDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [code, setCode] = useState(PYTHON_CODE);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [conclusions, setConclusions] = useState<string[]>(DEFAULT_CONCLUSIONS);
+  const [editingConclusion, setEditingConclusion] = useState<number | null>(null);
+  const [conclusionSaveStatus, setConclusionSaveStatus] = useState<{ [key: number]: 'idle' | 'saving' | 'saved' }>({});
 
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
@@ -73,6 +82,7 @@ export function ProjectDetailPage() {
         } else {
           setDataset(datasetData);
           setCode(datasetData.code || PYTHON_CODE);
+          setConclusions(datasetData.conclusions && datasetData.conclusions.length > 0 ? datasetData.conclusions : DEFAULT_CONCLUSIONS);
           setRawData(data);
           setCleanedData(data); // 初始化清洗后数据为原始数据
         }
@@ -107,6 +117,33 @@ export function ProjectDetailPage() {
       console.error('保存代码失败:', error);
       setSaveStatus('idle');
     }
+  };
+
+  const handleSaveConclusion = async (index: number) => {
+    if (!dataset) return;
+    setConclusionSaveStatus(prev => ({ ...prev, [index]: 'saving' }));
+    try {
+      await updateDataset({ ...dataset, conclusions });
+      setConclusionSaveStatus(prev => ({ ...prev, [index]: 'saved' }));
+      setEditingConclusion(null);
+      setTimeout(() => setConclusionSaveStatus(prev => ({ ...prev, [index]: 'idle' })), 2000);
+    } catch (error) {
+      console.error('保存结论失败:', error);
+      setConclusionSaveStatus(prev => ({ ...prev, [index]: 'idle' }));
+    }
+  };
+
+  const handleDeleteConclusion = (index: number) => {
+    const newConclusions = conclusions.filter((_, i) => i !== index);
+    setConclusions(newConclusions);
+    if (dataset) {
+      updateDataset({ ...dataset, conclusions: newConclusions });
+    }
+  };
+
+  const handleAddConclusion = () => {
+    setConclusions([...conclusions, '']);
+    setEditingConclusion(conclusions.length);
   };
 
   // 加载状态
@@ -326,34 +363,81 @@ export function ProjectDetailPage() {
                   数据分析结论
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex gap-4 p-4 bg-red-50 border border-red-100 rounded-lg">
-                    <div className="flex-shrink-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      1
+                  {conclusions.map((conclusion, index) => (
+                    <div
+                      key={index}
+                      className={`flex gap-4 p-4 rounded-lg border transition-colors ${
+                        editingConclusion === index
+                          ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-100'
+                          : 'bg-gray-50 border-gray-100'
+                      }`}
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-[#1e3a5f] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        {editingConclusion === index ? (
+                          <textarea
+                            value={conclusion}
+                            onChange={(e) => {
+                              const newConclusions = [...conclusions];
+                              newConclusions[index] = e.target.value;
+                              setConclusions(newConclusions);
+                            }}
+                            className="w-full p-2 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 min-h-[80px] resize-y"
+                            placeholder="请输入分析结论..."
+                            autoFocus
+                          />
+                        ) : (
+                          <p
+                            className="text-sm text-gray-600 cursor-pointer hover:text-gray-900"
+                            onClick={() => setEditingConclusion(index)}
+                          >
+                            {conclusion || '点击编辑...'}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 mt-2">
+                          {editingConclusion === index ? (
+                            <>
+                              <button
+                                onClick={() => handleSaveConclusion(index)}
+                                disabled={conclusionSaveStatus[index] === 'saving'}
+                                className="px-3 py-1 text-xs font-medium text-white bg-[#1e3a5f] rounded-lg hover:bg-[#2d4a6f] transition-colors disabled:opacity-50"
+                              >
+                                {conclusionSaveStatus[index] === 'saving' ? '保存中...' : conclusionSaveStatus[index] === 'saved' ? '✓ 已保存' : '保存修改'}
+                              </button>
+                              <button
+                                onClick={() => setEditingConclusion(null)}
+                                className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                              >
+                                取消
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => setEditingConclusion(index)}
+                              className="text-xs text-gray-400 hover:text-[#1e3a5f] transition-colors"
+                            >
+                              ✏️ 编辑
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDeleteConclusion(index)}
+                            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                          >
+                            🗑️ 删除
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-1">食品烟酒类价格波动最大</h4>
-                      <p className="text-sm text-gray-600">是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 p-4 bg-orange-50 border border-orange-100 rounded-lg">
-                    <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      2
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-1">衣着类价格呈现持续上涨趋势</h4>
-                      <p className="text-sm text-gray-600">1-5月累计上涨 1.8%，涨幅较为明显，需关注后续价格走势</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 p-4 bg-green-50 border border-green-100 rounded-lg">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      3
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-1">居住类价格保持稳定</h4>
-                      <p className="text-sm text-gray-600">波动幅度最小，是稳定物价的重要支撑因素</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
+                <button
+                  onClick={handleAddConclusion}
+                  className="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-[#1e3a5f] hover:text-[#1e3a5f] transition-colors"
+                >
+                  + 添加新结论
+                </button>
               </div>
             </div>
           )}

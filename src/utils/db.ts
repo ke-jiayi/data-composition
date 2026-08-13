@@ -14,6 +14,7 @@ export interface Dataset {
   updatedAt: number;
   tags?: string[];
   code?: string;
+  conclusions?: string[];
 }
 
 // 数据行类型
