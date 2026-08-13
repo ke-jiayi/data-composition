@@ -37,14 +37,14 @@ export function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0a0e1a]">
       {/* Header */}
       <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed left-0 top-16 bottom-0 w-[240px] bg-white shadow-lg border-r border-gray-200 z-30 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-16 bottom-0 w-[240px] bg-[#0a0e1a]/95 backdrop-blur-md shadow-[4px_0_30px_rgba(168,85,247,0.15)] border-r border-purple-500/20 z-30 transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -57,8 +57,8 @@ export function Layout({ children }: LayoutProps) {
                   onClick={handleNavClick}
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                     isActive(link.to)
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                      ? 'text-cyan-300 bg-purple-500/10 border-l-2 border-cyan-400'
+                      : 'text-gray-400 hover:text-purple-300 hover:bg-purple-500/5'
                   }`}
                 >
                   {link.label}

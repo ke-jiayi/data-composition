@@ -121,32 +121,32 @@ export function HomePage() {
             <div className="absolute top-0 right-0">
               <button
                 onClick={() => navigate('/')}
-                className="px-3 py-1.5 text-xs md:text-sm font-medium text-gray-500 border border-gray-200 rounded-lg hover:text-cyan-600 hover:border-cyan-300 hover:bg-cyan-50 transition-colors"
+                className="px-3 py-1.5 text-xs md:text-sm font-medium text-purple-300/70 border border-purple-500/30 rounded-lg hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-purple-500/10 transition-colors"
               >
                 ← 返回封面
               </button>
             </div>
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">📊 数据作品集</h1>
-              <p className="text-base text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2">📊 数据作品集</h1>
+              <p className="text-base text-purple-200/70">数据分析 · 数据可视化 · 个人作品集</p>
               <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
             </div>
           </div>
           {/* 主内容卡片容器 */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.1)] border border-purple-500/20 p-6 md:p-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-cyan-200 flex items-center gap-2">
                   <span className="w-1 h-6 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
                   我 的 数 据 集
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">已导入 {datasets.length} 个数据集</p>
+                <p className="mt-1 text-sm text-purple-200/60">已导入 {datasets.length} 个数据集</p>
               </div>
               <div className="flex items-center gap-4">
                 <button
                   onClick={handleImport}
                   disabled={isImporting || dbLoading}
-                  className="px-4 py-2 bg-gradient-to-r from-[#1e3a5f] to-[#2a4a73] text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-500/10 hover:scale-[1.02] transition-all"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
                 >
                   {isImporting ? '导入中...' : '导 入 数 据'}
                 </button>
@@ -162,18 +162,18 @@ export function HomePage() {
 
           {/* 导入成功提示 */}
           {importSuccess && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-green-700 font-medium">✓ 数据导入成功！</p>
+            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <p className="text-green-300 font-medium">✓ 数据导入成功！</p>
             </div>
           )}
 
           {/* 导入失败提示 */}
           {importError && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex justify-between items-center">
-              <p className="text-red-700 font-medium">✗ {importError}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex justify-between items-center">
+              <p className="text-red-300 font-medium">✗ {importError}</p>
               <button
                 onClick={() => setImportError(null)}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-400 hover:text-red-300"
               >
                 ✕
               </button>
@@ -182,26 +182,26 @@ export function HomePage() {
 
           {/* 统计卡片 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-cyan-600" />
-              <p className="text-xs text-gray-500 mb-2 tracking-wider">总 数 据 集</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 数 据 集</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(datasets.length)}
-                <span className="ml-2 text-sm font-medium text-gray-500">个</span>
+                <span className="ml-2 text-sm font-medium text-purple-200/50">个</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-purple-600" />
-              <p className="text-xs text-gray-500 mb-2 tracking-wider">总 数 据 行</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 数 据 行</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(datasets.reduce((sum, d) => sum + d.rowCount, 0))}
-                <span className="ml-2 text-sm font-medium text-gray-500">行</span>
+                <span className="ml-2 text-sm font-medium text-purple-200/50">行</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-sky-400 to-sky-600" />
-              <p className="text-xs text-gray-500 mb-2 tracking-wider">最 近 更 新</p>
-              <p className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
+              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-fuchsia-400 to-fuchsia-600" />
+              <p className="text-xs text-purple-200/60 mb-2 tracking-wider">最 近 更 新</p>
+              <p className="text-2xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {datasets.length > 0 ? formatDate(datasets[0].updatedAt) : '暂无'}
               </p>
             </div>
@@ -211,7 +211,7 @@ export function HomePage() {
           <div className="mb-6">
             <div className="relative">
               <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/60"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -223,7 +223,7 @@ export function HomePage() {
                 placeholder="搜索数据集名称或文件名..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/40 transition-all text-sm"
+                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-cyan-400/50 text-gray-100 placeholder-purple-200/40 transition-all text-sm"
               />
             </div>
           </div>
@@ -236,7 +236,7 @@ export function HomePage() {
                   <Link
                     key={dataset.id}
                     to={`/project/${dataset.id}`}
-                    className="group relative overflow-hidden bg-gradient-to-b from-white to-gray-50/30 rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-cyan-400/60 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
+                    className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-5 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
                   >
                     {/* 删除按钮 */}
                     <button
@@ -246,7 +246,7 @@ export function HomePage() {
                         e.stopPropagation();
                         setDeleteTarget(dataset);
                       }}
-                      className="absolute top-3 right-3 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                      className="absolute top-3 right-3 p-1.5 rounded-lg text-purple-300/50 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
                       aria-label="删除数据集"
                     >
                       <svg
@@ -276,7 +276,7 @@ export function HomePage() {
                       }}
                     />
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-800 line-clamp-1">
+                      <h3 className="text-lg font-semibold text-cyan-100 group-hover:text-cyan-200 line-clamp-1">
                         {dataset.name}
                       </h3>
                       <span
@@ -294,13 +294,13 @@ export function HomePage() {
                       </span>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm text-gray-600 flex items-center gap-1.5">
-                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <p className="text-sm text-purple-100/80 flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-purple-300/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                         </svg>
                         {formatNumber(dataset.rowCount)} 行数据
                       </p>
-                      <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                      <p className="text-xs text-purple-200/50 flex items-center gap-1.5">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
@@ -308,7 +308,7 @@ export function HomePage() {
                       </p>
                     </div>
                     {/* 卡片底部箭头指示 */}
-                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 group-hover:text-cyan-500 transition-colors">
+                    <div className="mt-4 pt-3 border-t border-purple-500/10 flex items-center justify-between text-xs text-purple-200/40 group-hover:text-cyan-300 transition-colors">
                       <span>查看详情</span>
                       <svg
                         className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
@@ -323,16 +323,16 @@ export function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-14 bg-gray-50/60 rounded-xl border border-gray-200 border-dashed">
-                <div className="text-gray-300 text-5xl mb-3">🔍</div>
-                <p className="text-gray-500">未找到匹配的数据集</p>
+              <div className="text-center py-14 bg-white/5 rounded-xl border border-purple-500/20 border-dashed">
+                <div className="text-purple-300/40 text-5xl mb-3">🔍</div>
+                <p className="text-purple-200/60">未找到匹配的数据集</p>
               </div>
             )
           ) : (
-            <div className="text-center py-16 bg-gray-50/60 rounded-xl border border-gray-200 border-dashed">
-              <div className="text-gray-300 text-6xl mb-4">📁</div>
-              <p className="text-gray-600 text-lg mb-2 font-medium">暂无数据集</p>
-              <p className="text-gray-400 text-sm mb-6">开始导入你第一个数据作品吧</p>
+            <div className="text-center py-16 bg-white/5 rounded-xl border border-purple-500/20 border-dashed">
+              <div className="text-purple-300/40 text-6xl mb-4">📁</div>
+              <p className="text-cyan-200 text-lg mb-2 font-medium">暂无数据集</p>
+              <p className="text-purple-200/50 text-sm mb-6">开始导入你第一个数据作品吧</p>
               <button
                 onClick={handleImport}
                 disabled={isImporting || dbLoading}
@@ -350,7 +350,7 @@ export function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="mt-8 py-8 text-center text-sm text-gray-400 border-t border-gray-200"
+            className="mt-8 py-8 text-center text-sm text-purple-200/40 border-t border-purple-500/10"
           >
             <p>© 2026 Data Portfolio · 用数据记录成长 · Crafted with React & Python</p>
           </motion.div>
@@ -359,17 +359,17 @@ export function HomePage() {
 
       {/* 删除确认对话框 */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 p-6">
-            <h3 className="text-lg font-semibold text-gray-900">确认删除</h3>
-            <p className="mt-2 text-sm text-gray-600">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#0f1424] rounded-xl shadow-[0_0_40px_rgba(168,85,247,0.3)] border border-purple-500/30 w-full max-w-sm mx-4 p-6">
+            <h3 className="text-lg font-semibold text-cyan-200">确认删除</h3>
+            <p className="mt-2 text-sm text-purple-100/80">
               确定要删除 {deleteTarget.name} 吗？此操作不可撤销。
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
               >
                 取消
               </button>

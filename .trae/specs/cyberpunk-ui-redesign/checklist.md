@@ -1,0 +1,23 @@
+# Checklist
+
+- [x] `src/index.css` 中 `:root` 与 `@theme` 的 background/surface/text/border 变量已改为深蓝黑/浅色/霓虹边
+- [x] `src/index.css` 中 `body` 背景为深蓝黑，文字为浅色
+- [x] `src/index.css` 中 `::selection`、scrollbar 配色为深色 + 紫色高亮
+- [x] `src/index.css` 中 `.card`、`.btn`、`.input`、`.data-table` 等组件类已改为深色玻璃态样式（类名未变）
+- [x] `src/components/Layout.tsx` 根容器背景为深蓝黑（非 `bg-gray-50`）
+- [x] `src/components/Layout.tsx` 侧边栏为深色玻璃态，激活态链接为霓虹紫/青
+- [x] `src/components/Header.tsx` 背景为深蓝黑半透明 + backdrop-blur
+- [x] `src/components/Header.tsx` 底部边框为霓虹紫细线，"✈️ 导航"文字为霓虹色
+- [x] `src/pages/WelcomePage.tsx` 已移除主标题上方的 `📊` emoji 图标
+- [x] `src/pages/WelcomePage.tsx` 背景层新增紫色流光折线图 SVG 装饰（带 blur 辉光）
+- [x] `src/pages/WelcomePage.tsx` 点击任意位置跳转 `/home` 逻辑不变
+- [x] `src/pages/HomePage.tsx` 主内容卡片容器为深色玻璃态
+- [x] `src/pages/HomePage.tsx` 三个统计卡片为深色玻璃态 + 霓虹色条
+- [x] `src/pages/HomePage.tsx` 搜索框为深色背景 + 霓虹聚焦边框
+- [x] `src/pages/HomePage.tsx` 数据集卡片为深色玻璃态 + 霓虹悬停光晕
+- [x] `src/pages/HomePage.tsx` "导入数据"按钮为霓虹渐变风格
+- [x] `src/pages/HomePage.tsx` 空状态、删除确认框、提示框为深色基调
+- [x] `src/pages/HomePage.tsx` "← 返回封面"按钮为深色霓虹边框风格
+- [x] `src/pages/HomePage.tsx` 所有功能逻辑代码（handleImport、handleFileChange、handleDelete、搜索过滤、Link 跳转、useDB 调用）完全未改动
+- [x] `npm run build` 构建成功，无 TypeScript 错误
+- [x] 本地 `npm run dev` 验证封面页、首页、项目详情页视觉为赛博朋克深色风且功能正常
