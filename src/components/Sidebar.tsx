@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const navLinks = [
-  { to: '/', label: '首页' },
+  { to: '/home', label: '首页' },
   { to: '/projects', label: '项目' },
   { to: '/about', label: '关于' },
 ];
