@@ -114,37 +114,40 @@ export function HomePage() {
     <Layout>
       {/* ============ 数据集列表区域 ============ */}
       <section id="datasets">
-        <div className="max-w-5xl mx-auto pt-6 pb-8">
+        <div className="max-w-6xl mx-auto py-8 px-4 md:px-6">
           {/* 页面标题 */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">📊 数据作品集</h1>
-            <p className="mt-1 text-sm text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">📊 数据作品集</h1>
+            <p className="text-base text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
+            <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
           </div>
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <span className="w-1 h-6 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
-                我 的 数 据 集
-              </h2>
-              <p className="mt-1 text-sm text-gray-500">已导入 {datasets.length} 个数据集</p>
+          {/* 主内容卡片容器 */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <span className="w-1 h-6 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
+                  我 的 数 据 集
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">已导入 {datasets.length} 个数据集</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleImport}
+                  disabled={isImporting || dbLoading}
+                  className="px-4 py-2 bg-gradient-to-r from-[#1e3a5f] to-[#2a4a73] text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-500/10 hover:scale-[1.02] transition-all"
+                >
+                  {isImporting ? '导入中...' : '导 入 数 据'}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,.xlsx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleImport}
-                disabled={isImporting || dbLoading}
-                className="px-4 py-2 bg-gradient-to-r from-[#1e3a5f] to-[#2a4a73] text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-500/10 hover:scale-[1.02] transition-all"
-              >
-                {isImporting ? '导入中...' : '导 入 数 据'}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv,.xlsx"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
-          </div>
 
           {/* 导入成功提示 */}
           {importSuccess && (
@@ -167,8 +170,8 @@ export function HomePage() {
           )}
 
           {/* 统计卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
+            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-cyan-600" />
               <p className="text-xs text-gray-500 mb-2 tracking-wider">总 数 据 集</p>
               <p className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -176,7 +179,7 @@ export function HomePage() {
                 <span className="ml-2 text-sm font-medium text-gray-500">个</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-purple-600" />
               <p className="text-xs text-gray-500 mb-2 tracking-wider">总 数 据 行</p>
               <p className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -184,7 +187,7 @@ export function HomePage() {
                 <span className="ml-2 text-sm font-medium text-gray-500">行</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="relative overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-sky-400 to-sky-600" />
               <p className="text-xs text-gray-500 mb-2 tracking-wider">最 近 更 新</p>
               <p className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -222,7 +225,7 @@ export function HomePage() {
                   <Link
                     key={dataset.id}
                     to={`/project/${dataset.id}`}
-                    className="group relative overflow-hidden bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:shadow-cyan-500/5 hover:border-cyan-300/40 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                    className="group relative overflow-hidden bg-gradient-to-b from-white to-gray-50/30 rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:shadow-cyan-500/10 hover:border-cyan-400/60 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
                   >
                     {/* 删除按钮 */}
                     <button
@@ -309,13 +312,13 @@ export function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-white rounded-xl border border-gray-200 border-dashed">
+              <div className="text-center py-14 bg-gray-50/60 rounded-xl border border-gray-200 border-dashed">
                 <div className="text-gray-300 text-5xl mb-3">🔍</div>
                 <p className="text-gray-500">未找到匹配的数据集</p>
               </div>
             )
           ) : (
-            <div className="text-center py-20 bg-white rounded-xl border border-gray-200 border-dashed">
+            <div className="text-center py-16 bg-gray-50/60 rounded-xl border border-gray-200 border-dashed">
               <div className="text-gray-300 text-6xl mb-4">📁</div>
               <p className="text-gray-600 text-lg mb-2 font-medium">暂无数据集</p>
               <p className="text-gray-400 text-sm mb-6">开始导入你第一个数据作品吧</p>
@@ -328,18 +331,19 @@ export function HomePage() {
               </button>
             </div>
           )}
-        </div>
+          </div>
 
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="mt-8 py-8 text-center text-sm text-gray-400 border-t border-gray-200"
-        >
-          <p>© 2026 Data Portfolio · 用数据记录成长 · Crafted with React & Python</p>
-        </motion.div>
+          {/* Footer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="mt-8 py-8 text-center text-sm text-gray-400 border-t border-gray-200"
+          >
+            <p>© 2026 Data Portfolio · 用数据记录成长 · Crafted with React & Python</p>
+          </motion.div>
+        </div>
       </section>
 
       {/* 删除确认对话框 */}
