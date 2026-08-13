@@ -13,6 +13,7 @@ export interface Dataset {
   createdAt: number;
   updatedAt: number;
   tags?: string[];
+  code?: string;
 }
 
 // 数据行类型

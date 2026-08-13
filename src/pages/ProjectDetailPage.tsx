@@ -1,4 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs';
+import 'prismjs/components/prism-python';
+import 'prismjs/themes/prism-tomorrow.css';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
@@ -42,7 +46,7 @@ plt.show()`;
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { getDataset, getData, saveData } = useDB();
+  const { getDataset, getData, saveData, updateDataset } = useDB();
   const { openModal } = useImportModal();
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
@@ -50,7 +54,8 @@ export function ProjectDetailPage() {
   const [cleanedData, setCleanedData] = useState<DataRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [codeExpanded, setCodeExpanded] = useState(false);
+  const [code, setCode] = useState(PYTHON_CODE);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
@@ -71,6 +76,7 @@ export function ProjectDetailPage() {
           setError('数据集未找到');
         } else {
           setDataset(datasetData);
+          setCode(datasetData.code || PYTHON_CODE);
           setRawData(data);
           setCleanedData(data); // 初始化清洗后数据为原始数据
         }
@@ -93,6 +99,19 @@ export function ProjectDetailPage() {
     // 保存清洗后的数据
     await saveData(id, newData);
   }, [id, saveData]);
+
+  const handleSaveCode = async () => {
+    if (!id || !dataset) return;
+    setSaveStatus('saving');
+    try {
+      await updateDataset({ ...dataset, code });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (error) {
+      console.error('保存代码失败:', error);
+      setSaveStatus('idle');
+    }
+  };
 
   // 加载状态
   if (isLoading) {
@@ -279,27 +298,30 @@ export function ProjectDetailPage() {
                 />
               )}
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <button
-                  onClick={() => setCodeExpanded(!codeExpanded)}
-                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                >
+                <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-900">📊 数据清洗与可视化代码</span>
-                  <svg
-                    className={`w-5 h-5 text-gray-500 transition-transform ${codeExpanded ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <button
+                    onClick={handleSaveCode}
+                    disabled={saveStatus === 'saving'}
+                    className="px-3 py-1 text-sm font-medium text-white bg-[#1e3a5f] rounded-lg hover:bg-[#2d4a6f] transition-colors disabled:opacity-50"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {codeExpanded && (
-                  <div className="border-t border-gray-200">
-                    <pre className="bg-gray-900 text-gray-100 p-4 overflow-x-auto text-sm font-mono leading-relaxed">
-                      <code>{PYTHON_CODE}</code>
-                    </pre>
-                  </div>
-                )}
+                    {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
+                  </button>
+                </div>
+                <div className="bg-gray-900">
+                  <Editor
+                    value={code}
+                    onValueChange={setCode}
+                    highlight={(code) => highlight(code, languages.python, 'python')}
+                    padding={16}
+                    style={{
+                      fontFamily: '"Fira code", "Fira Mono", monospace',
+                      fontSize: 14,
+                      minHeight: 300,
+                      color: '#e5e7eb',
+                    }}
+                  />
+                </div>
               </div>
             </div>
           )}

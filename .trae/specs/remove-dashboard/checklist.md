@@ -1,7 +1,7 @@
-- [ ] DashboardPage.tsx 已删除
-- [ ] index.ts 不再导出 DashboardPage
-- [ ] App.tsx 不包含 /dashboard 路由
-- [ ] HomePage 不包含数据大屏入口卡片
-- [ ] public/dashboard.html 已删除
-- [ ] TypeScript 编译通过
-- [ ] 代码已提交并推送
+- [x] DashboardPage.tsx 已删除
+- [x] index.ts 不再导出 DashboardPage
+- [x] App.tsx 不包含 /dashboard 路由
+- [x] HomePage 不包含数据大屏入口卡片
+- [x] public/dashboard.html 已删除
+- [x] TypeScript 编译通过
+- [x] 代码已提交并推送
