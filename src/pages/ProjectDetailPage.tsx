@@ -1,8 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-python';
-import 'prismjs/themes/prism-tomorrow.css';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
@@ -309,17 +305,12 @@ export function ProjectDetailPage() {
                   </button>
                 </div>
                 <div className="bg-gray-900">
-                  <Editor
+                  <textarea
                     value={code}
-                    onValueChange={setCode}
-                    highlight={(code) => Prism.highlight(code, Prism.languages.python, 'python')}
-                    padding={16}
-                    style={{
-                      fontFamily: '"Fira code", "Fira Mono", monospace',
-                      fontSize: 14,
-                      minHeight: 300,
-                      color: '#e5e7eb',
-                    }}
+                    onChange={(e) => setCode(e.target.value)}
+                    spellCheck={false}
+                    className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-sm leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
+                    style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
                   />
                 </div>
               </div>
