@@ -1,12 +1,12 @@
-- [ ] WelcomePage 全屏封面页已创建
-- [ ] 封面显示"欢迎来到我的个人数据收集网址"
-- [ ] 封面显示"点击任意位置进入"提示
-- [ ] 点击封面任意位置跳转到 /home（路由跳转，不是下滑）
-- [ ] HomePage 路由改为 /home
-- [ ] `/` 路由指向 WelcomePage
-- [ ] Layout.tsx 导航"首页"链接指向 /home
-- [ ] MobileMenu.tsx 导航"首页"链接指向 /home
-- [ ] Sidebar.tsx 导航"首页"链接指向 /home
-- [ ] Navigate * 路由指向 /home
-- [ ] TypeScript 编译通过
-- [ ] 代码已提交并推送
+- [x] WelcomePage 全屏封面页已创建
+- [x] 封面显示"欢迎来到我的个人数据收集网址"
+- [x] 封面显示"点击任意位置进入"提示
+- [x] 点击封面任意位置跳转到 /home（路由跳转，不是下滑）
+- [x] HomePage 路由改为 /home
+- [x] `/` 路由指向 WelcomePage
+- [x] Layout.tsx 导航"首页"链接指向 /home
+- [x] MobileMenu.tsx 导航"首页"链接指向 /home
+- [x] Sidebar.tsx 导航"首页"链接指向 /home
+- [x] Navigate * 路由指向 /home
+- [x] TypeScript 编译通过
+- [x] 代码已提交并推送

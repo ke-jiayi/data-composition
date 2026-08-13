@@ -15,7 +15,7 @@
   - [ ] SubTask 2.5: src/components/MobileMenu.tsx 导航首页链接从 `/` 改为 `/home`
   - [ ] SubTask 2.6: src/components/Sidebar.tsx 导航首页链接从 `/` 改为 `/home`
 
-- [ ] Task 3: 编译验证并提交推送
+- [x] Task 3: 编译验证并提交推送
   - [ ] SubTask 3.1: 运行 npx tsc --noEmit 验证编译
   - [ ] SubTask 3.2: git commit 并 push
 

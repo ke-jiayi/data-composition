@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
@@ -19,6 +19,7 @@ function formatNumber(num: number): string {
 
 export function HomePage() {
   const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset } = useDB();
+  const navigate = useNavigate();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -116,10 +117,20 @@ export function HomePage() {
       <section id="datasets">
         <div className="max-w-6xl mx-auto py-8 px-4 md:px-6">
           {/* 页面标题 */}
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">📊 数据作品集</h1>
-            <p className="text-base text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
-            <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
+          <div className="mb-8 relative">
+            <div className="absolute top-0 right-0">
+              <button
+                onClick={() => navigate('/')}
+                className="px-3 py-1.5 text-xs md:text-sm font-medium text-gray-500 border border-gray-200 rounded-lg hover:text-cyan-600 hover:border-cyan-300 hover:bg-cyan-50 transition-colors"
+              >
+                ← 返回封面
+              </button>
+            </div>
+            <div className="text-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">📊 数据作品集</h1>
+              <p className="text-base text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
+              <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
+            </div>
           </div>
           {/* 主内容卡片容器 */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
