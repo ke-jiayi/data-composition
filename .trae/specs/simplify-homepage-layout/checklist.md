@@ -1,0 +1,10 @@
+- [ ] 全屏封面 Hero 区域已移除
+- [ ] framer-motion Hero 动画变体已移除
+- [ ] scrollToDatasets 和 datasetsRef 已移除
+- [ ] 页面顶部显示"📊 数据作品集"小标题
+- [ ] 导入按钮在标题右侧
+- [ ] 统计卡片在标题下方
+- [ ] 搜索框和数据集列表在统计卡片下方
+- [ ] Footer 动画保留
+- [ ] TypeScript 编译通过
+- [ ] 代码已提交并推送

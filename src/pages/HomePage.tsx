@@ -17,34 +17,7 @@ function formatNumber(num: number): string {
   return num.toLocaleString('zh-CN');
 }
 
-// Hero 动画变体
-const heroContainerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const heroItemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
 export function HomePage() {
-  const today = new Date();
-  const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
   const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isImporting, setIsImporting] = useState(false);
@@ -53,12 +26,6 @@ export function HomePage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [deleteTarget, setDeleteTarget] = useState<Dataset | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const datasetsRef = useRef<HTMLDivElement>(null);
-
-  // 平滑滚动到数据集列表
-  const scrollToDatasets = () => {
-    datasetsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   // 根据搜索关键词过滤数据集
   const filteredDatasets = searchQuery
@@ -145,104 +112,14 @@ export function HomePage() {
 
   return (
     <Layout>
-      {/* ============ 封面 Hero 区域 ============ */}
-      <section className="-m-6 md:-m-10 -mt-20 relative min-h-[calc(100vh-80px)] overflow-hidden">
-        {/* 深色渐变背景 + 微妙网格纹理 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-[#0a0f1e] to-slate-950" />
-        {/* 霓虹光晕装饰 */}
-        <div className="absolute top-1/4 -left-24 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 -right-24 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
-
-        {/* 居中内容 */}
-        <motion.div
-          variants={heroContainerVariants}
-          initial="hidden"
-          animate="visible"
-          className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-6 md:px-16 text-center"
-        >
-          {/* 顶部小标签 */}
-          <motion.div variants={heroItemVariants} className="mb-8">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-cyan-400/20 backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-              </span>
-              <span className="text-xs font-medium tracking-widest text-cyan-300 uppercase">
-                {dateString} · Online
-              </span>
-            </span>
-          </motion.div>
-
-          {/* 主标题 - 中英文 */}
-          <motion.h1
-            variants={heroItemVariants}
-            className="relative"
-          >
-            <span className="block font-black tracking-tight text-5xl md:text-7xl lg:text-8xl text-white leading-none">
-              Data
-              <span className="bg-gradient-to-r from-cyan-400 via-sky-400 to-purple-400 bg-clip-text text-transparent ml-2 md:ml-4">
-                Portfolio
-              </span>
-            </span>
-            <span className="mt-4 block text-2xl md:text-4xl font-bold tracking-wide text-gray-300/90">
-              数 据 作 品 集
-            </span>
-            {/* 装饰下划线 */}
-            <span className="mt-6 mx-auto block w-24 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full" />
-          </motion.h1>
-
-          {/* 副标题 */}
-          <motion.p
-            variants={heroItemVariants}
-            className="mt-8 max-w-2xl text-base md:text-lg text-gray-400 tracking-wider"
-          >
-            <span className="text-cyan-300/80">数据分析</span>
-            <span className="mx-3 text-gray-600">·</span>
-            <span className="text-purple-300/80">数据可视化</span>
-            <span className="mx-3 text-gray-600">·</span>
-            <span className="text-sky-300/80">个人作品集</span>
-          </motion.p>
-
-          {/* 探索按钮 */}
-          <motion.div variants={heroItemVariants} className="mt-12">
-            <button
-              onClick={scrollToDatasets}
-              className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold text-base shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-[1.03] transition-all duration-300 ease-out"
-            >
-              <span>探 索 作 品</span>
-              <svg
-                className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-0.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-              {/* 按钮光晕 */}
-              <span className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 to-purple-400 opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-300" />
-            </button>
-          </motion.div>
-
-          {/* 底部信息 */}
-          <motion.div variants={heroItemVariants} className="absolute bottom-8 left-0 right-0">
-            <p className="text-xs md:text-sm text-gray-500 tracking-wider">
-              数据来源：国家统计局
-              <span className="mx-3 text-gray-700">|</span>
-              技术栈：
-              <span className="text-cyan-400/80">React</span>
-              <span className="mx-1 text-gray-600">·</span>
-              <span className="text-purple-400/80">Python</span>
-              <span className="mx-1 text-gray-600">·</span>
-              <span className="text-sky-400/80">Tailwind</span>
-            </p>
-          </motion.div>
-        </motion.div>
-      </section>
-
       {/* ============ 数据集列表区域 ============ */}
-      <section ref={datasetsRef} id="datasets" className="scroll-mt-24">
-        <div className="max-w-5xl mx-auto pt-16 pb-8">
+      <section id="datasets">
+        <div className="max-w-5xl mx-auto pt-6 pb-8">
+          {/* 页面标题 */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">📊 数据作品集</h1>
+            <p className="mt-1 text-sm text-gray-500">数据分析 · 数据可视化 · 个人作品集</p>
+          </div>
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
