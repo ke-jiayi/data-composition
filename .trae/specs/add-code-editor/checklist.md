@@ -1,8 +1,8 @@
-- [ ] Dataset 接口包含 code?: string 字段
-- [ ] 数据清洗 Tab 中代码区域是可编辑的编辑器
-- [ ] 编辑器支持 Python 语法高亮
-- [ ] 编辑器下方有"保存修改"按钮
-- [ ] 点击保存后代码存储到 IndexedDB（通过 updateDataset）
-- [ ] 页面重新加载时显示上次保存的代码
-- [ ] TypeScript 编译通过
-- [ ] 代码已提交并推送
+- [x] Dataset 接口包含 code?: string 字段
+- [x] 数据清洗 Tab 中代码区域是可编辑的编辑器
+- [x] 编辑器支持 Python 语法高亮
+- [x] 编辑器下方有"保存修改"按钮
+- [x] 点击保存后代码存储到 IndexedDB（通过 updateDataset）
+- [x] 页面重新加载时显示上次保存的代码
+- [x] TypeScript 编译通过
+- [x] 代码已提交并推送

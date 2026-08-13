@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs';
+import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/themes/prism-tomorrow.css';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
@@ -312,7 +312,7 @@ export function ProjectDetailPage() {
                   <Editor
                     value={code}
                     onValueChange={setCode}
-                    highlight={(code) => highlight(code, languages.python, 'python')}
+                    highlight={(code) => Prism.highlight(code, Prism.languages.python, 'python')}
                     padding={16}
                     style={{
                       fontFamily: '"Fira code", "Fira Mono", monospace',
