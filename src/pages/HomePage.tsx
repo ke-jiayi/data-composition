@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
@@ -19,7 +19,6 @@ function formatNumber(num: number): string {
 
 export function HomePage() {
   const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset } = useDB();
-  const navigate = useNavigate();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -119,12 +118,12 @@ export function HomePage() {
           {/* 页面标题 */}
           <div className="mb-8 relative">
             <div className="absolute top-0 right-0">
-              <button
-                onClick={() => navigate('/')}
-                className="px-3 py-1.5 text-xs md:text-sm font-medium text-purple-300/70 border border-purple-500/30 rounded-lg hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-purple-500/10 transition-colors"
+              <Link
+                to="/"
+                className="px-3 py-1.5 text-xs md:text-sm font-medium text-purple-300/70 border border-purple-500/30 rounded-lg hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-purple-500/10 transition-colors no-underline inline-flex items-center"
               >
                 ← 返回封面
-              </button>
+              </Link>
             </div>
             <div className="text-center">
               <h1 className="text-3xl md:text-4xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2">📊 数据作品集</h1>

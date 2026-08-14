@@ -16,18 +16,19 @@ export function WelcomePage() {
     if (!chartRef.current) return;
     const myChart = echarts.init(chartRef.current);
     const width = window.innerWidth;
-    const fontSize = width < 640 ? 52 : width < 1024 ? 78 : 96;
+    const fontSize = width < 640 ? 48 : width < 1024 ? 72 : 88;
     const option = {
       graphic: {
         elements: [
           {
             type: 'text',
             left: 'center',
-            top: 'center',
+            top: 'middle',
             style: {
               text: 'welcome',
               fontSize: fontSize,
               fontWeight: 'bold',
+              fontFamily: 'Inter, system-ui, "Segoe UI", Roboto, sans-serif',
               textVerticalAlign: 'middle',
               lineDash: [0, 200],
               lineDashOffset: 0,
@@ -69,7 +70,7 @@ export function WelcomePage() {
 
     const handleResize = () => {
       const w = window.innerWidth;
-      const fs = w < 640 ? 52 : w < 1024 ? 78 : 96;
+      const fs = w < 640 ? 48 : w < 1024 ? 72 : 88;
       myChart.setOption({
         graphic: { elements: [{ style: { fontSize: fs } }] },
       } as any);
@@ -88,23 +89,18 @@ export function WelcomePage() {
   };
 
   const linePoints = [
-    { x: 0, y: 620 },
-    { x: 80, y: 600 },
-    { x: 160, y: 520 },
-    { x: 240, y: 580 },
-    { x: 320, y: 380 },
-    { x: 400, y: 460 },
-    { x: 480, y: 300 },
-    { x: 560, y: 420 },
-    { x: 640, y: 180 },
-    { x: 720, y: 300 },
-    { x: 800, y: 140 },
-    { x: 880, y: 260 },
-    { x: 960, y: 100 },
-    { x: 1040, y: 220 },
-    { x: 1120, y: 80 },
+    { x: 0,    y: 640 },
+    { x: 160,  y: 620 },
+    { x: 260,  y: 480 },
+    { x: 360,  y: 560 },
+    { x: 480,  y: 280 },
+    { x: 580,  y: 400 },
+    { x: 720,  y: 180 },
+    { x: 820,  y: 320 },
+    { x: 960,  y: 120 },
+    { x: 1080, y: 240 },
     { x: 1200, y: 180 },
-    { x: 1280, y: 120 },
+    { x: 1280, y: 220 },
   ];
 
   return (
@@ -135,27 +131,37 @@ export function WelcomePage() {
         <line x1={0} y1={540} x2={1280} y2={540} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
         <line x1={0} y1={720} x2={1280} y2={720} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
         <path
-          d="M0,620 L80,600 L160,520 L240,580 L320,380 L400,460 L480,300 L560,420 L640,180 L720,300 L800,140 L880,260 L960,100 L1040,220 L1120,80 L1200,180 L1280,120"
+          id="mainPath"
+          d="M0,640 L160,620 L260,480 L360,560 L480,280 L580,400 L720,180 L820,320 L960,120 L1080,240 L1200,180 L1280,220"
           fill="none"
           stroke="url(#lineGrad)"
           strokeWidth="3"
           filter="url(#softGlow)"
         />
-        {linePoints.map((p, i) => (
+        {[0, 2, 4, 6, 8, 11].map((i) => (
           <circle
             key={i}
-            cx={p.x}
-            cy={p.y}
+            cx={linePoints[i].x}
+            cy={linePoints[i].y}
             r={3.5}
             fill="#6BC5E8"
             opacity="0.85"
             filter="url(#softGlow)"
           />
         ))}
+        <circle r="5.5" fill="#6BC5E8" filter="url(#softGlow)">
+          <animateMotion
+            dur="6s"
+            repeatCount="indefinite"
+            rotate="auto"
+          >
+            <mpath href="#mainPath" />
+          </animateMotion>
+        </circle>
       </svg>
 
       <div className="relative z-10 text-center px-4">
-        <div ref={chartRef} className="w-full h-[300px] md:h-[380px] pointer-events-none mb-4" />
+        <div ref={chartRef} className="w-full h-[360px] md:h-[440px] pointer-events-none mb-4" />
 
         <div className="mx-auto w-32 h-[1.5px] bg-gradient-to-r from-transparent via-[#5BB8D9] to-transparent mb-6" />
 
