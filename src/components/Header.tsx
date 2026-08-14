@@ -15,8 +15,8 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             <span
               className="text-2xl leading-none"
               style={{
-                fontFamily: 'Oswald, "Arial Narrow", sans-serif',
-                fontWeight: 600,
+                fontFamily: 'XiQueMeiHua, "KaiTi", "STKaiti", cursive, serif',
+                fontWeight: 'normal',
                 color: '#6BC5E8',
                 textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)',
               }}

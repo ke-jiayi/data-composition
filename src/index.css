@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* 引入喜鹊梅花楷书 */
+@font-face {
+  font-family: 'XiQueMeiHua';
+  src: url('/fonts/XiQueMeiHua-Regular.woff2') format('woff2'),
+       url('/fonts/XiQueMeiHua-Regular.woff') format('woff'),
+       url('/fonts/XiQueMeiHua-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @source "../**/*.{js,ts,jsx,tsx,html}";
 
 @theme {
