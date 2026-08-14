@@ -151,7 +151,7 @@ export function WelcomePage() {
           <p
             className="neon-enter-hint"
             style={{
-              fontSize: '20px',
+              fontSize: '22px',
               color: '#5FFBF1',
               fontWeight: 'bold',
               fontFamily: 'Arial, sans-serif',
