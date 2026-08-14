@@ -14,7 +14,7 @@
   - `programmatic` TR-1.1: 代码中无 `echarts.init` 调用
   - `human-judgement` TR-1.2: 浏览器验证文字完整、动画流畅、字号自适应
 
-## [/] Task 2: 验证 + 提交推送部署
+## [x] Task 2: 验证 + 提交推送部署
 - **Priority**: high
 - **Depends On**: Task 1
 - **Description**: 构建验证 + 浏览器验收 + Git 提交推送
