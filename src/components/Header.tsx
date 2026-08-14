@@ -23,6 +23,15 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             >
               K
             </span>
+            <span
+              className="text-2xl leading-none -ml-1"
+              style={{
+                color: '#6BC5E8',
+                textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)',
+              }}
+            >
+              .
+            </span>
             <span className="text-lg font-semibold">导航</span>
           </button>
         </div>
