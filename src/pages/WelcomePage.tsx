@@ -49,6 +49,16 @@ export function WelcomePage() {
             fill: #FFFFFF;
           }
         }
+        @keyframes neon-flicker {
+          0%, 100% {
+            opacity: 1;
+            text-shadow: 0 0 5px #6BC5E8, 0 0 10px #6BC5E8;
+          }
+          50% {
+            opacity: 0.85;
+            text-shadow: 0 0 4px #6BC5E8, 0 0 8px #6BC5E8;
+          }
+        }
       `}</style>
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.55]"
@@ -132,22 +142,41 @@ export function WelcomePage() {
           </svg>
         </div>
 
+        <div
+          className={`transition-all duration-1000 ${
+            showEnter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+          style={{ marginTop: '20px' }}
+        >
+          <p
+            className="neon-enter-hint"
+            style={{
+              fontSize: '20px',
+              color: '#6BC5E8',
+              fontWeight: 'bold',
+              fontFamily: 'Arial, sans-serif',
+              letterSpacing: '0.15em',
+              textShadow: '0 0 5px #6BC5E8, 0 0 10px #6BC5E8',
+              animation: 'neon-flicker 4s ease-in-out infinite',
+              cursor: 'pointer',
+              transition: 'text-shadow 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.textShadow = '0 0 8px #6BC5E8, 0 0 16px #6BC5E8, 0 0 24px #6BC5E8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.textShadow = '0 0 5px #6BC5E8, 0 0 10px #6BC5E8';
+            }}
+          >
+            点击任意位置进入 →
+          </p>
+        </div>
+
         <div className="mx-auto w-32 h-[1.5px] bg-gradient-to-r from-transparent via-[#5BB8D9] to-transparent mb-6" />
 
         <p className="text-sm md:text-base text-[#7B4B9E]/75 tracking-[0.3em] mb-16">
           DATA&nbsp;&nbsp;PORTFOLIO&nbsp;&nbsp;·&nbsp;&nbsp;数据作品集
         </p>
-
-        <div
-          className={`transition-all duration-1000 ${
-            showEnter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#5BB8D9]/60 bg-[#1A1A1E]/40 backdrop-blur-sm text-[#7B4B9E] text-sm hover:bg-[#7B4B9E]/10 hover:border-[#6BC5E8] transition-colors">
-            <span>点击任意位置进入</span>
-            <span className="text-lg">→</span>
-          </div>
-        </div>
       </div>
 
       <div className="absolute bottom-6 text-xs text-[#7B4B9E]/50 tracking-widest">
