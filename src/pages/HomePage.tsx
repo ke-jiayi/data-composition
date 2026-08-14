@@ -44,12 +44,28 @@ export function HomePage() {
     }
   }, [dbLoading]);
 
-  // 记录访问量（localStorage 持久化，每次打开首页 +1）
+  // 记录访问量（跨设备统计：优先调用 Pages Function /api/visit；失败时 fallback localStorage）
   useEffect(() => {
+    let settled = false;
     const stored = localStorage.getItem('visitCount');
-    const next = (stored ? parseInt(stored, 10) : 0) + 1;
-    localStorage.setItem('visitCount', String(next));
-    setVisitCount(next);
+    setVisitCount(stored ? parseInt(stored, 10) : 0);
+
+    fetch('/api/visit')
+      .then((r) => r.json())
+      .then((data) => {
+        if (settled || !data.count) return;
+        settled = true;
+        setVisitCount(data.count);
+        localStorage.setItem('visitCount', String(data.count));
+      })
+      .catch(() => {
+        // 网络失败或本地开发：fallback 到 localStorage +1
+        if (settled) return;
+        settled = true;
+        const next = (stored ? parseInt(stored, 10) : 0) + 1;
+        localStorage.setItem('visitCount', String(next));
+        setVisitCount(next);
+      });
   }, []);
 
   const loadDatasets = async () => {
