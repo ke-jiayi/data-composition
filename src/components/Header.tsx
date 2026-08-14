@@ -12,8 +12,17 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             className="flex items-center gap-2 text-cyan-300 hover:text-purple-400 transition-colors"
             aria-label="Toggle sidebar"
           >
-            <span className="text-xl">✈️</span>
-            <span className="text-lg font-semibold">导航</span>
+            <span
+              className="text-2xl font-bold leading-none"
+              style={{
+                fontFamily: 'Arial Black, Impact, sans-serif',
+                color: '#6BC5E8',
+                textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)',
+              }}
+            >
+              K
+            </span>
+            <span className="text-lg font-semibold">数据作品集</span>
           </button>
         </div>
       </div>
