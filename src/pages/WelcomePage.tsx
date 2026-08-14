@@ -113,7 +113,7 @@ export function WelcomePage() {
       </svg>
 
       <div className="relative z-10 text-center px-4">
-        <div className="w-full h-[420px] md:h-[560px] lg:h-[680px] pointer-events-none mb-4 flex items-center justify-center overflow-hidden">
+        <div className="w-full h-[260px] md:h-[320px] lg:h-[380px] pointer-events-none mb-2 flex items-center justify-center overflow-hidden">
           <svg
             viewBox="0 0 600 200"
             className="w-full h-full max-w-full"
