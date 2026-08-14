@@ -36,7 +36,7 @@
   - `programmatic` TR-2.1: 代码审阅按钮实际渲染为 `<Link to="/">`（不是 onClick navigate），className 与旧按钮一致
   - `human-judgement` TR-2.2: 浏览器访问 /home，点按钮 → 成功跳回封面页 `/`
 
-## [/] Task 3: 构建 + 浏览器验证 + 自动提交推送
+## [x] Task 3: 构建 + 浏览器验证 + 自动提交推送
 - **Priority**: high
 - **Depends On**: Task 1 & Task 2
 - **Acceptance Criteria Addressed**: AC-1, AC-2, AC-3, AC-4

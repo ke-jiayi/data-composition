@@ -115,8 +115,8 @@ export function WelcomePage() {
       >
         <defs>
           <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#7B4B9E" />
-            <stop offset="100%" stop-color="#6BC5E8" />
+            <stop offset="0%" stopColor="#7B4B9E" />
+            <stop offset="100%" stopColor="#6BC5E8" />
           </linearGradient>
           <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
             <feGaussianBlur stdDeviation="2.5" result="blur" />

@@ -23,7 +23,7 @@
   - `human-judgement` TR-1.5: 本地浏览器截图——welcome 7 字母完整无裁切，背景深碳灰、折线带数据点渐变、整体简洁居中
 - **Notes**: 背景折线可以用 SVG `<defs><linearGradient id="lineGrad"><stop offset="0%" stop-color="#7B4B9E"/><stop offset="100%" stop-color="#6BC5E8"/></linearGradient></defs>`；数据点在转折点以 `<circle>` 呈现（半径 3-4，半透明）
 
-## [/] Task 2: 构建验证、浏览器测试、自动提交推送
+## [x] Task 2: 构建验证、浏览器测试、自动提交推送
 - **Priority**: high
 - **Depends On**: Task 1
 - **Description**:
