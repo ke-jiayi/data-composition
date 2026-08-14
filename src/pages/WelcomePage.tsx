@@ -1,91 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as echarts from 'echarts';
 
 export function WelcomePage() {
   const navigate = useNavigate();
   const [showEnter, setShowEnter] = useState(false);
-  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowEnter(true), 1500);
     return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!chartRef.current) return;
-    const myChart = echarts.init(chartRef.current);
-    let chartH = chartRef.current?.clientHeight ?? 0;
-    if (!chartH) chartH = window.innerWidth < 768 ? 420 : window.innerWidth < 1024 ? 560 : 680;
-    const fontSize = Math.max(48, Math.min(Math.round(Math.min(window.innerWidth * 0.095, chartH * 0.68)), 200));
-    const option = {
-      graphic: {
-        elements: [
-          {
-            type: 'text',
-            left: 'center',
-            top: 'middle',
-            // z 层级确保文字在最上层渲染
-            z: 100,
-            style: {
-              text: ' welcome ',
-              fontSize: fontSize,
-              fontWeight: 'bold',
-              fill: 'transparent',
-              stroke: '#6C3B9A',
-              lineWidth: 2,
-              // textPadding 扩展描边绘制区域，防止 W/E 边缘被切
-              textPadding: [12, 24, 12, 24],
-              shadowBlur: 8,
-              shadowColor: 'rgba(107, 197, 232, 0.25)',
-            },
-            keyframeAnimation: {
-              duration: 3000,
-              loop: true,
-              keyframes: [
-                {
-                  percent: 0.7,
-                  style: {
-                    fill: 'transparent',
-                    lineDashOffset: 200,
-                    lineDash: [200, 0],
-                  },
-                },
-                {
-                  percent: 0.8,
-                  style: {
-                    fill: 'transparent',
-                  },
-                },
-                {
-                  percent: 1,
-                  style: {
-                    fill: '#FFFFFF',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    };
-    myChart.setOption(option as any);
-
-    const handleResize = () => {
-      let chartH = chartRef.current?.clientHeight ?? 0;
-      if (!chartH) chartH = window.innerWidth < 768 ? 420 : window.innerWidth < 1024 ? 560 : 680;
-      const fs = Math.max(48, Math.min(Math.round(Math.min(window.innerWidth * 0.095, chartH * 0.68)), 200));
-      myChart.setOption({
-        graphic: { elements: [{ style: { fontSize: fs } }] },
-      } as any);
-      myChart.resize();
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      myChart.dispose();
-    };
   }, []);
 
   const handleEnter = () => {
@@ -112,6 +34,22 @@ export function WelcomePage() {
       onClick={handleEnter}
       className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-[#1A1A1E] via-[#1E1E24] to-[#1A1A1E] flex flex-col items-center justify-center cursor-pointer select-none"
     >
+      <style>{`
+        @keyframes welcome-draw {
+          0% {
+            stroke-dashoffset: 200;
+            fill: transparent;
+          }
+          70% {
+            stroke-dashoffset: 0;
+            fill: transparent;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            fill: #FFFFFF;
+          }
+        }
+      `}</style>
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.55]"
         viewBox="0 0 1280 720"
@@ -165,7 +103,34 @@ export function WelcomePage() {
       </svg>
 
       <div className="relative z-10 text-center px-4">
-        <div ref={chartRef} className="w-full h-[420px] md:h-[560px] lg:h-[680px] pointer-events-none mb-4" />
+        <div className="w-full h-[420px] md:h-[560px] lg:h-[680px] pointer-events-none mb-4 flex items-center justify-center overflow-hidden">
+          <svg
+            viewBox="0 0 600 200"
+            className="w-full h-full max-w-full"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="128"
+              fontWeight="bold"
+              fontFamily="Inter, system-ui, 'Segoe UI', Roboto, sans-serif"
+              stroke="#6C3B9A"
+              strokeWidth="2"
+              strokeDasharray="200"
+              strokeDashoffset="200"
+              fill="transparent"
+              style={{
+                animation: 'welcome-draw 3s ease-in-out infinite',
+                filter: 'drop-shadow(0 0 8px rgba(107, 197, 232, 0.25))',
+              }}
+            >
+              welcome
+            </text>
+          </svg>
+        </div>
 
         <div className="mx-auto w-32 h-[1.5px] bg-gradient-to-r from-transparent via-[#5BB8D9] to-transparent mb-6" />
 
