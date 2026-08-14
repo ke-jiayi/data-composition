@@ -52,11 +52,11 @@ export function WelcomePage() {
         @keyframes neon-flicker {
           0%, 100% {
             opacity: 1;
-            text-shadow: 0 0 5px #6BC5E8, 0 0 10px #6BC5E8;
+            text-shadow: 0 0 5px #5FFBF1, 0 0 10px #5FFBF1;
           }
           50% {
             opacity: 0.85;
-            text-shadow: 0 0 4px #6BC5E8, 0 0 8px #6BC5E8;
+            text-shadow: 0 0 4px #5FFBF1, 0 0 8px #5FFBF1;
           }
         }
       `}</style>
@@ -152,20 +152,20 @@ export function WelcomePage() {
             className="neon-enter-hint"
             style={{
               fontSize: '20px',
-              color: '#6BC5E8',
+              color: '#5FFBF1',
               fontWeight: 'bold',
               fontFamily: 'Arial, sans-serif',
               letterSpacing: '0.15em',
-              textShadow: '0 0 5px #6BC5E8, 0 0 10px #6BC5E8',
+              textShadow: '0 0 5px #5FFBF1, 0 0 10px #5FFBF1',
               animation: 'neon-flicker 4s ease-in-out infinite',
               cursor: 'pointer',
               transition: 'text-shadow 0.3s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.textShadow = '0 0 8px #6BC5E8, 0 0 16px #6BC5E8, 0 0 24px #6BC5E8';
+              e.currentTarget.style.textShadow = '0 0 8px #5FFBF1, 0 0 16px #5FFBF1, 0 0 24px #5FFBF1';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.textShadow = '0 0 5px #6BC5E8, 0 0 10px #6BC5E8';
+              e.currentTarget.style.textShadow = '0 0 5px #5FFBF1, 0 0 10px #5FFBF1';
             }}
           >
             点击任意位置进入 →
