@@ -53,7 +53,7 @@ export function HomePage() {
     fetch('/api/visit')
       .then((r) => r.json())
       .then((data) => {
-        if (settled || !data.count) return;
+        if (settled || data.count == null) return;
         settled = true;
         setVisitCount(data.count);
         localStorage.setItem('visitCount', String(data.count));
