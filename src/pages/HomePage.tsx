@@ -126,7 +126,14 @@ export function HomePage() {
               </Link>
             </div>
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2">📊 数据作品集</h1>
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="text-4xl md:text-5xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2"
+              >
+                数据作品集
+              </motion.h1>
               <p className="text-base text-purple-200/70">数据分析 · 数据可视化 · 个人作品集</p>
               <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
             </div>
