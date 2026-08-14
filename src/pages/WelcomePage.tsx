@@ -15,7 +15,9 @@ export function WelcomePage() {
   useEffect(() => {
     if (!chartRef.current) return;
     const myChart = echarts.init(chartRef.current);
-    const fontSize = window.innerWidth < 640 ? 60 : window.innerWidth < 1024 ? 100 : 128;
+    let chartH = chartRef.current?.clientHeight ?? 0;
+    if (!chartH) chartH = window.innerWidth < 768 ? 420 : window.innerWidth < 1024 ? 560 : 680;
+    const fontSize = Math.max(48, Math.min(Math.round(Math.min(window.innerWidth * 0.095, chartH * 0.68)), 200));
     const option = {
       graphic: {
         elements: [
@@ -70,7 +72,9 @@ export function WelcomePage() {
     myChart.setOption(option as any);
 
     const handleResize = () => {
-      const fs = window.innerWidth < 640 ? 60 : window.innerWidth < 1024 ? 100 : 128;
+      let chartH = chartRef.current?.clientHeight ?? 0;
+      if (!chartH) chartH = window.innerWidth < 768 ? 420 : window.innerWidth < 1024 ? 560 : 680;
+      const fs = Math.max(48, Math.min(Math.round(Math.min(window.innerWidth * 0.095, chartH * 0.68)), 200));
       myChart.setOption({
         graphic: { elements: [{ style: { fontSize: fs } }] },
       } as any);
@@ -161,7 +165,7 @@ export function WelcomePage() {
       </svg>
 
       <div className="relative z-10 text-center px-4">
-        <div ref={chartRef} className="w-full h-[360px] md:h-[440px] pointer-events-none mb-4" />
+        <div ref={chartRef} className="w-full h-[420px] md:h-[560px] lg:h-[680px] pointer-events-none mb-4" />
 
         <div className="mx-auto w-32 h-[1.5px] bg-gradient-to-r from-transparent via-[#5BB8D9] to-transparent mb-6" />
 
