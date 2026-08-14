@@ -13,16 +13,17 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             aria-label="Toggle sidebar"
           >
             <span
-              className="text-2xl font-bold leading-none"
+              className="text-2xl leading-none"
               style={{
-                fontFamily: 'Arial Black, Impact, sans-serif',
+                fontFamily: 'Oswald, "Arial Narrow", sans-serif',
+                fontWeight: 600,
                 color: '#6BC5E8',
                 textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)',
               }}
             >
               K
             </span>
-            <span className="text-lg font-semibold">数据作品集</span>
+            <span className="text-lg font-semibold">导航</span>
           </button>
         </div>
       </div>
