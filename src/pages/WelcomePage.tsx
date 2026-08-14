@@ -15,6 +15,7 @@ export function WelcomePage() {
   useEffect(() => {
     if (!chartRef.current) return;
     const myChart = echarts.init(chartRef.current);
+    const fontSize = window.innerWidth < 640 ? 60 : window.innerWidth < 1024 ? 100 : 128;
     const option = {
       graphic: {
         elements: [
@@ -26,7 +27,7 @@ export function WelcomePage() {
             z: 100,
             style: {
               text: ' welcome ',
-              fontSize: 80,
+              fontSize: fontSize,
               fontWeight: 'bold',
               fill: 'transparent',
               stroke: '#6C3B9A',
@@ -69,6 +70,10 @@ export function WelcomePage() {
     myChart.setOption(option as any);
 
     const handleResize = () => {
+      const fs = window.innerWidth < 640 ? 60 : window.innerWidth < 1024 ? 100 : 128;
+      myChart.setOption({
+        graphic: { elements: [{ style: { fontSize: fs } }] },
+      } as any);
       myChart.resize();
     };
     window.addEventListener('resize', handleResize);
