@@ -25,7 +25,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             aria-label="Toggle sidebar"
           >
             <span
-              className="text-3xl leading-none"
+              className="text-4xl leading-none"
               style={{
                 fontFamily: 'XiQueMeiHua, "KaiTi", "STKaiti", cursive, serif',
                 fontWeight: 'normal',
@@ -36,7 +36,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               K
             </span>
             <span
-              className="text-3xl leading-none -ml-1"
+              className="text-4xl leading-none -ml-1"
               style={{
                 color: '#6BC5E8',
                 textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)',
@@ -44,10 +44,10 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             >
               .
             </span>
-            <span className="text-xl font-semibold">导航</span>
+            <span className="text-2xl font-semibold">导航</span>
           </button>
           <span
-            className="text-lg font-mono tabular-nums"
+            className="text-xl font-mono tabular-nums"
             style={{ color: '#6BC5E8' }}
           >
             {timeStr}
