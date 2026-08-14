@@ -1,13 +1,85 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as echarts from 'echarts';
 
 export function WelcomePage() {
   const navigate = useNavigate();
   const [showEnter, setShowEnter] = useState(false);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowEnter(true), 1500);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!chartRef.current) return;
+    const myChart = echarts.init(chartRef.current);
+    const width = window.innerWidth;
+    const fontSize = width < 640 ? 60 : width < 1024 ? 88 : 110;
+    const option = {
+      graphic: {
+        elements: [
+          {
+            type: 'text',
+            left: 'center',
+            top: 'center',
+            style: {
+              text: 'welcome',
+              fontSize: fontSize,
+              fontWeight: 'bold',
+              lineDash: [0, 200],
+              lineDashOffset: 0,
+              fill: 'transparent',
+              stroke: '#22d3ee',
+              lineWidth: 1,
+            },
+            keyframeAnimation: {
+              duration: 3000,
+              loop: true,
+              keyframes: [
+                {
+                  percent: 0.7,
+                  style: {
+                    fill: 'transparent',
+                    lineDashOffset: 200,
+                    lineDash: [200, 0],
+                  },
+                },
+                {
+                  percent: 0.8,
+                  style: {
+                    fill: 'transparent',
+                  },
+                },
+                {
+                  percent: 1,
+                  style: {
+                    fill: '#a855f7',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    };
+    myChart.setOption(option as any);
+
+    const handleResize = () => {
+      const w = window.innerWidth;
+      const fs = w < 640 ? 60 : w < 1024 ? 88 : 110;
+      myChart.setOption({
+        graphic: { elements: [{ style: { fontSize: fs } }] },
+      } as any);
+      myChart.resize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      myChart.dispose();
+    };
   }, []);
 
   const handleEnter = () => {
@@ -97,11 +169,7 @@ export function WelcomePage() {
       {/* 主内容 */}
       <div className="relative z-10 text-center px-4">
         {/* 主标题 */}
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-white mb-6">
-          <span className="bg-gradient-to-r from-cyan-300 via-purple-200 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-            欢迎来到我的个人数据收集网址
-          </span>
-        </h1>
+        <div ref={chartRef} className="w-full h-[200px] md:h-[260px] pointer-events-none mb-6" />
 
         {/* 副标题装饰线 */}
         <div className="mx-auto w-40 h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent mb-8 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
