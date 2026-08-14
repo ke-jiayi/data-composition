@@ -44,7 +44,7 @@ export function Layout({ children }: LayoutProps) {
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed left-0 top-16 bottom-0 w-[240px] bg-[#0a0e1a]/95 backdrop-blur-md shadow-[4px_0_30px_rgba(168,85,247,0.15)] border-r border-purple-500/20 z-30 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-18 bottom-0 w-[240px] bg-[#0a0e1a]/95 backdrop-blur-md shadow-[4px_0_30px_rgba(168,85,247,0.15)] border-r border-purple-500/20 z-30 transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -55,7 +55,7 @@ export function Layout({ children }: LayoutProps) {
                 <Link
                   to={link.to}
                   onClick={handleNavClick}
-                  className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     isActive(link.to)
                       ? 'text-cyan-300 bg-purple-500/10 border-l-2 border-cyan-400'
                       : 'text-gray-400 hover:text-purple-300 hover:bg-purple-500/5'
@@ -70,7 +70,7 @@ export function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className={`pt-20 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
+      <main className={`pt-24 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
         <div className="p-6 md:p-10">{children}</div>
       </main>
     </div>
