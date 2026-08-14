@@ -21,11 +21,11 @@ export function WelcomePage() {
           {
             type: 'text',
             left: 'center',
-            top: 'center',
+            top: 'middle',
             // z 层级确保文字在最上层渲染
             z: 100,
             style: {
-              text: 'DATA PORTFOLIO',
+              text: ' welcome ',
               fontSize: 80,
               fontWeight: 'bold',
               fill: 'transparent',
