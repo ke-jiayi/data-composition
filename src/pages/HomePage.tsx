@@ -187,7 +187,7 @@ export function HomePage() {
           )}
 
           {/* 统计卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mb-8">
             <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-cyan-600" />
               <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 数 据 集</p>
@@ -202,13 +202,6 @@ export function HomePage() {
               <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(datasets.reduce((sum, d) => sum + d.rowCount, 0))}
                 <span className="ml-2 text-sm font-medium text-purple-200/50">行</span>
-              </p>
-            </div>
-            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-fuchsia-400 to-fuchsia-600" />
-              <p className="text-xs text-purple-200/60 mb-2 tracking-wider">最 近 更 新</p>
-              <p className="text-2xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
-                {datasets.length > 0 ? formatDate(datasets[0].updatedAt) : '暂无'}
               </p>
             </div>
           </div>
