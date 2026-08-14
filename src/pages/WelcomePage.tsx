@@ -114,7 +114,7 @@ export function WelcomePage() {
               y="50%"
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize="90"
+              fontSize="85"
               fontWeight="bold"
               fontFamily="Inter, system-ui, 'Segoe UI', Roboto, sans-serif"
               stroke="#6C3B9A"
