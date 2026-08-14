@@ -15,26 +15,26 @@ export function WelcomePage() {
   useEffect(() => {
     if (!chartRef.current) return;
     const myChart = echarts.init(chartRef.current);
-    const width = window.innerWidth;
-    const fontSize = width < 640 ? 48 : width < 1024 ? 72 : 88;
     const option = {
       graphic: {
         elements: [
           {
             type: 'text',
             left: 'center',
-            top: 'middle',
+            top: 'center',
+            // z 层级确保文字在最上层渲染
+            z: 100,
             style: {
-              text: 'welcome',
-              fontSize: fontSize,
+              text: 'DATA PORTFOLIO',
+              fontSize: 80,
               fontWeight: 'bold',
-              fontFamily: 'Inter, system-ui, "Segoe UI", Roboto, sans-serif',
-              textVerticalAlign: 'middle',
-              lineDash: [0, 200],
-              lineDashOffset: 0,
               fill: 'transparent',
-              stroke: '#6BC5E8',
-              lineWidth: 1.5,
+              stroke: '#6C3B9A',
+              lineWidth: 2,
+              // textPadding 扩展描边绘制区域，防止 W/E 边缘被切
+              textPadding: [12, 24, 12, 24],
+              shadowBlur: 8,
+              shadowColor: 'rgba(107, 197, 232, 0.25)',
             },
             keyframeAnimation: {
               duration: 3000,
@@ -57,7 +57,7 @@ export function WelcomePage() {
                 {
                   percent: 1,
                   style: {
-                    fill: '#7B4B9E',
+                    fill: '#FFFFFF',
                   },
                 },
               ],
@@ -69,11 +69,6 @@ export function WelcomePage() {
     myChart.setOption(option as any);
 
     const handleResize = () => {
-      const w = window.innerWidth;
-      const fs = w < 640 ? 48 : w < 1024 ? 72 : 88;
-      myChart.setOption({
-        graphic: { elements: [{ style: { fontSize: fs } }] },
-      } as any);
       myChart.resize();
     };
     window.addEventListener('resize', handleResize);
