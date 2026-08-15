@@ -185,7 +185,7 @@ export function ProjectDetailPage() {
             </p>
             <div className="mt-6">
               <Link
-                to="/"
+                to="/home"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#1e3a5f] hover:bg-[#2d4a6f]"
               >
                 返回首页
@@ -217,7 +217,7 @@ export function ProjectDetailPage() {
         {/* 返回按钮 */}
         <div className="mb-4">
           <Link
-            to="/"
+            to="/home"
             className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
             <svg
