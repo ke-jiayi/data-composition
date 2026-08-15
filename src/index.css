@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 引入喜鹊梅花楷书 */
 @font-face {
   font-family: 'XiQueMeiHua';
