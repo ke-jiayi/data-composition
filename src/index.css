@@ -530,3 +530,101 @@ html.light .border-white\/10 {
 
 /* Code editor - keep dark */
 /* bg-gray-900 stays as is - no override needed */
+
+/* ===== HomePage 白天模式青绿蓝配色（仅 #datasets 作用域）===== */
+
+/* --- 文字色覆盖 --- */
+html.light #datasets .text-cyan-300 { color: #1A2A3A !important; filter: none !important; }
+html.light #datasets .text-cyan-200 { color: #1A2A3A !important; }
+html.light #datasets .text-cyan-100 { color: #1A2A3A !important; }
+html.light #datasets .text-purple-200\/70,
+html.light #datasets .text-purple-200\/60,
+html.light #datasets .text-purple-200\/50,
+html.light #datasets .text-purple-200\/40 { color: #6B8CAE !important; }
+html.light #datasets .text-purple-100\/80 { color: #2D3F4F !important; }
+html.light #datasets .text-purple-300\/60,
+html.light #datasets .text-purple-300\/50,
+html.light #datasets .text-purple-300\/40 { color: #6B8CAE !important; }
+html.light #datasets .text-gray-100 { color: #1A2A3A !important; }
+
+/* --- 卡片背景（覆盖全局 bg-white/5）--- */
+html.light #datasets .bg-white\/5 { background-color: #FFFFFF !important; }
+
+/* --- 数据集卡片渐变背景 --- */
+html.light #datasets .from-white\/5 { --tw-gradient-from: #FFFFFF !important; }
+html.light #datasets .to-purple-500\/5 { --tw-gradient-to: #FFFFFF !important; }
+
+/* --- 边框 --- */
+html.light #datasets .border-purple-500\/20,
+html.light #datasets .border-purple-500\/10,
+html.light #datasets .border-purple-500\/40 { border-color: #DCE8F2 !important; }
+html.light #datasets .hover\:border-cyan-400\/40:hover,
+html.light #datasets .hover\:border-cyan-400\/60:hover { border-color: #00B4D8 !important; }
+
+/* --- 阴影 --- */
+html.light #datasets .shadow-\[0_0_40px_rgba\(168\,85\,247\,0\.1\)\] { box-shadow: 0 2px 8px rgba(0, 180, 216, 0.08) !important; }
+html.light #datasets .hover\:shadow-\[0_0_30px_rgba\(168\,85\,247\,0\.2\)\]:hover { box-shadow: 0 4px 12px rgba(0, 180, 216, 0.12) !important; }
+html.light #datasets .hover\:shadow-\[0_0_40px_rgba\(168\,85\,247\,0\.25\)\]:hover { box-shadow: 0 6px 16px rgba(0, 180, 216, 0.15) !important; }
+
+/* --- 返回封面按钮（覆盖内联样式）--- */
+html.light #datasets a[href="/"] {
+  color: #00B4D8 !important;
+  text-shadow: none !important;
+  background-color: rgba(0, 180, 216, 0.08) !important;
+  border-color: #DCE8F2 !important;
+}
+html.light #datasets a[href="/"]:hover {
+  background-color: rgba(0, 180, 216, 0.15) !important;
+  border-color: #00B4D8 !important;
+}
+
+/* --- 导入按钮（覆盖渐变为纯色）--- */
+html.light #datasets .from-purple-600 { --tw-gradient-from: #00B4D8 !important; background: #00B4D8 !important; }
+html.light #datasets .to-cyan-500 { --tw-gradient-to: #00B4D8 !important; }
+html.light #datasets .from-cyan-500 { --tw-gradient-from: #00B4D8 !important; background: #00B4D8 !important; }
+html.light #datasets .to-purple-500 { --tw-gradient-to: #00B4D8 !important; }
+
+/* --- 统计数字（覆盖渐变文字）--- */
+html.light #datasets .from-cyan-200 { -webkit-text-fill-color: #00B4D8 !important; background: none !important; }
+html.light #datasets .to-purple-200 { -webkit-text-fill-color: #00B4D8 !important; }
+
+/* --- 装饰线渐变 --- */
+html.light #datasets .via-purple-500 { --tw-gradient-via: #48CAE4 !important; }
+html.light #datasets .to-sky-500 { --tw-gradient-to: #0096B0 !important; }
+
+/* --- 统计卡片色条 --- */
+html.light #datasets .from-cyan-400 { --tw-gradient-from: #00B4D8 !important; }
+html.light #datasets .to-cyan-600 { --tw-gradient-to: #0096B0 !important; }
+html.light #datasets .from-purple-400 { --tw-gradient-from: #48CAE4 !important; }
+html.light #datasets .to-purple-600 { --tw-gradient-to: #00B4D8 !important; }
+html.light #datasets .from-fuchsia-400 { --tw-gradient-from: #52B788 !important; }
+html.light #datasets .to-fuchsia-600 { --tw-gradient-to: #40916C !important; }
+
+/* --- 搜索框 --- */
+html.light #datasets input[type="text"] {
+  background-color: #FFFFFF !important;
+  color: #1A2A3A !important;
+  border-color: #DCE8F2 !important;
+}
+html.light #datasets input[type="text"]:focus {
+  border-color: #00B4D8 !important;
+  box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2) !important;
+}
+html.light #datasets input[type="text"]::placeholder { color: #6B8CAE !important; opacity: 0.6; }
+
+/* --- 搜索框聚焦样式覆盖 --- */
+html.light #datasets .focus\:ring-purple-500\/30:focus { box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2) !important; }
+html.light #datasets .focus\:border-cyan-400\/50:focus { border-color: #00B4D8 !important; }
+
+/* --- "查看详情" hover --- */
+html.light #datasets .group:hover .text-purple-200\/40 { color: #00B4D8 !important; }
+
+/* --- 平滑过渡 --- */
+html.light #datasets .bg-white\/5,
+html.light #datasets .border-purple-500\/20,
+html.light #datasets .border-purple-500\/10,
+html.light #datasets .text-cyan-300,
+html.light #datasets .text-cyan-200,
+html.light #datasets .text-cyan-100 {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
