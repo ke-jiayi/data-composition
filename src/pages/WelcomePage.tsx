@@ -1,10 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { useTheme } from '../hooks/useTheme';
 
 export function WelcomePage() {
   const navigate = useNavigate();
   const [showEnter, setShowEnter] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const colors = {
+    welcomeDrawFill: isDark ? '#FFFFFF' : '#1A1A2E',
+    welcomeStroke:  isDark ? '#6C3B9A' : '#2C5282',
+    welcomeDropShadow: isDark
+      ? 'drop-shadow(0 0 8px rgba(107,197,232,0.25))'
+      : 'drop-shadow(0 0 4px rgba(44,82,130,0.3))',
+    neonColor: isDark ? '#5FFBF1' : '#2C5282',
+    neonGlow: isDark
+      ? '0 0 5px #5FFBF1, 0 0 10px #5FFBF1'
+      : '0 0 4px rgba(44,82,130,0.35), 0 0 8px rgba(44,82,130,0.2)',
+    neonGlowHover: isDark
+      ? '0 0 8px #5FFBF1, 0 0 16px #5FFBF1, 0 0 24px #5FFBF1'
+      : '0 0 6px rgba(44,82,130,0.5), 0 0 12px rgba(44,82,130,0.35), 0 0 18px rgba(44,82,130,0.25)',
+    gradStart: isDark ? '#7B4B9E' : '#553C9A',
+    gradEnd:   isDark ? '#6BC5E8' : '#3182CE',
+    dotFill:   isDark ? '#6BC5E8' : '#3182CE',
+    dotOpacity: isDark ? 0.85 : 1,
+    gridLineStroke:  isDark ? '#7B4B9E' : '#2C5282',
+    gridLineOpacity: isDark ? 0.08 : 0.15,
+    softGlowBlur: isDark ? 2.5 : 1.5,
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setShowEnter(true), 1500);
@@ -47,17 +71,17 @@ export function WelcomePage() {
           }
           100% {
             stroke-dashoffset: 0;
-            fill: #FFFFFF;
+            fill: ${colors.welcomeDrawFill};
           }
         }
         @keyframes neon-flicker {
           0%, 100% {
             opacity: 1;
-            text-shadow: 0 0 5px #5FFBF1, 0 0 10px #5FFBF1;
+            text-shadow: ${colors.neonGlow};
           }
           50% {
             opacity: 0.85;
-            text-shadow: 0 0 4px #5FFBF1, 0 0 8px #5FFBF1;
+            text-shadow: ${colors.neonGlow};
           }
         }
       `}</style>
@@ -68,21 +92,21 @@ export function WelcomePage() {
       >
         <defs>
           <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#7B4B9E" />
-            <stop offset="100%" stopColor="#6BC5E8" />
+            <stop offset="0%" stopColor={colors.gradStart} />
+            <stop offset="100%" stopColor={colors.gradEnd} />
           </linearGradient>
           <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feGaussianBlur stdDeviation={`${colors.softGlowBlur}`} result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-        <line x1={0} y1={180} x2={1280} y2={180} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
-        <line x1={0} y1={360} x2={1280} y2={360} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
-        <line x1={0} y1={540} x2={1280} y2={540} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
-        <line x1={0} y1={720} x2={1280} y2={720} stroke="#7B4B9E" strokeWidth="0.5" opacity="0.08" />
+        <line x1={0} y1={180} x2={1280} y2={180} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
+        <line x1={0} y1={360} x2={1280} y2={360} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
+        <line x1={0} y1={540} x2={1280} y2={540} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
+        <line x1={0} y1={720} x2={1280} y2={720} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
         <path
           id="mainPath"
           d="M0,640 L160,620 L260,480 L360,560 L480,280 L580,400 L720,180 L820,320 L960,120 L1080,240 L1200,180 L1280,220"
@@ -97,12 +121,12 @@ export function WelcomePage() {
             cx={linePoints[i].x}
             cy={linePoints[i].y}
             r={3.5}
-            fill="#6BC5E8"
-            opacity="0.85"
+            fill={colors.dotFill}
+            opacity={`${colors.dotOpacity}`}
             filter="url(#softGlow)"
           />
         ))}
-        <circle r="5.5" fill="#6BC5E8" filter="url(#softGlow)">
+        <circle r="5.5" fill={colors.dotFill} filter="url(#softGlow)">
           <animateMotion
             dur="6s"
             repeatCount="indefinite"
@@ -128,14 +152,14 @@ export function WelcomePage() {
               fontSize="85"
               fontWeight="bold"
               fontFamily="Inter, system-ui, 'Segoe UI', Roboto, sans-serif"
-              stroke="#6C3B9A"
+              stroke={`${colors.welcomeStroke}`}
               strokeWidth="2"
               strokeDasharray="200"
               strokeDashoffset="200"
               fill="transparent"
               style={{
                 animation: 'welcome-draw 3s ease-in-out infinite',
-                filter: 'drop-shadow(0 0 8px rgba(107, 197, 232, 0.25))',
+                filter: `${colors.welcomeDropShadow}`,
               }}
             >
               welcome
@@ -153,20 +177,20 @@ export function WelcomePage() {
             className="neon-enter-hint"
             style={{
               fontSize: '26px',
-              color: '#5FFBF1',
+              color: colors.neonColor,
               fontWeight: 'bold',
               fontFamily: 'Arial, sans-serif',
               letterSpacing: '0.15em',
-              textShadow: '0 0 5px #5FFBF1, 0 0 10px #5FFBF1',
+              textShadow: colors.neonGlow,
               animation: 'neon-flicker 4s ease-in-out infinite',
               cursor: 'pointer',
               transition: 'text-shadow 0.3s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.textShadow = '0 0 8px #5FFBF1, 0 0 16px #5FFBF1, 0 0 24px #5FFBF1';
+              e.currentTarget.style.textShadow = colors.neonGlowHover;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.textShadow = '0 0 5px #5FFBF1, 0 0 10px #5FFBF1';
+              e.currentTarget.style.textShadow = colors.neonGlow;
             }}
           >
             点击任意位置进入 →
