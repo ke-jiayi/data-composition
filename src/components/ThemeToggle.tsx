@@ -1,153 +1,82 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { useTheme } from '../hooks/useTheme';
+import { type ButtonHTMLAttributes, type CSSProperties, useId } from "react";
+import { useTheme } from "../hooks/useTheme";
 
-const TRACK_HEIGHT = 120;
-const KNOB_SIZE = 32;
-const MAX_OFFSET = TRACK_HEIGHT - KNOB_SIZE; // 88px of travel
+export interface WithinProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "children"
+> {
+  duration?: number;
+  [key: `data-${string}`]: string | number | boolean | null | undefined;
+}
 
-// Sun bright: #FCD34D -> rgb(252, 211, 77)
-// Moon bright: #6BC5E8 -> rgb(107, 197, 232)
+export function Within({
+  duration = 500,
+  className,
+  type = "button",
+  title = "Toggle theme",
+  "aria-label": ariaLabel = "Toggle theme",
+  ...props
+}: WithinProps) {
+  const toggleId = useId();
 
-function intensityColor(r: number, g: number, b: number, intensity: number) {
-  // Dim floor at 0.3 alpha, bright at 1.0
-  const alpha = 0.3 + 0.7 * intensity;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  const clipMainId = `toggles.dev-within-main-${toggleId}`;
+
+  return (
+    <button
+      type={type}
+      title={title}
+      aria-label={ariaLabel}
+      className={className}
+      {...props}
+    >
+      <svg
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        aria-hidden="true"
+        fill={"currentColor"}
+        style={
+          { "--toggles-within--duration": `${duration}ms` } as CSSProperties
+        }
+      >
+        <defs>
+          <clipPath id={clipMainId}>
+            <path d={"M0 0h32v32h-32ZM6 16A1 1 0 0026 16 1 1 0 006 16"} />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${clipMainId})`}>
+          <path
+            d={
+              "M30.7 21.3 27.1 16l3.7-5.3c.4-.5.1-1.3-.6-1.4l-6.3-1.1-1.1-6.3c-.1-.6-.8-.9-1.4-.6L16 5l-5.4-3.7c-.5-.4-1.3-.1-1.4.6l-1 6.3-6.4 1.1c-.6.1-.9.9-.6 1.3L4.9 16l-3.7 5.3c-.4.5-.1 1.3.6 1.4l6.3 1.1 1.1 6.3c.1.6.8.9 1.4.6l5.3-3.7 5.3 3.7c.5.4 1.3.1 1.4-.6l1.1-6.3 6.3-1.1c.8-.1 1.1-.8.7-1.4zM16 25.1c-5.1 0-9.1-4.1-9.1-9.1 0-5.1 4.1-9.1 9.1-9.1s9.1 4.1 9.1 9.1c0 5.1-4 9.1-9.1 9.1z"
+            }
+            className="[transform-origin:center] [transition:transform_var(--toggles-within--duration)_cubic-bezier(0,0,0,1.25)] dark:[transform:scale(0.65)]"
+          />
+        </g>
+        <path
+          d={
+            "M16 7.7c-4.6 0-8.2 3.7-8.2 8.2s3.6 8.4 8.2 8.4 8.2-3.7 8.2-8.2-3.6-8.4-8.2-8.4zm0 14.4c-3.4 0-6.1-2.9-6.1-6.2s2.7-6.1 6.1-6.1c3.4 0 6.1 2.9 6.1 6.2s-2.7 6.1-6.1 6.1z"
+          }
+          className="[transform-origin:center] [transition:transform_var(--toggles-within--duration)_cubic-bezier(0,0,0,1.25)] dark:[transform:scale(1.5)]"
+        />
+        <path
+          d={
+            "M16 9.5c-3.6 0-6.4 2.9-6.4 6.4s2.8 6.5 6.4 6.5 6.4-2.9 6.4-6.4-2.8-6.5-6.4-6.5z"
+          }
+          className="[transform-origin:center] [transition:transform_var(--toggles-within--duration)_cubic-bezier(0,0,0,1.25)] dark:[transform:translate3d(3px,-3px,0)_scale(1.2)]"
+        />
+      </svg>
+    </button>
+  );
 }
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [knobPosition, setKnobPosition] = useState(1); // 0 = top (sun/light), 1 = bottom (moon/dark)
-  const [isDragging, setIsDragging] = useState(false);
-  // Ref mirror so the mouseup handler reads the latest position without stale closures
-  const knobPositionRef = useRef(1);
-
-  // Initialize / sync position from theme
-  useEffect(() => {
-    const pos = theme === 'dark' ? 1 : 0;
-    setKnobPosition(pos);
-    knobPositionRef.current = pos;
-  }, [theme]);
-
-  const updateKnobFromClientY = useCallback((clientY: number) => {
-    const track = trackRef.current;
-    if (!track) return;
-    const rect = track.getBoundingClientRect();
-    // Knob center travels from (top + KNOB_SIZE/2) to (bottom - KNOB_SIZE/2)
-    const minY = rect.top + KNOB_SIZE / 2;
-    const maxY = rect.bottom - KNOB_SIZE / 2;
-    const range = maxY - minY || 1;
-    let ratio = (clientY - minY) / range;
-    ratio = Math.max(0, Math.min(1, ratio));
-    setKnobPosition(ratio);
-    knobPositionRef.current = ratio;
-  }, []);
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(true);
-      updateKnobFromClientY(e.clientY);
-    },
-    [updateKnobFromClientY],
-  );
-
-  // Global drag listeners while dragging
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      updateKnobFromClientY(e.clientY);
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      // Snap to nearest end
-      const snapped = knobPositionRef.current < 0.5 ? 0 : 1;
-      setKnobPosition(snapped);
-      knobPositionRef.current = snapped;
-      setTheme(snapped === 0 ? 'light' : 'dark');
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, updateKnobFromClientY, setTheme]);
-
-  // Icon intensity: sun bright at top (pos 0), moon bright at bottom (pos 1)
-  const sunIntensity = 1 - knobPosition;
-  const moonIntensity = knobPosition;
-  const sunColor = intensityColor(252, 211, 77, sunIntensity);
-  const moonColor = intensityColor(107, 197, 232, moonIntensity);
-  // Color emoji ignore `color`, so also drive opacity for a visible bright/dim effect
-  const sunOpacity = 0.35 + 0.65 * sunIntensity;
-  const moonOpacity = 0.35 + 0.65 * moonIntensity;
-
-  const knobTop = knobPosition * MAX_OFFSET;
+  const { toggleTheme } = useTheme();
 
   return (
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="flex flex-col items-center gap-2 select-none"
-    >
-      {/* Sun icon at top */}
-      <span
-        style={{
-          color: sunColor,
-          opacity: sunOpacity,
-          fontSize: '16px',
-          transition: isDragging ? 'none' : 'color 300ms ease, opacity 300ms ease',
-        }}
-      >
-        ☀️
-      </span>
-
-      {/* Track with knob */}
-      <div
-        ref={trackRef}
-        className="relative rounded-full"
-        style={{
-          width: '4px',
-          height: `${TRACK_HEIGHT}px`,
-          background: 'linear-gradient(to bottom, #FCD34D, #a855f7, #6BC5E8)',
-          boxShadow: '0 0 8px rgba(107, 197, 232, 0.4)',
-        }}
-      >
-        <div
-          onMouseDown={handleMouseDown}
-          className="absolute rounded-full"
-          style={{
-            width: `${KNOB_SIZE}px`,
-            height: `${KNOB_SIZE}px`,
-            left: '50%',
-            top: `${knobTop}px`,
-            transform: 'translateX(-50%)',
-            background: 'linear-gradient(135deg, #FCD34D, #a855f7, #6BC5E8)',
-            boxShadow:
-              '0 0 12px rgba(168, 85, 247, 0.6), 0 0 4px rgba(107, 197, 232, 0.8)',
-            transition: isDragging ? 'none' : 'top 300ms ease',
-            cursor: isDragging ? 'grabbing' : 'grab',
-          }}
-        />
-      </div>
-
-      {/* Moon icon at bottom */}
-      <span
-        style={{
-          color: moonColor,
-          opacity: moonOpacity,
-          fontSize: '16px',
-          transition: isDragging ? 'none' : 'color 300ms ease, opacity 300ms ease',
-        }}
-      >
-        🌙
-      </span>
-    </div>
+    <Within
+      onClick={toggleTheme}
+      className="text-3xl text-[#7B4B9E] dark:text-[#6BC5E8] transition-colors duration-300 cursor-pointer"
+    />
   );
 }
 
