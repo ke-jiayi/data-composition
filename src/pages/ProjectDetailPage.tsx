@@ -152,8 +152,8 @@ export function ProjectDetailPage() {
       <Layout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1e3a5f] mx-auto mb-4"></div>
-            <p className="text-gray-500">正在加载项目...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BC5E8] mx-auto mb-4"></div>
+            <p className="text-[#9CA3AF]">正在加载项目...</p>
           </div>
         </div>
       </Layout>
@@ -167,7 +167,7 @@ export function ProjectDetailPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-[#9CA3AF]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -179,14 +179,14 @@ export function ProjectDetailPage() {
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">项目未找到</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <h3 className="mt-2 text-sm font-medium text-white">项目未找到</h3>
+            <p className="mt-1 text-sm text-[#9CA3AF]">
               {error || `项目 ID ${id} 不存在或已被删除`}
             </p>
             <div className="mt-6">
               <Link
                 to="/home"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#1e3a5f] hover:bg-[#2d4a6f]"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-[#0a0e1a] bg-[#6BC5E8] hover:bg-[#5AB4D8]"
               >
                 返回首页
               </Link>
@@ -239,14 +239,14 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 项目标题区域 */}
-        <div className="mb-6 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+        <div className="mb-6 bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">{dataset.name}</h1>
+              <h1 className="text-3xl font-bold text-white">{dataset.name}</h1>
               {dataset.description && (
-                <p className="mt-2 text-gray-600">{dataset.description}</p>
+                <p className="mt-2 text-[#D1D5DB]">{dataset.description}</p>
               )}
-              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[#9CA3AF]">
                 <span>创建于 {formatDate(dataset.createdAt)}</span>
                 {dataset.updatedAt !== dataset.createdAt && (
                   <span>· 更新于 {formatDate(dataset.updatedAt)}</span>
@@ -257,7 +257,7 @@ export function ProjectDetailPage() {
                   {dataset.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#1e3a5f]/10 text-[#1e3a5f] border border-[#1e3a5f]/20"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#6BC5E8]/10 text-[#6BC5E8] border border-[#6BC5E8]/20"
                     >
                       {tag}
                     </span>
@@ -267,7 +267,7 @@ export function ProjectDetailPage() {
             </div>
             <button
               onClick={openModal}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#2d4a6f] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#6BC5E8] text-[#0a0e1a] text-sm font-medium rounded-lg hover:bg-[#5AB4D8] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -278,32 +278,32 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 项目信息展示区域 */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm mb-6">
+        <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">数据集信息</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">数据集信息</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* 文件名 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">文件名</h3>
-                <p className="text-gray-900">{dataset.fileName}</p>
+                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件名</h3>
+                <p className="text-white">{dataset.fileName}</p>
               </div>
 
               {/* 文件类型 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">文件类型</h3>
-                <p className="text-gray-900 uppercase">{dataset.fileType}</p>
+                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件类型</h3>
+                <p className="text-white uppercase">{dataset.fileType}</p>
               </div>
 
               {/* 数据量 */}
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">数据行数</h3>
-                <p className="text-gray-900">{formatNumber(dataset.rowCount)} 行</p>
+                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">数据行数</h3>
+                <p className="text-white">{formatNumber(dataset.rowCount)} 行</p>
               </div>
 
               {/* 字段 */}
               <div className="md:col-span-2 lg:col-span-3">
-                <h3 className="text-sm font-medium text-gray-500 mb-1">数据字段</h3>
-                <p className="text-gray-900">{dataset.columns.join('、')}</p>
+                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">数据字段</h3>
+                <p className="text-white">{dataset.columns.join('、')}</p>
               </div>
             </div>
           </div>
@@ -331,13 +331,13 @@ export function ProjectDetailPage() {
                   onDataChange={handleCleanedDataChange}
                 />
               )}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-900">📊 数据清洗与可视化代码</span>
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
+                <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
+                  <span className="text-sm font-medium text-white">📊 数据清洗与可视化代码</span>
                   <button
                     onClick={handleSaveCode}
                     disabled={saveStatus === 'saving'}
-                    className="px-3 py-1 text-sm font-medium text-white bg-[#1e3a5f] rounded-lg hover:bg-[#2d4a6f] transition-colors disabled:opacity-50"
+                    className="px-3 py-1 text-sm font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
                   >
                     {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
                   </button>
@@ -358,8 +358,8 @@ export function ProjectDetailPage() {
           {/* Tab 3: 分析结论 */}
           {activeTab === 'conclusion' && (
             <div className="space-y-4">
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-6">
+                <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
                   <span className="text-xl">💡</span>
                   数据分析结论
                 </h3>
@@ -369,11 +369,11 @@ export function ProjectDetailPage() {
                       key={index}
                       className={`flex gap-4 p-4 rounded-lg border transition-colors ${
                         editingConclusion === index
-                          ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-100'
-                          : 'bg-gray-50 border-gray-100'
+                          ? 'bg-[#6BC5E8]/10 border-[#6BC5E8]/40 ring-2 ring-[#6BC5E8]/20'
+                          : 'bg-[#1E1E24] border-[#3A3A44]'
                       }`}
                     >
-                      <div className="flex-shrink-0 w-8 h-8 bg-[#1e3a5f] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      <div className="flex-shrink-0 w-8 h-8 bg-[#6BC5E8] text-[#0a0e1a] rounded-full flex items-center justify-center text-sm font-bold">
                         {index + 1}
                       </div>
                       <div className="flex-1">
@@ -385,13 +385,13 @@ export function ProjectDetailPage() {
                               newConclusions[index] = e.target.value;
                               setConclusions(newConclusions);
                             }}
-                            className="w-full p-2 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 min-h-[80px] resize-y"
+                            className="w-full p-2 border border-[#3A3A44] rounded-lg text-sm text-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#6BC5E8]/30 focus:border-[#6BC5E8]/60 min-h-[80px] resize-y"
                             placeholder="请输入分析结论..."
                             autoFocus
                           />
                         ) : (
                           <p
-                            className="text-sm text-gray-600 cursor-pointer hover:text-gray-900"
+                            className="text-sm text-[#D1D5DB] cursor-pointer hover:text-white"
                             onClick={() => setEditingConclusion(index)}
                           >
                             {conclusion || '点击编辑...'}
@@ -403,13 +403,13 @@ export function ProjectDetailPage() {
                               <button
                                 onClick={() => handleSaveConclusion(index)}
                                 disabled={conclusionSaveStatus[index] === 'saving'}
-                                className="px-3 py-1 text-xs font-medium text-white bg-[#1e3a5f] rounded-lg hover:bg-[#2d4a6f] transition-colors disabled:opacity-50"
+                                className="px-3 py-1 text-xs font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
                               >
                                 {conclusionSaveStatus[index] === 'saving' ? '保存中...' : conclusionSaveStatus[index] === 'saved' ? '✓ 已保存' : '保存修改'}
                               </button>
                               <button
                                 onClick={() => setEditingConclusion(null)}
-                                className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                className="px-3 py-1 text-xs font-medium text-[#9CA3AF] bg-[#1E1E24] rounded-lg hover:bg-[#3A3A44] transition-colors"
                               >
                                 取消
                               </button>
@@ -417,14 +417,14 @@ export function ProjectDetailPage() {
                           ) : (
                             <button
                               onClick={() => setEditingConclusion(index)}
-                              className="text-xs text-gray-400 hover:text-[#1e3a5f] transition-colors"
+                              className="text-xs text-[#9CA3AF] hover:text-[#6BC5E8] transition-colors"
                             >
                               ✏️ 编辑
                             </button>
                           )}
                           <button
                             onClick={() => handleDeleteConclusion(index)}
-                            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                            className="text-xs text-[#9CA3AF] hover:text-red-500 transition-colors"
                           >
                             🗑️ 删除
                           </button>
@@ -435,7 +435,7 @@ export function ProjectDetailPage() {
                 </div>
                 <button
                   onClick={handleAddConclusion}
-                  className="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-[#1e3a5f] hover:text-[#1e3a5f] transition-colors"
+                  className="mt-4 w-full py-2 border-2 border-dashed border-[#3A3A44] rounded-lg text-sm text-[#9CA3AF] hover:border-[#6BC5E8] hover:text-[#6BC5E8] transition-colors"
                 >
                   + 添加新结论
                 </button>
@@ -450,8 +450,8 @@ export function ProjectDetailPage() {
 
           {/* Tab 4: 可视化分析 */}
           {activeTab === 'chart' && (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">城市居民消费价格指数趋势图</h3>
+            <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-4">
+              <h3 className="text-lg font-semibold text-white mb-4 text-center">城市居民消费价格指数趋势图</h3>
               <div className="flex justify-center">
                 <img
                   src="/images/城市价格指数趋势图.png.png"
@@ -459,7 +459,7 @@ export function ProjectDetailPage() {
                   className="w-full max-h-[500px] object-contain rounded"
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
+              <p className="text-sm text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
             </div>
           )}
         </div>

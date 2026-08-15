@@ -313,7 +313,7 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
   if (data.length < 3) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-gray-500 text-center">数据量太少，无法生成有意义的图表</p>
+        <p className="text-[#9CA3AF] text-center">数据量太少，无法生成有意义的图表</p>
       </div>
     );
   }
@@ -321,7 +321,7 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
   if (cards.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-gray-500 text-center">未找到适合生成图表的数据列</p>
+        <p className="text-[#9CA3AF] text-center">未找到适合生成图表的数据列</p>
       </div>
     );
   }
@@ -339,10 +339,10 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
         return (
           <div
             key={card.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-4"
+            className="bg-[#26262C] rounded-xl shadow-sm border border-[#3A3A44] p-4"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-semibold text-gray-900">{card.title}</h3>
+              <h3 className="text-base font-semibold text-white">{card.title}</h3>
               {card.canSwitch && (
                 <div className="flex gap-1">
                   <button
@@ -350,8 +350,8 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
                     onClick={() => handleSwitch(card.id, 'bar')}
                     className={`px-2 py-1 text-sm rounded transition-colors ${
                       currentType === 'bar'
-                        ? 'bg-[#1e3a5f] text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-[#6BC5E8] text-[#0a0e1a]'
+                        : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'
                     }`}
                     title="柱状图"
                   >
@@ -362,8 +362,8 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
                     onClick={() => handleSwitch(card.id, 'line')}
                     className={`px-2 py-1 text-sm rounded transition-colors ${
                       currentType === 'line'
-                        ? 'bg-[#1e3a5f] text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-[#6BC5E8] text-[#0a0e1a]'
+                        : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'
                     }`}
                     title="折线图"
                   >
@@ -374,8 +374,8 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
                     onClick={() => handleSwitch(card.id, 'pie')}
                     className={`px-2 py-1 text-sm rounded transition-colors ${
                       currentType === 'pie'
-                        ? 'bg-[#1e3a5f] text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-[#6BC5E8] text-[#0a0e1a]'
+                        : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'
                     }`}
                     title="饼图"
                   >

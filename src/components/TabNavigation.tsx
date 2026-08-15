@@ -88,7 +88,7 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   };
 
   return (
-    <div className="border-b border-gray-200 bg-white">
+    <div className="border-b border-[#3A3A44] bg-[#1E1E24]">
       <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
         {tabs.map((tab) => (
           <button
@@ -98,8 +98,8 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
               flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors
               ${
                 activeTab === tab.key
-                  ? 'border-[#1e3a5f] text-[#1e3a5f]'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-[#6BC5E8] text-[#6BC5E8]'
+                  : 'border-transparent text-[#9CA3AF] hover:text-[#D1D5DB] hover:border-[#3A3A44]'
               }
             `}
             aria-current={activeTab === tab.key ? 'page' : undefined}

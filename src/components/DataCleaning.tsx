@@ -109,17 +109,17 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md border border-gray-200">
+    <div className="w-full bg-[#26262C] rounded-lg shadow-md border border-[#3A3A44]">
       {/* 头部 */}
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">数据清洗</h3>
-        <p className="text-sm text-gray-500 mt-1">
-          当前数据：<span className="font-medium text-blue-500">{data.length}</span> 行
+      <div className="p-4 border-b border-[#3A3A44]">
+        <h3 className="text-lg font-semibold text-white">数据清洗</h3>
+        <p className="text-sm text-[#9CA3AF] mt-1">
+          当前数据：<span className="font-medium text-[#6BC5E8]">{data.length}</span> 行
         </p>
       </div>
 
       {/* 操作按钮区域 */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-[#3A3A44]">
         <div className="flex flex-wrap gap-3">
           <button
             onClick={handleDeduplicate}
@@ -136,18 +136,18 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
         {/* 列操作 */}
         {columns.length > 0 && (
           <div className="mt-4">
-            <p className="text-sm text-gray-600 mb-2">列操作：</p>
+            <p className="text-sm text-[#D1D5DB] mb-2">列操作：</p>
             <div className="flex flex-wrap gap-2">
               {columns.map((column) => (
                 <div
                   key={column}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E1E24] text-[#D1D5DB] text-sm rounded-full"
                 >
                   <span className="max-w-[120px] truncate">{column}</span>
                   <div className="flex items-center gap-1 ml-1">
                     <button
                       onClick={() => handleOpenFillModal(column)}
-                      className="p-0.5 text-blue-500 hover:text-blue-700"
+                      className="p-0.5 text-[#6BC5E8] hover:text-blue-700"
                       title="填充空值"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,20 +173,20 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
 
       {/* 清洗前后对比 */}
       {logs.length > 0 && (
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
+        <div className="p-4 border-b border-[#3A3A44] bg-[#1E1E24]">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">清洗前：</span>
-              <span className="text-lg font-semibold text-gray-900">
+              <span className="text-sm text-[#D1D5DB]">清洗前：</span>
+              <span className="text-lg font-semibold text-white">
                 {data.length + (logs.reduce((sum, log) => sum + (log.affectedRows || 0), 0))}
               </span>
             </div>
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-[#9CA3AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">清洗后：</span>
-              <span className="text-lg font-semibold text-blue-500">{data.length}</span>
+              <span className="text-sm text-[#D1D5DB]">清洗后：</span>
+              <span className="text-lg font-semibold text-[#6BC5E8]">{data.length}</span>
             </div>
             <span className="text-sm text-green-600">
               (-{logs.reduce((sum, log) => sum + (log.affectedRows || 0), 0)})
@@ -197,10 +197,10 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
 
       {/* 日志列表 */}
       <div className="p-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">清洗日志</h4>
+        <h4 className="text-sm font-medium text-[#D1D5DB] mb-3">清洗日志</h4>
         {logs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-            <svg className="w-10 h-10 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col items-center justify-center py-8 text-[#9CA3AF]">
+            <svg className="w-10 h-10 text-[#9CA3AF] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             <p className="text-sm">暂无清洗记录</p>
@@ -210,16 +210,16 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
             {logs.map((log) => (
               <div
                 key={log.id}
-                className="p-3 bg-gray-50 border border-gray-200 rounded-md"
+                className="p-3 bg-[#1E1E24] border border-[#3A3A44] rounded-md"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
                       {log.operation}
                     </span>
-                    <span className="text-sm text-gray-600">{log.details}</span>
+                    <span className="text-sm text-[#D1D5DB]">{log.details}</span>
                   </div>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                  <span className="text-xs text-[#9CA3AF] whitespace-nowrap">
                     {formatTimestamp(log.timestamp)}
                   </span>
                 </div>
@@ -237,14 +237,14 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
       {/* 填充空值弹窗 */}
       {showFillModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-            <div className="p-4 border-b border-gray-200">
-              <h4 className="text-lg font-semibold text-gray-900">填充空值</h4>
-              <p className="text-sm text-gray-500 mt-1">列：{selectedColumn}</p>
+          <div className="bg-[#26262C] rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div className="p-4 border-b border-[#3A3A44]">
+              <h4 className="text-lg font-semibold text-white">填充空值</h4>
+              <p className="text-sm text-[#9CA3AF] mt-1">列：{selectedColumn}</p>
             </div>
             <div className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">填充策略</label>
+                <label className="block text-sm font-medium text-[#D1D5DB] mb-2">填充策略</label>
                 <div className="flex gap-4">
                   <label className="inline-flex items-center">
                     <input
@@ -253,9 +253,9 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       value="mean"
                       checked={fillStrategy === 'mean'}
                       onChange={() => setFillStrategy('mean')}
-                      className="text-blue-500 focus:ring-blue-500"
+                      className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-gray-700">均值</span>
+                    <span className="ml-2 text-sm text-[#D1D5DB]">均值</span>
                   </label>
                   <label className="inline-flex items-center">
                     <input
@@ -264,9 +264,9 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       value="median"
                       checked={fillStrategy === 'median'}
                       onChange={() => setFillStrategy('median')}
-                      className="text-blue-500 focus:ring-blue-500"
+                      className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-gray-700">中位数</span>
+                    <span className="ml-2 text-sm text-[#D1D5DB]">中位数</span>
                   </label>
                   <label className="inline-flex items-center">
                     <input
@@ -275,32 +275,32 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       value="custom"
                       checked={fillStrategy === 'custom'}
                       onChange={() => setFillStrategy('custom')}
-                      className="text-blue-500 focus:ring-blue-500"
+                      className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-gray-700">自定义</span>
+                    <span className="ml-2 text-sm text-[#D1D5DB]">自定义</span>
                   </label>
                 </div>
               </div>
               {fillStrategy === 'custom' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">自定义值</label>
+                  <label className="block text-sm font-medium text-[#D1D5DB] mb-2">自定义值</label>
                   <input
                     type="text"
                     value={customValue}
                     onChange={(e) => setCustomValue(e.target.value)}
                     placeholder="请输入自定义值"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[#3A3A44] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
                   />
                 </div>
               )}
             </div>
-            <div className="p-4 border-t border-gray-200 flex justify-end gap-3">
+            <div className="p-4 border-t border-[#3A3A44] flex justify-end gap-3">
               <button
                 onClick={() => {
                   setShowFillModal(false);
                   setCustomValue('');
                 }}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
               >
                 取消
               </button>
@@ -318,19 +318,19 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
       {/* 删除列弹窗 */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-            <div className="p-4 border-b border-gray-200">
-              <h4 className="text-lg font-semibold text-gray-900">删除列</h4>
+          <div className="bg-[#26262C] rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div className="p-4 border-b border-[#3A3A44]">
+              <h4 className="text-lg font-semibold text-white">删除列</h4>
             </div>
             <div className="p-4">
-              <p className="text-sm text-gray-600">
-                确定要删除列 "<span className="font-medium text-gray-900">{selectedColumn}</span>" 吗？此操作不可撤销。
+              <p className="text-sm text-[#D1D5DB]">
+                确定要删除列 "<span className="font-medium text-white">{selectedColumn}</span>" 吗？此操作不可撤销。
               </p>
             </div>
-            <div className="p-4 border-t border-gray-200 flex justify-end gap-3">
+            <div className="p-4 border-t border-[#3A3A44] flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
               >
                 取消
               </button>

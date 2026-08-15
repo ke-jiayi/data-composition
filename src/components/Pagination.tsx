@@ -79,14 +79,14 @@ const Pagination = ({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 bg-white border-t border-gray-200">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 bg-[#26262C] border-t border-[#3A3A44]">
       {/* 左侧：显示条数选择 */}
-      <div className="flex items-center gap-2 text-sm text-gray-700">
+      <div className="flex items-center gap-2 text-sm text-[#D1D5DB]">
         <span>每页</span>
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="px-2 py-1 border border-[#3A3A44] rounded-md focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
         >
           {pageSizeOptions.map((size) => (
             <option key={size} value={size}>
@@ -103,7 +103,7 @@ const Pagination = ({
         <button
           onClick={handlePrevious}
           disabled={currentPage === 1}
-          className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-3 py-1 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] border border-[#3A3A44] rounded-md hover:bg-[#26262C] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           上一页
         </button>
@@ -113,14 +113,14 @@ const Pagination = ({
           {getPageNumbers().map((page, index) => (
             <Fragment key={index}>
               {page === '...' ? (
-                <span className="px-2 py-1 text-gray-500">...</span>
+                <span className="px-2 py-1 text-[#9CA3AF]">...</span>
               ) : (
                 <button
                   onClick={() => onPageChange(page as number)}
                   className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
                     currentPage === page
-                      ? 'bg-blue-500 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-[#6BC5E8] text-[#0a0e1a]'
+                      : 'text-[#D1D5DB] hover:bg-[#1E1E24]'
                   }`}
                 >
                   {page}
@@ -131,7 +131,7 @@ const Pagination = ({
         </div>
 
         {/* 移动端页码显示 */}
-        <span className="sm:hidden px-3 py-1 text-sm text-gray-700">
+        <span className="sm:hidden px-3 py-1 text-sm text-[#D1D5DB]">
           {currentPage} / {totalPages}
         </span>
 
@@ -139,14 +139,14 @@ const Pagination = ({
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-3 py-1 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] border border-[#3A3A44] rounded-md hover:bg-[#26262C] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           下一页
         </button>
       </div>
 
       {/* 右侧：统计信息 */}
-      <div className="text-sm text-gray-700">
+      <div className="text-sm text-[#D1D5DB]">
         共 <span className="font-medium">{totalItems}</span> 条
       </div>
     </div>
