@@ -75,7 +75,7 @@ export function ThemeToggle() {
   return (
     <Within
       onClick={toggleTheme}
-      className="text-3xl text-[#7B4B9E] dark:text-[#6BC5E8] transition-colors duration-300 cursor-pointer"
+      className="text-[35px] text-[#7B4B9E] dark:text-[#6BC5E8] transition-colors duration-300 cursor-pointer"
     />
   );
 }
