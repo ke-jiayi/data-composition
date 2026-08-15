@@ -4,6 +4,7 @@ import PowerBIPage from './pages/PowerBIPage';
 import { ImportModal } from './components';
 import { useDB } from './hooks/useDB';
 import { ImportModalProvider, useImportModal } from './contexts/ImportModalContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function AppContent() {
   const { isLoading, error, createDataset, saveData } = useDB();
@@ -77,9 +78,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ImportModalProvider>
-      <AppContent />
-    </ImportModalProvider>
+    <ThemeProvider>
+      <ImportModalProvider>
+        <AppContent />
+      </ImportModalProvider>
+    </ThemeProvider>
   );
 }
 
