@@ -145,7 +145,8 @@ export function HomePage() {
             <div className="absolute top-0 right-0 z-10">
               <Link
                 to="/"
-                className="px-3 py-1.5 text-xs md:text-sm font-medium text-purple-300/70 border border-purple-500/30 rounded-lg hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-purple-500/10 transition-colors no-underline inline-flex items-center"
+                className="inline-flex items-center text-[19px] transition-all px-4 py-2 rounded-lg border border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20 hover:border-purple-400/60"
+                style={{ color: '#B084DC', textShadow: '0 0 6px #7B4B9E, 0 0 12px #7B4B9E, 0 0 24px rgba(123, 75, 158, 0.6)' }}
               >
                 ← 返回封面
               </Link>
