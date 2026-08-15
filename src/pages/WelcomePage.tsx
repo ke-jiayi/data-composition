@@ -10,24 +10,25 @@ export function WelcomePage() {
   const isDark = theme === 'dark';
   const colors = {
     welcomeDrawFill: isDark ? '#FFFFFF' : '#1A1A2E',
-    welcomeStroke:  isDark ? '#6C3B9A' : '#2C5282',
+    welcomeStroke:  isDark ? '#6C3B9A' : '#0EA5E9',
     welcomeDropShadow: isDark
       ? 'drop-shadow(0 0 8px rgba(107,197,232,0.25))'
-      : 'drop-shadow(0 0 4px rgba(44,82,130,0.3))',
-    neonColor: isDark ? '#5FFBF1' : '#2C5282',
+      : 'drop-shadow(0 0 4px rgba(14,165,233,0.3))',
+    neonColor: isDark ? '#5FFBF1' : '#0891B2',
     neonGlow: isDark
       ? '0 0 5px #5FFBF1, 0 0 10px #5FFBF1'
-      : '0 0 4px rgba(44,82,130,0.35), 0 0 8px rgba(44,82,130,0.2)',
+      : '0 0 4px rgba(8,145,178,0.35), 0 0 8px rgba(8,145,178,0.2)',
     neonGlowHover: isDark
       ? '0 0 8px #5FFBF1, 0 0 16px #5FFBF1, 0 0 24px #5FFBF1'
-      : '0 0 6px rgba(44,82,130,0.5), 0 0 12px rgba(44,82,130,0.35), 0 0 18px rgba(44,82,130,0.25)',
-    gradStart: isDark ? '#7B4B9E' : '#553C9A',
-    gradEnd:   isDark ? '#6BC5E8' : '#3182CE',
-    dotFill:   isDark ? '#6BC5E8' : '#3182CE',
-    dotOpacity: isDark ? 0.85 : 1,
-    gridLineStroke:  isDark ? '#7B4B9E' : '#2C5282',
-    gridLineOpacity: isDark ? 0.08 : 0.15,
+      : '0 0 6px rgba(8,145,178,0.5), 0 0 12px rgba(8,145,178,0.35), 0 0 18px rgba(8,145,178,0.25)',
+    gradStart: isDark ? '#7B4B9E' : '#00D4FF',
+    gradEnd:   isDark ? '#6BC5E8' : '#60A5FA',
+    dotFill:   isDark ? '#6BC5E8' : '#22D3EE',
+    dotOpacity: isDark ? 0.85 : 0.55,
+    gridLineStroke:  isDark ? '#7B4B9E' : '#34D399',
+    gridLineOpacity: isDark ? 0.08 : 0.5,
     softGlowBlur: isDark ? 2.5 : 1.5,
+    pathStrokeWidth: isDark ? 3 : 2,
   };
 
   useEffect(() => {
@@ -112,7 +113,7 @@ export function WelcomePage() {
           d="M0,640 L160,620 L260,480 L360,560 L480,280 L580,400 L720,180 L820,320 L960,120 L1080,240 L1200,180 L1280,220"
           fill="none"
           stroke="url(#lineGrad)"
-          strokeWidth="3"
+          strokeWidth={colors.pathStrokeWidth}
           filter="url(#softGlow)"
         />
         {[0, 2, 4, 6, 8, 11].map((i) => (
