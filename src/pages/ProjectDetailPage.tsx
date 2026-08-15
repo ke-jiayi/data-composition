@@ -218,8 +218,8 @@ export function ProjectDetailPage() {
         <div className="mb-4">
           <Link
             to="/home"
-            className="inline-flex items-center text-[19px] transition-colors"
-            style={{ color: '#7B4B9E', textShadow: '0 0 8px #7B4B9E, 0 0 20px rgba(123, 75, 158, 0.3)' }}
+            className="inline-flex items-center text-[19px] transition-all px-4 py-2 rounded-lg border border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20 hover:border-purple-400/60"
+            style={{ color: '#B084DC', textShadow: '0 0 6px #7B4B9E, 0 0 12px #7B4B9E, 0 0 24px rgba(123, 75, 158, 0.6)' }}
           >
             <svg
               className="w-4 h-4 mr-1"
