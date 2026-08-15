@@ -50,7 +50,7 @@
 }
 
 html.dark body { background-color: #0a0e1a; color: #e2e8f0; }
-html.light body { background-color: #F8F9FA; color: #1A1A1E; }
+html.light body { background-color: #F0F4F8; color: #1A1A2E; }
 
 @layer base {
   /* Global dark theme styles */
@@ -451,58 +451,82 @@ html.light body { background-color: #F8F9FA; color: #1A1A1E; }
   }
 }
 
-/* ===== Light Theme Overrides ===== */
+/* ===== Light Theme Overrides (Tech Cold Gray) ===== */
 html.light body {
-  background-color: #F8F9FA !important;
-  color: #1A1A1E !important;
+  background-color: #F0F4F8 !important;
+  color: #1A1A2E !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Page backgrounds */
-html.light .bg-\[\#0a0e1a\] { background-color: #F8F9FA !important; }
-html.light .bg-\[\#0a0e1a\]\/80 { background-color: rgba(248, 249, 250, 0.8) !important; }
-html.light .bg-\[\#0a0e1a\]\/95 { background-color: rgba(248, 249, 250, 0.95) !important; }
+/* Page backgrounds — cold gray-blue */
+html.light .bg-\[\#0a0e1a\] { background-color: #F0F4F8 !important; }
+html.light .bg-\[\#0a0e1a\]\/80 { background-color: rgba(240, 244, 248, 0.8) !important; }
+html.light .bg-\[\#0a0e1a\]\/95 { background-color: rgba(240, 244, 248, 0.95) !important; }
 
-/* Card/panel backgrounds */
+/* Card/panel backgrounds — pure white */
 html.light .bg-\[\#26262C\] { background-color: #FFFFFF !important; }
-html.light .bg-\[\#1E1E24\] { background-color: #F0F0F4 !important; }
-html.light .bg-\[\#1A1A1E\] { background-color: #F8F9FA !important; }
+
+/* Secondary panels / table alternating rows — very light gray-blue */
+html.light .bg-\[\#1E1E24\] { background-color: #F7FAFC !important; }
+html.light .bg-\[\#1A1A1E\] { background-color: #F0F4F8 !important; }
 
 /* Gradient backgrounds (WelcomePage) */
-html.light .from-\[\#1A1A1E\] { --tw-gradient-from: #F8F9FA !important; }
-html.light .via-\[\#1E1E24\] { --tw-gradient-via: #F0F0F4 !important; }
-html.light .to-\[\#1A1A1E\] { --tw-gradient-to: #F8F9FA !important; }
+html.light .from-\[\#1A1A1E\] { --tw-gradient-from: #F0F4F8 !important; }
+html.light .via-\[\#1E1E24\] { --tw-gradient-via: #F7FAFC !important; }
+html.light .to-\[\#1A1A1E\] { --tw-gradient-to: #F0F4F8 !important; }
 
-/* Text colors */
-html.light .text-white { color: #1A1A1E !important; }
-html.light .text-gray-100 { color: #374151 !important; }
-html.light .text-gray-400 { color: #6B7280 !important; }
-html.light .text-gray-500 { color: #6B7280 !important; }
-html.light .text-gray-600 { color: #4B5563 !important; }
-html.light .text-gray-700 { color: #374151 !important; }
-html.light .text-gray-800 { color: #1F2937 !important; }
-html.light .text-gray-900 { color: #1A1A1E !important; }
-html.light .text-\[\#D1D5DB\] { color: #374151 !important; }
-html.light .text-\[\#9CA3AF\] { color: #6B7280 !important; }
-html.light .text-\[\#fafafa\] { color: #1A1A1E !important; }
-html.light .text-\[\#a3a3a3\] { color: #6B7280 !important; }
+/* Text colors — deep gray-blue hierarchy */
+html.light .text-white { color: #1A1A2E !important; }
+html.light .text-gray-100 { color: #2D3748 !important; }
+html.light .text-gray-400 { color: #718096 !important; }
+html.light .text-gray-500 { color: #718096 !important; }
+html.light .text-gray-600 { color: #4A5568 !important; }
+html.light .text-gray-700 { color: #2D3748 !important; }
+html.light .text-gray-800 { color: #1A1A2E !important; }
+html.light .text-gray-900 { color: #1A1A2E !important; }
+html.light .text-\[\#D1D5DB\] { color: #2D3748 !important; }
+html.light .text-\[\#9CA3AF\] { color: #718096 !important; }
+html.light .text-\[\#fafafa\] { color: #1A1A2E !important; }
+html.light .text-\[\#a3a3a3\] { color: #718096 !important; }
 
 /* Code editor exception: keep light text on dark bg */
 html.light .bg-gray-900.text-gray-100 { color: #F3F4F6 !important; }
 
-/* Borders */
-html.light .border-\[\#3A3A44\] { border-color: #E5E7EB !important; }
-html.light .border-\[\#303030\] { border-color: #E5E7EB !important; }
-html.light .divide-\[\#3A3A44\] > * { border-color: #E5E7EB !important; }
+/* Borders — light gray-blue */
+html.light .border-\[\#3A3A44\] { border-color: #DCE4EC !important; }
+html.light .border-\[\#303030\] { border-color: #DCE4EC !important; }
+html.light .border-white\/10 { border-color: #DCE4EC !important; }
+html.light .divide-\[\#3A3A44\] > * { border-color: #DCE4EC !important; }
 
-/* Table header */
-html.light .bg-\[\#7B4B9E\] { background-color: #6B46C1 !important; }
+/* Table header — keep tech-style purple */
+html.light .bg-\[\#7B4B9E\] { background-color: #7B4B9E !important; }
 
 /* PowerBIPage dark backgrounds */
-html.light .bg-\[\#262626\] { background-color: #F0F0F4 !important; }
+html.light .bg-\[\#262626\] { background-color: #F7FAFC !important; }
 
 /* Semi-transparent white backgrounds → subtle dark tint in light mode */
 html.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.03) !important; }
 html.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.05) !important; }
+
+/* Smooth theme transition for overridden elements */
+html.light .bg-\[\#0a0e1a\],
+html.light .bg-\[\#26262C\],
+html.light .bg-\[\#1E1E24\],
+html.light .bg-\[\#1A1A1E\],
+html.light .bg-\[\#262626\],
+html.light .text-white,
+html.light .text-gray-100,
+html.light .text-gray-400,
+html.light .text-gray-500,
+html.light .text-gray-600,
+html.light .text-gray-700,
+html.light .text-gray-800,
+html.light .text-gray-900,
+html.light .border-\[\#3A3A44\],
+html.light .border-\[\#303030\],
+html.light .border-white\/10 {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
 
 /* Code editor - keep dark */
 /* bg-gray-900 stays as is - no override needed */
