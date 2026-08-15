@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export function WelcomePage() {
   const navigate = useNavigate();
@@ -181,6 +182,11 @@ export function WelcomePage() {
 
       <div className="absolute bottom-6 text-xs text-[#7B4B9E]/50 tracking-widest">
         © 2026 Data Portfolio · Click to enter
+      </div>
+
+      {/* 日夜切换拖拽条 */}
+      <div className="absolute top-6 right-6 z-20" onClick={(e) => e.stopPropagation()}>
+        <ThemeToggle />
       </div>
     </div>
   );
