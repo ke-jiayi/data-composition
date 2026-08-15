@@ -472,16 +472,35 @@ html.light .to-\[\#1A1A1E\] { --tw-gradient-to: #F8F9FA !important; }
 
 /* Text colors */
 html.light .text-white { color: #1A1A1E !important; }
-html.light .text-\[\#D1D5DB\] { color: #4B5563 !important; }
-html.light .text-\[\#9CA3AF\] { color: #6B7280 !important; }
+html.light .text-gray-100 { color: #374151 !important; }
 html.light .text-gray-400 { color: #6B7280 !important; }
+html.light .text-gray-500 { color: #6B7280 !important; }
+html.light .text-gray-600 { color: #4B5563 !important; }
+html.light .text-gray-700 { color: #374151 !important; }
+html.light .text-gray-800 { color: #1F2937 !important; }
+html.light .text-gray-900 { color: #1A1A1E !important; }
+html.light .text-\[\#D1D5DB\] { color: #374151 !important; }
+html.light .text-\[\#9CA3AF\] { color: #6B7280 !important; }
+html.light .text-\[\#fafafa\] { color: #1A1A1E !important; }
+html.light .text-\[\#a3a3a3\] { color: #6B7280 !important; }
+
+/* Code editor exception: keep light text on dark bg */
+html.light .bg-gray-900.text-gray-100 { color: #F3F4F6 !important; }
 
 /* Borders */
 html.light .border-\[\#3A3A44\] { border-color: #E5E7EB !important; }
+html.light .border-\[\#303030\] { border-color: #E5E7EB !important; }
 html.light .divide-\[\#3A3A44\] > * { border-color: #E5E7EB !important; }
 
 /* Table header */
 html.light .bg-\[\#7B4B9E\] { background-color: #6B46C1 !important; }
+
+/* PowerBIPage dark backgrounds */
+html.light .bg-\[\#262626\] { background-color: #F0F0F4 !important; }
+
+/* Semi-transparent white backgrounds → subtle dark tint in light mode */
+html.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.03) !important; }
+html.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.05) !important; }
 
 /* Code editor - keep dark */
 /* bg-gray-900 stays as is - no override needed */
