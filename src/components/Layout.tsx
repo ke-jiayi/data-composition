@@ -57,9 +57,14 @@ export function Layout({ children }: LayoutProps) {
                   onClick={handleNavClick}
                   className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     isActive(link.to)
-                      ? 'text-cyan-300 bg-purple-500/10 border-l-2 border-cyan-400'
+                      ? 'bg-cyan-500/15 border-l-2 border-cyan-400'
                       : 'text-gray-400 hover:text-purple-300 hover:bg-purple-500/5'
                   }`}
+                  style={
+                    isActive(link.to)
+                      ? { color: '#6BC5E8', textShadow: '0 0 8px #6BC5E8, 0 0 20px rgba(107, 197, 232, 0.3)' }
+                      : undefined
+                  }
                 >
                   {link.label}
                 </Link>

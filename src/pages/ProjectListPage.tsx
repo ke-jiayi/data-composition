@@ -59,7 +59,7 @@ export function ProjectListPage() {
             <div className="text-gray-400 text-6xl mb-4">📁</div>
             <p className="text-gray-500 text-lg mb-4">暂无项目</p>
             <Link
-              to="/"
+              to="/home"
               className="inline-flex items-center px-6 py-2.5 bg-[#1e3a5f] text-white font-medium rounded-lg hover:bg-[#2a4a73] transition-colors"
             >
               返回首页导入数据
