@@ -26,7 +26,7 @@ export function WelcomePage() {
     dotFill:   isDark ? '#6BC5E8' : '#22D3EE',
     dotOpacity: isDark ? 0.85 : 0.55,
     gridLineStroke:  isDark ? '#7B4B9E' : '#34D399',
-    gridLineOpacity: isDark ? 0.08 : 0.5,
+    gridLineOpacity: isDark ? 0.08 : 0,
     softGlowBlur: isDark ? 2.5 : 1.5,
     pathStrokeWidth: isDark ? 3 : 2,
   };
