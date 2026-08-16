@@ -36,7 +36,7 @@ export function ProjectListPage() {
     <Layout>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">项目列表</h1>
+          <h1 className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">项目列表</h1>
           <p className="mt-1 text-sm text-gray-500">已导入 {datasets.length} 个数据集</p>
         </div>
 
