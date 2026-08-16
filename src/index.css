@@ -640,3 +640,44 @@ html.light a[href="/home"].border-purple-500\/40:hover {
   background-color: rgba(0, 180, 216, 0.15) !important;
   border-color: #00B4D8 !important;
 }
+
+/* ===== ProjectDetailPage 白天模式紫色→青蓝色（仅 #detail-page 作用域）===== */
+
+/* 1. 表格表头：紫色 #7B4B9E → 青蓝 #00B4D8（覆盖全局 L502 强制紫表头规则）*/
+html.light #detail-page .bg-\[\#7B4B9E\] {
+  background-color: #00B4D8 !important;
+}
+/* 表头 hover：#7B4B9E/80 → #00B4D8/80 */
+html.light #detail-page .hover\:bg-\[\#7B4B9E\]\/80:hover {
+  background-color: rgba(0, 180, 216, 0.8) !important;
+}
+
+/* 2. DataTable 搜索框紫色边框：#7B4B9E → 浅蓝灰 #DCE8F2 */
+html.light #detail-page .border-\[\#7B4B9E\] {
+  border-color: #DCE8F2 !important;
+}
+
+/* 3. 文字色紫 #7B4B9E → 青蓝 #00B4D8 */
+html.light #detail-page .text-\[\#7B4B9E\] {
+  color: #00B4D8 !important;
+}
+
+/* 4. 深紫 #6C3B9A → 深青 #0096B0（文字/边框/背景）*/
+html.light #detail-page .bg-\[\#6C3B9A\] { background-color: #0096B0 !important; }
+html.light #detail-page .border-\[\#6C3B9A\] { border-color: #0096B0 !important; }
+html.light #detail-page .text-\[\#6C3B9A\] { color: #0096B0 !important; }
+
+/* 5. 浅紫 #A78BFA → 浅青 #48CAE4（文字/边框/背景）*/
+html.light #detail-page .bg-\[\#A78BFA\] { background-color: #48CAE4 !important; }
+html.light #detail-page .border-\[\#A78BFA\] { border-color: #48CAE4 !important; }
+html.light #detail-page .text-\[\#A78BFA\] { color: #48CAE4 !important; }
+
+/* 6. 过渡平滑 */
+html.light #detail-page .bg-\[\#7B4B9E\],
+html.light #detail-page .border-\[\#7B4B9E\],
+html.light #detail-page .bg-\[\#6C3B9A\],
+html.light #detail-page .border-\[\#6C3B9A\],
+html.light #detail-page .bg-\[\#A78BFA\],
+html.light #detail-page .border-\[\#A78BFA\] {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}

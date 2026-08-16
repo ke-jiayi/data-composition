@@ -1,0 +1,12 @@
+# Checklist
+- [ ] ProjectDetailPage 主容器有 `<div id="detail-page">` 作用域
+- [ ] 白天模式表格表头背景 `#00B4D8`（替换 `#7B4B9E`）
+- [ ] 白天模式 DataTable 搜索框边框 `#DCE8F2`（替换 `#7B4B9E` 紫色边框）
+- [ ] 白天模式详情页所有 `#7B4B9E` 替换为 `#00B4D8`
+- [ ] 白天模式详情页所有 `#6C3B9A` 替换为 `#0096B0`
+- [ ] 白天模式详情页所有 `#A78BFA` 替换为 `#48CAE4`
+- [ ] 深色模式所有紫色保持不变
+- [ ] HomePage、WelcomePage 不受影响
+- [ ] `npx tsc --noEmit` 无错误
+- [ ] `npx vite build` 成功
+- [ ] 变更已提交并推送到 origin/main

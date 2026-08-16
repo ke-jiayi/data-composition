@@ -150,10 +150,12 @@ export function ProjectDetailPage() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BC5E8] mx-auto mb-4"></div>
-            <p className="text-[#9CA3AF]">正在加载项目...</p>
+        <div id="detail-page">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BC5E8] mx-auto mb-4"></div>
+              <p className="text-[#9CA3AF]">正在加载项目...</p>
+            </div>
           </div>
         </div>
       </Layout>
@@ -164,32 +166,34 @@ export function ProjectDetailPage() {
   if (error || !dataset) {
     return (
       <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-12">
-            <svg
-              className="mx-auto h-12 w-12 text-[#9CA3AF]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-medium text-white">项目未找到</h3>
-            <p className="mt-1 text-sm text-[#9CA3AF]">
-              {error || `项目 ID ${id} 不存在或已被删除`}
-            </p>
-            <div className="mt-6">
-              <Link
-                to="/home"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-[#0a0e1a] bg-[#6BC5E8] hover:bg-[#5AB4D8]"
+        <div id="detail-page">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="text-center py-12">
+              <svg
+                className="mx-auto h-12 w-12 text-[#9CA3AF]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                返回首页
-              </Link>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-white">项目未找到</h3>
+              <p className="mt-1 text-sm text-[#9CA3AF]">
+                {error || `项目 ID ${id} 不存在或已被删除`}
+              </p>
+              <div className="mt-6">
+                <Link
+                  to="/home"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-[#0a0e1a] bg-[#6BC5E8] hover:bg-[#5AB4D8]"
+                >
+                  返回首页
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -213,7 +217,8 @@ export function ProjectDetailPage() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="detail-page">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 返回按钮 */}
         <div className="mb-4">
           <Link
@@ -463,6 +468,7 @@ export function ProjectDetailPage() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </Layout>
   );
