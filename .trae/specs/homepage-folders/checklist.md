@@ -1,0 +1,19 @@
+# Checklist
+- [ ] Folder 接口存在，Dataset.folderId?: string 字段存在
+- [ ] DB_VERSION 2 → 3，upgrade 分支创建 folders store，老数据无损
+- [ ] createFolder / getAllFolders / updateFolder / deleteFolder / getDatasetsByFolderId 全部实现并导出
+- [ ] useDB hook 暴露上述 5 个新方法
+- [ ] HomePage 有 currentFolderId state + folders 加载 + 面包屑
+- [ ] HomePage 工具栏有"新建文件夹"按钮 + 弹窗输入名称
+- [ ] HomePage 根目录上方显示文件夹卡片网格，下方显示"未分类的数据集"
+- [ ] 文件夹卡片显示名称 + 数据集数量，点击进入
+- [ ] 文件夹卡片有编辑（重命名）和删除图标
+- [ ] 删除文件夹时为空才能删除，否则提示
+- [ ] 数据集卡片有"移动到文件夹"菜单（未分类/各文件夹）
+- [ ] 首页拖拽导入 createDataset 时传入 folderId: currentFolderId
+- [ ] ImportModal 预览步骤有"放入文件夹"下拉
+- [ ] ImportModal 下拉选中的 folderId 传入 createDataset
+- [ ] HomePage 给 ImportModal 传 folders + currentFolderId props
+- [ ] `npx tsc --noEmit` 无错误
+- [ ] `npx vite build` 成功
+- [ ] 变更已提交并推送到 origin/main

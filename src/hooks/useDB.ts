@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Dataset, DataRow, CleaningLog, ChartConfig } from '../utils/db';
+import type { Dataset, DataRow, CleaningLog, ChartConfig, Folder } from '../utils/db';
 import {
   initDB,
   createDataset,
@@ -16,6 +16,12 @@ import {
   updateChart,
   deleteChart,
   isDBEmpty,
+  createFolder,
+  getAllFolders,
+  updateFolder,
+  updateFolderName,
+  deleteFolder,
+  getDatasetsByFolderId,
 } from '../utils/db';
 
 type DatabaseOperation = (...args: never[]) => Promise<unknown>;
@@ -30,6 +36,14 @@ interface UseDBReturn {
   getAllDatasets: () => Promise<Dataset[]>;
   updateDataset: (dataset: Dataset) => Promise<void>;
   deleteDataset: (id: string) => Promise<void>;
+
+  // 文件夹操作
+  createFolder: (name: string) => Promise<Folder>;
+  getAllFolders: () => Promise<Folder[]>;
+  updateFolder: (id: string, patch: Partial<Omit<Folder, 'id'>>) => Promise<void>;
+  updateFolderName: (id: string, newName: string) => Promise<void>;
+  deleteFolder: (id: string) => Promise<void>;
+  getDatasetsByFolderId: (folderId: string | null) => Promise<Dataset[]>;
 
   // 数据操作
   saveData: (datasetId: string, data: DataRow[]) => Promise<void>;
@@ -85,6 +99,14 @@ export function useDB(): UseDBReturn {
     getAllDatasets: wrapOperation(getAllDatasets),
     updateDataset: wrapOperation(updateDataset),
     deleteDataset: wrapOperation(deleteDataset),
+
+    // 文件夹操作
+    createFolder: wrapOperation(createFolder),
+    getAllFolders: wrapOperation(getAllFolders),
+    updateFolder: wrapOperation(updateFolder),
+    updateFolderName: wrapOperation(updateFolderName),
+    deleteFolder: wrapOperation(deleteFolder),
+    getDatasetsByFolderId: wrapOperation(getDatasetsByFolderId),
 
     // 数据操作
     saveData: wrapOperation(saveData),

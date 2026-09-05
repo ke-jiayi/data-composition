@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HomePage, ProjectDetailPage, ProjectListPage, AboutPage, WelcomePage } from './pages';
 import PowerBIPage from './pages/PowerBIPage';
@@ -5,10 +6,24 @@ import { ImportModal } from './components';
 import { useDB } from './hooks/useDB';
 import { ImportModalProvider, useImportModal } from './contexts/ImportModalContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import type { Folder } from './utils/db';
 
 function AppContent() {
-  const { isLoading, error, createDataset, saveData } = useDB();
+  const { isLoading, error, createDataset, saveData, getAllFolders, createFolder } = useDB();
   const { isOpen, closeModal } = useImportModal();
+  const [folders, setFolders] = useState<Folder[]>([]);
+
+  // 加载文件夹列表
+  useEffect(() => {
+    getAllFolders()
+      .then(setFolders)
+      .catch((err) => console.error('加载文件夹失败:', err));
+  }, [getAllFolders]);
+
+  // ImportModal 内新建文件夹后刷新列表
+  const handleFolderCreated = (folder: Folder) => {
+    setFolders((prev) => [...prev, folder]);
+  };
 
   // 显示加载状态
   if (isLoading) {
@@ -71,6 +86,9 @@ function AppContent() {
         onImportSuccess={() => closeModal()}
         saveData={saveData}
         createDataset={createDataset}
+        createFolder={createFolder}
+        folders={folders}
+        onFolderCreated={handleFolderCreated}
       />
     </Router>
   );

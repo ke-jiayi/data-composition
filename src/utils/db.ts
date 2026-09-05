@@ -1,6 +1,13 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { v4 as uuidv4 } from 'uuid';
 
+// 文件夹
+export interface Folder {
+  id: string;
+  name: string;
+  createdAt: number;
+}
+
 // 数据集元信息
 export interface Dataset {
   id: string;
@@ -15,6 +22,7 @@ export interface Dataset {
   tags?: string[];
   code?: string;
   conclusions?: string[];
+  folderId?: string;
 }
 
 // 数据行类型
@@ -50,6 +58,10 @@ export interface ChartConfig {
 
 // 数据库 schema
 interface DBSchema {
+  folders: {
+    key: string;
+    value: Folder;
+  };
   datasets: {
     key: string;
     value: Dataset;
@@ -72,7 +84,7 @@ interface DBSchema {
 }
 
 const DB_NAME = 'dataPortfolioDB';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let dbInstance: IDBPDatabase<DBSchema> | null = null;
 
@@ -113,6 +125,11 @@ export async function initDB(): Promise<IDBPDatabase<DBSchema>> {
       if (!db.objectStoreNames.contains('charts')) {
         const chartStore = db.createObjectStore('charts', { keyPath: 'id' });
         chartStore.createIndex('by-dataset', 'datasetId');
+      }
+
+      // 创建 folders store
+      if (!db.objectStoreNames.contains('folders')) {
+        db.createObjectStore('folders', { keyPath: 'id' });
       }
     },
   });
@@ -187,6 +204,56 @@ export async function deleteDataset(id: string): Promise<void> {
     await chartStore.delete(key);
   }
   await chartTx.done;
+}
+
+// ==================== Folder CRUD ====================
+
+export async function createFolder(name: string): Promise<Folder> {
+  const db = await initDB();
+  const newFolder: Folder = {
+    id: uuidv4(),
+    name,
+    createdAt: Date.now(),
+  };
+  await db.put('folders', newFolder);
+  return newFolder;
+}
+
+export async function getAllFolders(): Promise<Folder[]> {
+  const db = await initDB();
+  const folders = await db.getAll('folders');
+  return folders.sort((a, b) => a.createdAt - b.createdAt);
+}
+
+export async function updateFolder(id: string, patch: Partial<Omit<Folder, 'id'>>): Promise<void> {
+  const db = await initDB();
+  const folder = await db.get('folders', id);
+  if (!folder) {
+    throw new Error(`Folder with id ${id} not found`);
+  }
+  const updatedFolder: Folder = {
+    ...folder,
+    ...patch,
+  };
+  await db.put('folders', updatedFolder);
+}
+
+export async function updateFolderName(id: string, newName: string): Promise<void> {
+  return updateFolder(id, { name: newName });
+}
+
+export async function deleteFolder(id: string): Promise<void> {
+  const db = await initDB();
+  await db.delete('folders', id);
+}
+
+export async function getDatasetsByFolderId(folderId: string | null): Promise<Dataset[]> {
+  const db = await initDB();
+  const allDatasets = await db.getAll('datasets');
+  const filtered = folderId === null
+    ? allDatasets.filter(ds => !ds.folderId)
+    : allDatasets.filter(ds => ds.folderId === folderId);
+  return filtered.sort((a, b) => b.createdAt - a.createdAt);
 }
 
 // ==================== Data Operations ====================

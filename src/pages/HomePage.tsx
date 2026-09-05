@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Layout } from '../components/Layout';
 import { useDB } from '../hooks/useDB';
 import { parseFile } from '../utils/fileParser';
-import type { Dataset } from '../utils/db';
+import type { Dataset, Folder } from '../utils/db';
 
 // 格式化时间戳为 YYYY-MM-DD
 function formatDate(timestamp: number): string {
@@ -18,8 +18,10 @@ function formatNumber(num: number): string {
 }
 
 export function HomePage() {
-  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset } = useDB();
+  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
@@ -28,21 +30,39 @@ export function HomePage() {
   const [visitCount, setVisitCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 根据搜索关键词过滤数据集
+  // 文件夹操作 state
+  const [showFolderModal, setShowFolderModal] = useState(false);
+  const [folderModalMode, setFolderModalMode] = useState<'create' | 'rename'>('create');
+  const [folderNameInput, setFolderNameInput] = useState('');
+  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
+  const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
+
+  // 按 currentFolderId 筛选，再根据搜索关键词过滤
+  const visibleDatasets = currentFolderId === null
+    ? datasets.filter(d => !d.folderId)
+    : datasets.filter(d => d.folderId === currentFolderId);
   const filteredDatasets = searchQuery
-    ? datasets.filter(
+    ? visibleDatasets.filter(
         (d) =>
           d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           d.fileName.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : datasets;
+    : visibleDatasets;
 
-  // 加载数据集列表
+  // 加载数据集列表和文件夹
+  useEffect(() => {
+    if (!dbLoading) {
+      loadFolders();
+      loadDatasets();
+    }
+  }, [dbLoading]);
+
+  // 当 currentFolderId 变化时重新加载数据集
   useEffect(() => {
     if (!dbLoading) {
       loadDatasets();
     }
-  }, [dbLoading]);
+  }, [dbLoading, currentFolderId]);
 
   // 记录访问量（跨设备统计：优先调用 Pages Function /api/visit；失败时 fallback localStorage）
   useEffect(() => {
@@ -68,8 +88,18 @@ export function HomePage() {
       });
   }, []);
 
+  const loadFolders = async () => {
+    try {
+      const allFolders = await getAllFolders();
+      setFolders(allFolders);
+    } catch (error) {
+      console.error('加载文件夹失败:', error);
+    }
+  };
+
   const loadDatasets = async () => {
     try {
+      // 始终加载全部数据集，渲染时按 currentFolderId 筛选
       const allDatasets = await getAllDatasets();
       setDatasets(allDatasets);
     } catch (error) {
@@ -85,6 +115,57 @@ export function HomePage() {
       setDeleteTarget(null);
     } catch (error) {
       console.error('删除数据集失败:', error);
+    }
+  };
+
+  // 打开新建文件夹弹窗
+  const handleOpenCreateFolder = () => {
+    setFolderModalMode('create');
+    setFolderNameInput('');
+    setEditingFolderId(null);
+    setShowFolderModal(true);
+  };
+
+  // 打开重命名弹窗
+  const handleOpenRenameFolder = (folder: Folder) => {
+    setFolderModalMode('rename');
+    setFolderNameInput(folder.name);
+    setEditingFolderId(folder.id);
+    setShowFolderModal(true);
+  };
+
+  // 确认创建/重命名文件夹
+  const handleConfirmFolder = async () => {
+    const name = folderNameInput.trim();
+    if (!name) return;
+    try {
+      if (folderModalMode === 'create') {
+        await createFolder(name);
+      } else if (folderModalMode === 'rename' && editingFolderId) {
+        await updateFolderName(editingFolderId, name);
+      }
+      await loadFolders();
+      setShowFolderModal(false);
+    } catch (error) {
+      console.error('文件夹操作失败:', error);
+    }
+  };
+
+  // 确认删除文件夹
+  const handleConfirmDeleteFolder = async () => {
+    if (!deletingFolder) return;
+    const count = datasets.filter(d => d.folderId === deletingFolder.id).length;
+    if (count > 0) {
+      alert(`文件夹不为空（${count} 个数据集），无法删除`);
+      setDeletingFolder(null);
+      return;
+    }
+    try {
+      await deleteFolder(deletingFolder.id);
+      await loadFolders();
+      setDeletingFolder(null);
+    } catch (error) {
+      console.error('删除文件夹失败:', error);
     }
   };
 
@@ -118,6 +199,7 @@ export function HomePage() {
         columns: importData.columns,
         rowCount: importData.rowCount,
         tags: [importData.fileType.toUpperCase()],
+        folderId: currentFolderId ?? undefined,
       });
       await saveData(dataset.id, importData.rows);
       await loadDatasets();
@@ -175,6 +257,13 @@ export function HomePage() {
                 <p className="mt-1 text-sm text-purple-200/60">已导入 {datasets.length} 个数据集</p>
               </div>
               <div className="flex items-center gap-4">
+                <button
+                  onClick={handleOpenCreateFolder}
+                  disabled={dbLoading}
+                  className="px-4 py-2 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
+                >
+                  + 新建文件夹
+                </button>
                 <button
                   onClick={handleImport}
                   disabled={isImporting || dbLoading}
@@ -239,6 +328,83 @@ export function HomePage() {
               </p>
             </div>
           </div>
+
+          {/* 面包屑导航 */}
+          <div className="mb-6 flex items-center gap-2 text-sm">
+            <button
+              onClick={() => { setCurrentFolderId(null); setSearchQuery(''); }}
+              className={`px-2 py-1 rounded transition-colors ${currentFolderId === null ? 'text-cyan-300 font-medium' : 'text-purple-200/60 hover:text-cyan-300'}`}
+            >
+              🏠 首页
+            </button>
+            {currentFolderId !== null && (
+              <>
+                <span className="text-purple-300/40">/</span>
+                <span className="px-2 py-1 text-cyan-300 font-medium">
+                  📁 {folders.find(f => f.id === currentFolderId)?.name ?? '未知文件夹'}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* 文件夹卡片网格（仅根目录显示） */}
+          {currentFolderId === null && folders.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-sm font-medium text-purple-200/60 mb-3 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                文件夹
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {folders.map(folder => (
+                  <div
+                    key={folder.id}
+                    className="group relative flex items-center gap-3 bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-4 hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                    onClick={() => { setCurrentFolderId(folder.id); setSearchQuery(''); }}
+                  >
+                    <span className="text-2xl group-hover:scale-110 transition-transform">📁</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-cyan-100 group-hover:text-cyan-200 truncate">{folder.name}</p>
+                      <p className="text-xs text-purple-200/50">{datasets.filter(d => d.folderId === folder.id).length} 个数据集</p>
+                    </div>
+                    {/* 重命名按钮 */}
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); handleOpenRenameFolder(folder); }}
+                      className="absolute top-1.5 right-7 p-1 rounded text-purple-300/50 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                      aria-label="重命名文件夹"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    {/* 删除按钮 */}
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setDeletingFolder(folder); }}
+                      className="absolute top-1.5 right-1.5 p-1 rounded text-purple-300/50 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                      aria-label="删除文件夹"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 根目录下"未分类"标题 */}
+          {currentFolderId === null && (
+            <h3 className="text-sm font-medium text-purple-200/60 mb-3 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              未分类的数据集
+            </h3>
+          )}
 
           {/* 搜索输入框 */}
           <div className="mb-6">
@@ -409,6 +575,77 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={handleDelete}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+              >
+                确认删除
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 新建/重命名文件夹弹窗 */}
+      {showFolderModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setShowFolderModal(false)}>
+          <div
+            className="bg-[#0f1424] rounded-xl shadow-[0_0_40px_rgba(168,85,247,0.3)] border border-purple-500/30 w-full max-w-sm mx-4 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-cyan-200">
+              {folderModalMode === 'create' ? '新建文件夹' : '重命名文件夹'}
+            </h3>
+            <input
+              type="text"
+              value={folderNameInput}
+              onChange={(e) => setFolderNameInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleConfirmFolder(); }}
+              placeholder="输入文件夹名称"
+              className="mt-4 w-full px-4 py-2.5 bg-white/5 border border-purple-500/20 rounded-lg text-cyan-100 placeholder-purple-200/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400/50"
+              autoFocus
+            />
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowFolderModal(false)}
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmFolder}
+                disabled={!folderNameInput.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {folderModalMode === 'create' ? '创建' : '保存'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 删除文件夹确认弹窗 */}
+      {deletingFolder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setDeletingFolder(null)}>
+          <div
+            className="bg-[#0f1424] rounded-xl shadow-[0_0_40px_rgba(168,85,247,0.3)] border border-purple-500/30 w-full max-w-sm mx-4 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-cyan-200">删除文件夹</h3>
+            <p className="mt-2 text-sm text-purple-100/80">
+              确定要删除文件夹「{deletingFolder.name}」吗？文件夹必须为空才能删除。
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDeletingFolder(null)}
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteFolder}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
               >
                 确认删除

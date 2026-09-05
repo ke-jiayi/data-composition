@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { FileUpload } from './FileUpload';
 import { ImportPreview } from './ImportPreview';
 import { parseFile } from '../utils/fileParser';
 import type { ImportData } from '../types';
-import type { Dataset, DataRow } from '../utils/db';
+import type { Dataset, DataRow, Folder } from '../utils/db';
 
 type ImportStep = 'upload' | 'preview' | 'importing' | 'success' | 'error';
 
@@ -13,6 +13,10 @@ interface ImportModalProps {
   onImportSuccess: (dataset: Dataset) => void;
   saveData: (datasetId: string, data: DataRow[]) => Promise<void>;
   createDataset: (dataset: Omit<Dataset, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Dataset>;
+  createFolder?: (name: string) => Promise<Folder>;
+  folders?: Folder[];
+  currentFolderId?: string | null;
+  onFolderCreated?: (folder: Folder) => void;
 }
 
 export const ImportModal = ({
@@ -21,6 +25,10 @@ export const ImportModal = ({
   onImportSuccess,
   saveData,
   createDataset,
+  createFolder,
+  folders = [],
+  currentFolderId = null,
+  onFolderCreated,
 }: ImportModalProps) => {
   const [step, setStep] = useState<ImportStep>('upload');
   const [importData, setImportData] = useState<ImportData | null>(null);
@@ -28,6 +36,30 @@ export const ImportModal = ({
   const [error, setError] = useState<string | null>(null);
   const [createdDataset, setCreatedDataset] = useState<Dataset | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string>(currentFolderId ?? '');
+  const [newFolderName, setNewFolderName] = useState('');
+  const [showNewFolderInput, setShowNewFolderInput] = useState(false);
+
+  // 同步 currentFolderId 变化到 selectedFolderId
+  useEffect(() => {
+    setSelectedFolderId(currentFolderId ?? '');
+  }, [currentFolderId]);
+
+  // 新建文件夹
+  const handleCreateFolder = useCallback(async () => {
+    const name = newFolderName.trim();
+    if (!name || !createFolder) return;
+    try {
+      const folder = await createFolder(name);
+      // 通过 onFolderCreated 回调通知父组件刷新 folders 列表
+      onFolderCreated?.(folder);
+      setSelectedFolderId(folder.id);
+      setShowNewFolderInput(false);
+      setNewFolderName('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '创建文件夹失败');
+    }
+  }, [newFolderName, createFolder]);
 
   // 处理文件选择
   const handleFileSelect = useCallback(async (file: File) => {
@@ -65,6 +97,7 @@ export const ImportModal = ({
         columns: importData.columns,
         rowCount: importData.rowCount,
         tags: [importData.fileType.toUpperCase()],
+        folderId: selectedFolderId || undefined,
       });
 
       await saveData(dataset.id, importData.rows);
@@ -75,7 +108,7 @@ export const ImportModal = ({
       setError(err instanceof Error ? err.message : '导入失败');
       setStep('error');
     }
-  }, [importData, datasetName, saveData, createDataset]);
+  }, [importData, datasetName, saveData, createDataset, selectedFolderId]);
 
   // 关闭模态框
   const handleClose = useCallback(() => {
@@ -191,6 +224,62 @@ export const ImportModal = ({
                     placeholder="输入数据集名称"
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
                   />
+                </div>
+
+                {/* 放入文件夹选择 */}
+                <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    放入文件夹
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={selectedFolderId}
+                      onChange={(e) => setSelectedFolderId(e.target.value)}
+                      className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    >
+                      <option value="">未分类</option>
+                      {folders.map(f => (
+                        <option key={f.id} value={f.id}>{f.name}</option>
+                      ))}
+                    </select>
+                    {createFolder && !showNewFolderInput && (
+                      <button
+                        type="button"
+                        onClick={() => setShowNewFolderInput(true)}
+                        className="px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap"
+                      >
+                        + 新建文件夹
+                      </button>
+                    )}
+                  </div>
+                  {showNewFolderInput && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <input
+                        type="text"
+                        value={newFolderName}
+                        onChange={(e) => setNewFolderName(e.target.value)}
+                        placeholder="输入文件夹名称"
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleCreateFolder(); }}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 text-sm"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCreateFolder}
+                        disabled={!newFolderName.trim()}
+                        className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        确认
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowNewFolderInput(false); setNewFolderName(''); }}
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                      >
+                        取消
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <ImportPreview
