@@ -18,7 +18,7 @@ function formatNumber(num: number): string {
 }
 
 export function HomePage() {
-  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder } = useDB();
+  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder, updateDataset } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
@@ -36,6 +36,7 @@ export function HomePage() {
   const [folderNameInput, setFolderNameInput] = useState('');
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
+  const [movingDatasetId, setMovingDatasetId] = useState<string | null>(null);
 
   // 按 currentFolderId 筛选，再根据搜索关键词过滤
   const visibleDatasets = currentFolderId === null
@@ -166,6 +167,19 @@ export function HomePage() {
       setDeletingFolder(null);
     } catch (error) {
       console.error('删除文件夹失败:', error);
+    }
+  };
+
+  // 移动数据集到指定文件夹
+  const handleMoveToFolder = async (datasetId: string, folderId: string | null) => {
+    const dataset = datasets.find(d => d.id === datasetId);
+    if (!dataset) return;
+    try {
+      await updateDataset({ ...dataset, folderId: folderId ?? undefined });
+      await loadDatasets();
+      setMovingDatasetId(null);
+    } catch (error) {
+      console.error('移动数据集失败:', error);
     }
   };
 
@@ -462,6 +476,47 @@ export function HomePage() {
                         />
                       </svg>
                     </button>
+                    {/* 移动到文件夹按钮 */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setMovingDatasetId(movingDatasetId === dataset.id ? null : dataset.id);
+                      }}
+                      className="absolute top-3 right-11 p-1.5 rounded-lg text-purple-300/50 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                      aria-label="移动到文件夹"
+                      title="移动到文件夹"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                      </svg>
+                    </button>
+                    {/* 移动到文件夹下拉菜单 */}
+                    {movingDatasetId === dataset.id && (
+                      <div
+                        className="absolute top-10 right-3 z-10 bg-[#0f1424] border border-purple-500/30 rounded-lg shadow-lg py-1 w-40"
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleMoveToFolder(dataset.id, null)}
+                          className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors ${!dataset.folderId ? 'text-cyan-300' : 'text-purple-100/80'}`}
+                        >
+                          未分类
+                        </button>
+                        {folders.map(folder => (
+                          <button
+                            key={folder.id}
+                            type="button"
+                            onClick={() => handleMoveToFolder(dataset.id, folder.id)}
+                            className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors truncate ${dataset.folderId === folder.id ? 'text-cyan-300' : 'text-purple-100/80'}`}
+                          >
+                            📁 {folder.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     {/* 卡片顶部色条 */}
                     <div
                       className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity"

@@ -1,12 +1,12 @@
 # Checklist
-- [ ] ProjectDetailPage 主容器有 `<div id="detail-page">` 作用域
-- [ ] 白天模式表格表头背景 `#00B4D8`（替换 `#7B4B9E`）
-- [ ] 白天模式 DataTable 搜索框边框 `#DCE8F2`（替换 `#7B4B9E` 紫色边框）
-- [ ] 白天模式详情页所有 `#7B4B9E` 替换为 `#00B4D8`
-- [ ] 白天模式详情页所有 `#6C3B9A` 替换为 `#0096B0`
-- [ ] 白天模式详情页所有 `#A78BFA` 替换为 `#48CAE4`
-- [ ] 深色模式所有紫色保持不变
-- [ ] HomePage、WelcomePage 不受影响
-- [ ] `npx tsc --noEmit` 无错误
-- [ ] `npx vite build` 成功
-- [ ] 变更已提交并推送到 origin/main
+- [x] ProjectDetailPage 主容器有 `<div id="detail-page">` 作用域（3 个 Layout 分支都已包上）
+- [x] 白天模式表格表头背景 `#00B4D8`（替换 `#7B4B9E`）+ hover 状态
+- [x] 白天模式 DataTable 搜索框边框 `#DCE8F2`（替换 `#7B4B9E` 紫色边框）
+- [x] 白天模式详情页所有 `#7B4B9E`（bg/border/text）替换为 `#00B4D8`
+- [x] 白天模式详情页所有 `#6C3B9A` 替换为 `#0096B0`
+- [x] 白天模式详情页所有 `#A78BFA` 替换为 `#48CAE4`
+- [x] 深色模式所有紫色保持不变（所有规则只带 `html.light` 前缀）
+- [x] HomePage、WelcomePage 不受影响（所有规则只带 `#detail-page` 作用域前缀）
+- [x] `npx tsc --noEmit` 无错误
+- [x] `npx vite build` 成功（CSS 76.72 kB）
+- [x] 变更已提交并推送到 origin/main（commit d2bef67）

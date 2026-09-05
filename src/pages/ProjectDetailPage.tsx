@@ -6,7 +6,7 @@ import DataTable from '../components/DataTable';
 import DataCleaning from '../components/DataCleaning';
 import { SmartAnalysis } from '../components/SmartAnalysis';
 import { useDB } from '../hooks/useDB';
-import { useImportModal } from '../contexts/ImportModalContext';
+
 import type { Dataset, DataRow } from '../utils/db';
 
 // TabType 已从 TabNavigation 导入
@@ -49,7 +49,6 @@ export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const { getDataset, getData, saveData, updateDataset } = useDB();
-  const { openModal } = useImportModal();
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [rawData, setRawData] = useState<DataRow[]>([]);
@@ -270,15 +269,6 @@ export function ProjectDetailPage() {
                 </div>
               )}
             </div>
-            <button
-              onClick={openModal}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#6BC5E8] text-[#0a0e1a] text-sm font-medium rounded-lg hover:bg-[#5AB4D8] transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              导入数据
-            </button>
           </div>
         </div>
 

@@ -24,4 +24,4 @@
 ## 编译验证
 - [x] `npx tsc --noEmit` 无错误
 - [x] `npx vite build` 成功
-- [ ] 变更已提交并推送到 origin/main
+- [x] 变更已提交并推送到 origin/main

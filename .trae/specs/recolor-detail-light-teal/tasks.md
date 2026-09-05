@@ -32,7 +32,7 @@
   - `human-judgement` TR-2.1: 人工审查组件代码确认所有紫色色值已被 CSS 覆盖
   - `programmatic` TR-2.2: 再次 `npx tsc --noEmit`
 
-## [ ] Task 3: 提交并推送
+## [x] Task 3: 提交并推送
 - **Priority**: high
 - **Depends On**: Task 1, Task 2
 - **Description**: git add、commit、push 到 origin/main

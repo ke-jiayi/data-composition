@@ -18,8 +18,8 @@
   - [x] `npx tsc --noEmit` 无错误
   - [x] `npx vite build` 成功
 
-- [ ] Task 3: 提交并推送
-  - [ ] git add / commit / push 到 origin/main
+- [x] Task 3: 提交并推送
+  - [x] git add / commit / push 到 origin/main
 
 # Task Dependencies
 - [Task 2] 依赖于 [Task 1] 完成
