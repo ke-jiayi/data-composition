@@ -37,7 +37,7 @@ export function ProjectListPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">项目列表</h1>
-          <p className="mt-1 text-sm text-gray-500">已导入 {datasets.length} 个数据集</p>
+          <p className="mt-1 text-sm text-gray-500 dark:text-purple-200/60">已导入 {datasets.length} 个数据集</p>
         </div>
 
         {datasets.length > 0 ? (
@@ -46,11 +46,11 @@ export function ProjectListPage() {
               <Link
                 key={dataset.id}
                 to={`/project/${dataset.id}`}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-lg hover:border-[#1e3a5f]/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-6 hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:border-[#1e3a5f]/30 dark:hover:border-cyan-400/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{dataset.name}</h3>
-                <p className="text-sm text-gray-500">{formatNumber(dataset.rowCount)} 行</p>
-                <p className="text-xs text-gray-400 mt-2">导入于 {formatDate(dataset.createdAt)}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-2">{dataset.name}</h3>
+                <p className="text-sm text-gray-500 dark:text-purple-200/70">{formatNumber(dataset.rowCount)} 行</p>
+                <p className="text-xs text-gray-400 dark:text-purple-200/50 mt-2">导入于 {formatDate(dataset.createdAt)}</p>
               </Link>
             ))}
           </div>
