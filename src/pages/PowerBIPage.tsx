@@ -5,8 +5,8 @@ const PowerBIPage = () => {
     <Layout>
       <div className="max-w-7xl mx-auto">
         {/* 页面标题 */}
-        <div className="mb-6">
-          <h1 className="text-xl font-bold text-[#fafafa] mb-4">
+        <div className="mb-4">
+          <h1 className="text-lg font-bold text-[#fafafa] mb-2">
             Power BI 可视化看板
           </h1>
           <p className="text-[#a3a3a3] text-base">
@@ -15,7 +15,7 @@ const PowerBIPage = () => {
         </div>
 
         {/* 能力说明 */}
-        <div className="bg-[#171717] rounded-lg p-3 md:p-4 mb-6 border border-[#303030]">
+        <div className="bg-[#171717] rounded-lg p-2 md:p-3 mb-4 border border-[#303030]">
           <h2 className="text-xl font-semibold text-[#fafafa] mb-3">
             Power BI 数据分析能力展示
           </h2>
@@ -48,7 +48,7 @@ const PowerBIPage = () => {
         </div>
 
         {/* Power BI iframe 嵌入区域 */}
-        <div className="bg-[#171717] rounded-lg shadow-lg p-3 md:p-4 mb-6 border border-[#303030]">
+        <div className="bg-[#171717] rounded-lg shadow-lg p-2 md:p-3 mb-4 border border-[#303030]">
           <h3 className="text-lg font-semibold text-[#fafafa] mb-4">
             示例报表
           </h3>
@@ -88,11 +88,11 @@ const PowerBIPage = () => {
         </div>
 
         {/* 如何获取 Power BI 嵌入代码 */}
-        <div className="bg-[#171717] rounded-lg shadow-lg p-3 md:p-4 border border-[#303030]">
+        <div className="bg-[#171717] rounded-lg shadow-lg p-2 md:p-3 border border-[#303030]">
           <h3 className="text-lg font-semibold text-[#fafafa] mb-4">
             如何获取 Power BI 嵌入代码
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
             <div>
               <h4 className="text-base font-medium text-[#fafafa] mb-3">
                 步骤 1：创建并发布报表

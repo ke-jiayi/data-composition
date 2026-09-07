@@ -75,8 +75,8 @@ export function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className={`pt-20 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
-        <div className="p-3 md:p-5">{children}</div>
+      <main className={`pt-[72px] min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
+        <div className="p-2 md:p-3">{children}</div>
       </main>
     </div>
   );

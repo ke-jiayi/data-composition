@@ -243,10 +243,10 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 项目标题区域 */}
-        <div className="mb-6 bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm p-3 md:p-4">
+        <div className="mb-4 bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm p-2 md:p-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-xl font-bold text-white">{dataset.name}</h1>
+              <h1 className="text-lg font-bold text-white">{dataset.name}</h1>
               {dataset.description && (
                 <p className="mt-2 text-[#D1D5DB]">{dataset.description}</p>
               )}
@@ -273,10 +273,10 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 项目信息展示区域 */}
-        <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm mb-6">
-          <div className="p-3 md:p-4">
-            <h2 className="text-lg font-semibold text-white mb-4">数据集信息</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm mb-4">
+          <div className="p-2 md:p-3">
+            <h2 className="text-lg font-semibold text-white mb-3">数据集信息</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
               {/* 文件名 */}
               <div>
                 <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件名</h3>
@@ -352,17 +352,17 @@ export function ProjectDetailPage() {
 
           {/* Tab 3: 分析结论 */}
           {activeTab === 'conclusion' && (
-            <div className="space-y-4">
-              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-3 md:p-4">
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <div className="space-y-3">
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2 md:p-3">
+                <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                   <span className="text-xl">💡</span>
                   数据分析结论
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {conclusions.map((conclusion, index) => (
                     <div
                       key={index}
-                      className={`flex gap-3 p-3 rounded-lg border transition-colors ${
+                      className={`flex gap-2 p-2 rounded-lg border transition-colors ${
                         editingConclusion === index
                           ? 'bg-[#6BC5E8]/10 border-[#6BC5E8]/40 ring-2 ring-[#6BC5E8]/20'
                           : 'bg-[#1E1E24] border-[#3A3A44]'
@@ -445,7 +445,7 @@ export function ProjectDetailPage() {
 
           {/* Tab 4: 可视化分析 */}
           {activeTab === 'chart' && (
-            <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-3">
+            <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
               <h3 className="text-lg font-semibold text-white mb-4 text-center">城市居民消费价格指数趋势图</h3>
               <div className="flex justify-center">
                 <img
