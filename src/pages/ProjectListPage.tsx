@@ -36,17 +36,17 @@ export function ProjectListPage() {
     <Layout>
       <div className="max-w-5xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">项目列表</h1>
+          <h1 className="text-xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">项目列表</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-purple-200/60">已导入 {datasets.length} 个数据集</p>
         </div>
 
         {datasets.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {datasets.map((dataset) => (
               <Link
                 key={dataset.id}
                 to={`/project/${dataset.id}`}
-                className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-4 md:p-5 hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:border-[#1e3a5f]/30 dark:hover:border-cyan-400/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4 hover:shadow-lg dark:hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:border-[#1e3a5f]/30 dark:hover:border-cyan-400/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-2">{dataset.name}</h3>
                 <p className="text-sm text-gray-500 dark:text-purple-200/70">{formatNumber(dataset.rowCount)} 行</p>

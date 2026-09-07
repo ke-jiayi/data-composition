@@ -76,7 +76,7 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Main Content */}
       <main className={`pt-20 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
-        <div className="p-4 md:p-6">{children}</div>
+        <div className="p-3 md:p-5">{children}</div>
       </main>
     </div>
   );
