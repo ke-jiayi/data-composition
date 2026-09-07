@@ -89,13 +89,13 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
 
   return (
     <div className="border-b border-[#3A3A44] bg-[#1E1E24]">
-      <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+      <nav className="-mb-px flex space-x-8 px-4 md:px-6 overflow-x-auto scrollbar-hide" aria-label="Tabs">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => handleTabClick(tab.key)}
             className={`
-              flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors
+              flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap shrink-0 transition-colors
               ${
                 activeTab === tab.key
                   ? 'border-[#6BC5E8] text-[#6BC5E8]'

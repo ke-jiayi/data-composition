@@ -331,7 +331,7 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       {cards.map(card => {
         const currentType = overrides[card.id] ?? card.type;
         const displayCard: ChartCard = { ...card, type: currentType };

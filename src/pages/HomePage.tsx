@@ -235,9 +235,9 @@ export function HomePage() {
     <Layout>
       {/* ============ 数据集列表区域 ============ */}
       <section id="datasets">
-        <div className="max-w-6xl mx-auto py-8 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto">
           {/* 页面标题 */}
-          <div className="mb-8 relative">
+          <div className="mb-6 relative">
             <div className="absolute top-0 right-0 z-10">
               <Link
                 to="/"
@@ -252,25 +252,25 @@ export function HomePage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="text-4xl md:text-5xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2"
+                className="text-3xl md:text-4xl font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] mb-2"
               >
                 数据作品集
               </motion.h1>
-              <p className="text-base text-purple-200/70">数据分析 · 数据可视化 · 个人作品集</p>
-              <div className="mt-4 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
+              <p className="text-sm md:text-base text-purple-200/70">数据分析 · 数据可视化 · 个人作品集</p>
+              <div className="mt-3 mx-auto w-24 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
             </div>
           </div>
           {/* 主内容卡片容器 */}
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.1)] border border-purple-500/20 p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.1)] border border-purple-500/20 p-4 md:p-6">
+            <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-2xl font-bold text-cyan-200 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
+                <h2 className="text-xl font-bold text-cyan-200 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
                   我 的 数 据 集
                 </h2>
                 <p className="mt-1 text-sm text-purple-200/60">已导入 {datasets.length} 个数据集</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-3">
                 <button
                   onClick={handleOpenCreateFolder}
                   disabled={dbLoading}
@@ -297,14 +297,14 @@ export function HomePage() {
 
           {/* 导入成功提示 */}
           {importSuccess && (
-            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+            <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
               <p className="text-green-300 font-medium">✓ 数据导入成功！</p>
             </div>
           )}
 
           {/* 导入失败提示 */}
           {importError && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex justify-between items-center">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex justify-between items-center">
               <p className="text-red-300 font-medium">✗ {importError}</p>
               <button
                 onClick={() => setImportError(null)}
@@ -316,27 +316,27 @@ export function HomePage() {
           )}
 
           {/* 统计卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
-            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-4 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-cyan-600" />
               <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 数 据 集</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
+              <p className="text-2xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(datasets.length)}
                 <span className="ml-2 text-sm font-medium text-purple-200/50">个</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-4 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-purple-600" />
               <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 数 据 行</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
+              <p className="text-2xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(datasets.reduce((sum, d) => sum + d.rowCount, 0))}
                 <span className="ml-2 text-sm font-medium text-purple-200/50">行</span>
               </p>
             </div>
-            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-5 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-4 hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-fuchsia-400 to-fuchsia-600" />
               <p className="text-xs text-purple-200/60 mb-2 tracking-wider">总 访 问 量</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
+              <p className="text-2xl font-bold bg-gradient-to-r from-cyan-200 to-purple-200 bg-clip-text text-transparent">
                 {formatNumber(visitCount)}
                 <span className="ml-2 text-sm font-medium text-purple-200/50">次</span>
               </p>
@@ -344,7 +344,7 @@ export function HomePage() {
           </div>
 
           {/* 面包屑导航 */}
-          <div className="mb-6 flex items-center gap-2 text-sm">
+          <div className="mb-4 flex items-center gap-2 text-sm">
             <button
               onClick={() => { setCurrentFolderId(null); setSearchQuery(''); }}
               className={`px-2 py-1 rounded transition-colors ${currentFolderId === null ? 'text-cyan-300 font-medium' : 'text-purple-200/60 hover:text-cyan-300'}`}
@@ -363,7 +363,7 @@ export function HomePage() {
 
           {/* 文件夹卡片网格（仅根目录显示） */}
           {currentFolderId === null && folders.length > 0 && (
-            <div className="mb-8">
+            <div className="mb-6">
               <h3 className="text-sm font-medium text-purple-200/60 mb-3 flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
@@ -421,7 +421,7 @@ export function HomePage() {
           )}
 
           {/* 搜索输入框 */}
-          <div className="mb-6">
+          <div className="mb-5">
             <div className="relative">
               <svg
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/60"
@@ -436,7 +436,7 @@ export function HomePage() {
                 placeholder="搜索数据集名称或文件名..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-cyan-400/50 text-gray-100 placeholder-purple-200/40 transition-all text-sm"
+                className="w-full pl-12 pr-4 py-2.5 bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-cyan-400/50 text-gray-100 placeholder-purple-200/40 transition-all text-sm"
               />
             </div>
           </div>
@@ -444,12 +444,12 @@ export function HomePage() {
           {/* 数据集列表 */}
           {datasets.length > 0 ? (
             filteredDatasets.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredDatasets.map((dataset, idx) => (
                   <Link
                     key={dataset.id}
                     to={`/project/${dataset.id}`}
-                    className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-5 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
+                    className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-4 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                   >
                     {/* 删除按钮 */}
                     <button
@@ -529,8 +529,8 @@ export function HomePage() {
                             : 'linear-gradient(to right, #38bdf8, #0ea5e9)',
                       }}
                     />
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-lg font-semibold text-cyan-100 group-hover:text-cyan-200 line-clamp-1">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-base font-semibold text-cyan-100 group-hover:text-cyan-200 line-clamp-1">
                         {dataset.name}
                       </h3>
                       <span
@@ -562,7 +562,7 @@ export function HomePage() {
                       </p>
                     </div>
                     {/* 卡片底部箭头指示 */}
-                    <div className="mt-4 pt-3 border-t border-purple-500/10 flex items-center justify-between text-xs text-purple-200/40 group-hover:text-cyan-300 transition-colors">
+                    <div className="mt-3 pt-2 border-t border-purple-500/10 flex items-center justify-between text-xs text-purple-200/40 group-hover:text-cyan-300 transition-colors">
                       <span>查看详情</span>
                       <svg
                         className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"

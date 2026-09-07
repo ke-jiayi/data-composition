@@ -150,7 +150,7 @@ export function ProjectDetailPage() {
     return (
       <Layout>
         <div id="detail-page">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto">
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BC5E8] mx-auto mb-4"></div>
               <p className="text-[#9CA3AF]">正在加载项目...</p>
@@ -166,7 +166,7 @@ export function ProjectDetailPage() {
     return (
       <Layout>
         <div id="detail-page">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto">
             <div className="text-center py-12">
               <svg
                 className="mx-auto h-12 w-12 text-[#9CA3AF]"
@@ -217,7 +217,7 @@ export function ProjectDetailPage() {
   return (
     <Layout>
       <div id="detail-page">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto">
         {/* 返回按钮 */}
         <div className="mb-4">
           <Link
@@ -243,10 +243,10 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 项目标题区域 */}
-        <div className="mb-6 bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm p-6">
+        <div className="mb-6 bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm p-4 md:p-5">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-white">{dataset.name}</h1>
+              <h1 className="text-2xl font-bold text-white">{dataset.name}</h1>
               {dataset.description && (
                 <p className="mt-2 text-[#D1D5DB]">{dataset.description}</p>
               )}
@@ -274,9 +274,9 @@ export function ProjectDetailPage() {
 
         {/* 项目信息展示区域 */}
         <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] shadow-sm mb-6">
-          <div className="p-6">
+          <div className="p-4 md:p-5">
             <h2 className="text-lg font-semibold text-white mb-4">数据集信息</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {/* 文件名 */}
               <div>
                 <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件名</h3>
@@ -308,7 +308,7 @@ export function ProjectDetailPage() {
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
 
         {/* Tab 内容 */}
-        <div className="mt-6">
+        <div className="mt-4 md:mt-5">
           {/* Tab 1: 数据表格 */}
           {activeTab === 'table' && (
             <div>
@@ -353,8 +353,8 @@ export function ProjectDetailPage() {
           {/* Tab 3: 分析结论 */}
           {activeTab === 'conclusion' && (
             <div className="space-y-4">
-              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-6">
-                <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-4 md:p-5">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                   <span className="text-xl">💡</span>
                   数据分析结论
                 </h3>

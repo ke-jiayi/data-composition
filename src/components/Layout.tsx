@@ -37,7 +37,7 @@ export function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a]">
+    <div className="min-h-screen bg-[#0a0e1a] overflow-x-hidden">
       {/* Header */}
       <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
@@ -75,8 +75,8 @@ export function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className={`pt-24 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
-        <div className="p-6 md:p-10">{children}</div>
+      <main className={`pt-20 min-h-screen transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-[240px]' : ''}`}>
+        <div className="p-4 md:p-6">{children}</div>
       </main>
     </div>
   );
