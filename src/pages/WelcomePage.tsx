@@ -139,7 +139,7 @@ export function WelcomePage() {
       </svg>
 
       <div className="relative z-10 text-center px-4">
-        <div className="w-full h-[420px] md:h-[560px] lg:h-[680px] pointer-events-none mb-4 flex items-center justify-center overflow-hidden">
+        <div className="w-full h-[420px] md:h-[560px] lg:h-[440px] pointer-events-none mb-4 flex items-center justify-center overflow-hidden">
           <svg
             viewBox="0 0 600 200"
             className="w-full h-full max-w-full"
@@ -172,7 +172,7 @@ export function WelcomePage() {
           className={`transition-all duration-1000 ${
             showEnter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
-          style={{ marginTop: '20px', marginBottom: '80px' }}
+          style={{ marginTop: '12px', marginBottom: '24px' }}
         >
           <p
             className="neon-enter-hint"
@@ -200,7 +200,7 @@ export function WelcomePage() {
 
         <div className="mx-auto w-32 h-[1.5px] bg-gradient-to-r from-transparent via-[#5BB8D9] to-transparent mb-6" />
 
-        <p className="text-sm md:text-base text-[#7B4B9E]/75 tracking-[0.3em] mb-16">
+        <p className="text-sm md:text-base text-[#7B4B9E]/75 tracking-[0.3em] mb-8">
           DATA&nbsp;&nbsp;PORTFOLIO&nbsp;&nbsp;·&nbsp;&nbsp;数据作品集
         </p>
       </div>
