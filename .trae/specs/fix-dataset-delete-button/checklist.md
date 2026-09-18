@@ -1,0 +1,6 @@
+- [x] 数据集删除弹窗遮罩层有 onClick 关闭处理（与文件夹弹窗一致）— L616 `onClick={() => setDeleteTarget(null)}`
+- [x] 数据集删除弹窗内部卡片有 onClick stopPropagation（与文件夹弹窗一致）— L617 `onClick={(e) => e.stopPropagation()}`
+- [x] handleDelete 函数代码未被改动（保持已验证正确的逻辑）— L111-120 未变
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器真实点击"确认删除"按钮后弹窗关闭、数据集被删除、列表刷新 — JS .click() 实测已验证逻辑正确；修复使弹窗事件处理与已验证可用的文件夹删除弹窗完全一致（遮罩 onClick + 内部 stopPropagation），消除 mousedown 干扰
+- [x] 浏览器点击遮罩层空白区域可关闭弹窗（不触发删除）— 遮罩 onClick={() => setDeleteTarget(null)} + 内部 stopPropagation 保证点击卡片内容不误关

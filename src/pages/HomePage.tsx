@@ -613,8 +613,8 @@ export function HomePage() {
 
       {/* 删除确认对话框 */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-[#0f1424] rounded-xl shadow-[0_0_40px_rgba(168,85,247,0.3)] border border-purple-500/30 w-full max-w-sm mx-4 p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setDeleteTarget(null)}>
+          <div className="bg-[#0f1424] rounded-xl shadow-[0_0_40px_rgba(168,85,247,0.3)] border border-purple-500/30 w-full max-w-sm mx-4 p-6" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-cyan-200">确认删除</h3>
             <p className="mt-2 text-sm text-purple-100/80">
               确定要删除 {deleteTarget.name} 吗？此操作不可撤销。
