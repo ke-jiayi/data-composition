@@ -39,11 +39,94 @@ plt.grid(True, alpha=0.3)
 plt.savefig('折线图.png', dpi=300, bbox_inches='tight')
 plt.show()`;
 
+const CITY2_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+df = pd.read_excel('城市2.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+df_long.to_excel('城市2_长格式.xlsx', index=False)
+
+df_dec = df_long[df_long['月份'] == '2025年12月'].copy()
+df_dec = df_dec[~df_dec['指标'].str.contains('城市居民消费价格指数（上年同月=100）$', na=False)]
+df_dec['指标简称'] = df_dec['指标'].str.replace('城市居民消费价格指数（上年同月=100）', '', regex=False)
+
+plt.figure(figsize=(12, 6))
+bars = plt.barh(df_dec['指标简称'], df_dec['指数'], color='#00B4D8')
+
+for bar in bars:
+    width = bar.get_width()
+    plt.text(width + 0.1, bar.get_y() + bar.get_height()/2,
+             f'{width:.1f}', va='center', fontsize=10)
+
+plt.title('2025年12月城市居民消费价格指数（分指标）', fontsize=14)
+plt.xlabel('指数（上年同月=100）')
+plt.grid(axis='x', alpha=0.3)
+plt.tight_layout()
+plt.savefig('城市2_柱状图.png', dpi=150, bbox_inches='tight')
+plt.show()`;
+
+interface ChartMeta {
+  image: string;
+  code: string;
+  title: string;
+}
+
+// 按数据集名称绑定对应的可视化图表与代码
+const CHART_MAP: Record<string, ChartMeta> = {
+  '城市1': {
+    image: '/images/城市价格指数趋势图.png',
+    code: PYTHON_CODE,
+    title: '城市居民消费价格指数趋势图',
+  },
+  '城市2': {
+    image: '/images/城市2_柱状图.png',
+    code: CITY2_CODE,
+    title: '2025年12月城市居民消费价格指数（分指标）',
+  },
+};
+
+// 根据数据集名称解析图表配置：先精确匹配，未命中再按名称包含兜底
+function resolveChartMeta(name?: string): ChartMeta | null {
+  if (!name) return null;
+  const trimmed = name.trim();
+  if (CHART_MAP[trimmed]) return CHART_MAP[trimmed];
+  const fallback = Object.entries(CHART_MAP).find(([key]) => trimmed.includes(key));
+  return fallback ? fallback[1] : null;
+}
+
 const DEFAULT_CONCLUSIONS = [
   '食品烟酒类价格波动最大，是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著',
   '衣着类价格呈现持续上涨趋势，1-5月累计上涨 1.8%，涨幅较为明显，需关注后续价格走势',
   '居住类价格保持稳定，波动幅度最小，是稳定物价的重要支撑因素',
 ];
+
+// 城市2 专属分析结论
+const CITY2_CONCLUSIONS = [
+  '其他用品及服务类价格涨幅显著，从2025年4月的106.7升至12月的117.8，累计上涨11.1个百分点，是拉动总指数上行的主要因素。',
+  '交通通信类价格持续低迷，全年各月均低于100，12月为97.4，反映该领域价格下行压力较大，与城市1的交通通信表现形成对比。',
+  '食品烟酒类价格波动较大，5月为100.4，9月降至97.6，12月回升至101.0，呈现“V型”走势，需关注其波动对总指数的影响。',
+];
+
+// 按数据集名称绑定默认结论
+const CONCLUSIONS_MAP: Record<string, string[]> = {
+  '城市2': CITY2_CONCLUSIONS,
+};
+
+// 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底，仍无则返回默认结论
+function resolveConclusions(name?: string): string[] {
+  if (!name) return DEFAULT_CONCLUSIONS;
+  const trimmed = name.trim();
+  if (CONCLUSIONS_MAP[trimmed]) return CONCLUSIONS_MAP[trimmed];
+  const fallback = Object.entries(CONCLUSIONS_MAP).find(([key]) => trimmed.includes(key));
+  return fallback ? fallback[1] : DEFAULT_CONCLUSIONS;
+}
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -55,11 +138,12 @@ export function ProjectDetailPage() {
   const [cleanedData, setCleanedData] = useState<DataRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [code, setCode] = useState(PYTHON_CODE);
+  const [code, setCode] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [conclusions, setConclusions] = useState<string[]>(DEFAULT_CONCLUSIONS);
   const [editingConclusion, setEditingConclusion] = useState<number | null>(null);
   const [conclusionSaveStatus, setConclusionSaveStatus] = useState<{ [key: number]: 'idle' | 'saving' | 'saved' }>({});
+  const [showCleanCode, setShowCleanCode] = useState(false);
 
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
@@ -80,8 +164,8 @@ export function ProjectDetailPage() {
           setError('数据集未找到');
         } else {
           setDataset(datasetData);
-          setCode(datasetData.code || PYTHON_CODE);
-          setConclusions(datasetData.conclusions && datasetData.conclusions.length > 0 ? datasetData.conclusions : DEFAULT_CONCLUSIONS);
+          setCode(datasetData.code || resolveChartMeta(datasetData.name)?.code || '');
+          setConclusions(datasetData.conclusions && datasetData.conclusions.length > 0 ? datasetData.conclusions : resolveConclusions(datasetData.name));
           setRawData(data);
           setCleanedData(data); // 初始化清洗后数据为原始数据
         }
@@ -91,6 +175,14 @@ export function ProjectDetailPage() {
       })
       .finally(() => setIsLoading(false));
   }, [id]);
+
+  // 切换数据集时，重置数据清洗代码块为收起状态
+  useEffect(() => {
+    setShowCleanCode(false);
+  }, [id]);
+
+  // 根据当前数据集名称解析对应的图表配置
+  const chartMeta = resolveChartMeta(dataset?.name);
 
   // 切换 Tab
   const handleTabChange = (tab: TabType) => {
@@ -326,27 +418,38 @@ export function ProjectDetailPage() {
                   onDataChange={handleCleanedDataChange}
                 />
               )}
-              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
-                <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
-                  <span className="text-sm font-medium text-white">📊 数据清洗与可视化代码</span>
-                  <button
-                    onClick={handleSaveCode}
-                    disabled={saveStatus === 'saving'}
-                    className="px-3 py-1 text-sm font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
-                  >
-                    {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
-                  </button>
+              {chartMeta && (
+                <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
+                  <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => setShowCleanCode(!showCleanCode)}
+                      className="flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-200 transition-colors"
+                    >
+                      <span className="text-[#9CA3AF] text-xs">{showCleanCode ? '▼' : '▶'}</span>
+                      <span>数据清洗与可视化代码</span>
+                    </button>
+                    <button
+                      onClick={handleSaveCode}
+                      disabled={saveStatus === 'saving'}
+                      className="px-3 py-1 text-sm font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
+                    >
+                      {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
+                    </button>
+                  </div>
+                  {showCleanCode && (
+                    <div className="bg-gray-900">
+                      <textarea
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        spellCheck={false}
+                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-sm leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
+                        style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className="bg-gray-900">
-                  <textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    spellCheck={false}
-                    className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-sm leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
-                    style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -443,19 +546,25 @@ export function ProjectDetailPage() {
             <SmartAnalysis data={cleanedData.length > 0 ? cleanedData : rawData} columns={dataset?.columns || []} />
           )}
 
-          {/* Tab 4: 可视化分析 */}
+          {/* Tab 4: 可视化分析（按当前数据集绑定图表，代码已移至数据清洗 Tab） */}
           {activeTab === 'chart' && (
-            <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
-              <h3 className="text-lg font-semibold text-white mb-4 text-center">城市居民消费价格指数趋势图</h3>
-              <div className="flex justify-center">
-                <img
-                  src="/images/城市价格指数趋势图.png.png"
-                  alt="城市居民消费价格指数趋势图"
-                  className="w-full max-h-[500px] object-contain rounded"
-                />
+            chartMeta ? (
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
+                <h3 className="text-lg font-semibold text-white mb-4 text-center">{chartMeta.title}</h3>
+                <div className="flex justify-center">
+                  <img
+                    src={chartMeta.image}
+                    alt={chartMeta.title}
+                    className="w-full max-h-[500px] object-contain rounded"
+                  />
+                </div>
+                <p className="text-sm text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
               </div>
-              <p className="text-sm text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
-            </div>
+            ) : (
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-10 flex flex-col items-center justify-center text-center">
+                <p className="text-sm text-[#9CA3AF]">暂无可视化图表，请先上传并分析数据</p>
+              </div>
+            )
           )}
         </div>
       </div>

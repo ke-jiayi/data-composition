@@ -1,0 +1,11 @@
+- [x] CITY2_CODE 常量包含用户提供的完整 Python 代码
+- [x] 新增 useState 控制代码块展开状态，默认 false（收起）
+- [x] 第二张图片卡片样式与现有趋势图卡片一致（bg-[#26262C] rounded-lg border p-2）
+- [x] 图片 src 为 /images/城市2_柱状图.png，className 含 w-full max-h-[500px] object-contain rounded
+- [x] 图片标题为"2025年12月城市居民消费价格指数（分指标）"
+- [x] 图片说明为"数据来源：国家统计局 | 使用 Python Matplotlib 生成"
+- [x] 可折叠代码块标题为"📊 数据清洗与可视化代码"，默认收起
+- [x] 点击标题栏可切换展开/收起
+- [x] 代码区域有深色背景、等宽字体、横向滚动
+- [x] 第二张图片在现有趋势图下方，代码块在第二张图片下方
+- [x] npx tsc --noEmit 退出码 0
