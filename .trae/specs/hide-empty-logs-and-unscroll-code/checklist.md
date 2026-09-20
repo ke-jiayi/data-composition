@@ -1,0 +1,7 @@
+- [x] DataCleaning.tsx：logs.length===0 时不渲染"清洗日志"标题与"暂无清洗记录"
+- [x] DataCleaning.tsx：logs.length>0 时日志列表保留 max-h-[300px] overflow-y-auto
+- [x] ProjectDetailPage.tsx：textarea 去掉 min-h-[300px] 和 resize-y，加 overflow-hidden
+- [x] ProjectDetailPage.tsx：textarea 有 ref，useEffect 在 showCleanCode/code 变化时自适应高度
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器：空日志数据集无"清洗日志"文本
+- [x] 浏览器：代码块展开后无内部滚动条（scrollHeight===clientHeight）

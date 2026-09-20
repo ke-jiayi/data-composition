@@ -195,17 +195,10 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
         </div>
       )}
 
-      {/* 日志列表 */}
-      <div className="p-4">
-        <h4 className="text-base font-medium text-[#D1D5DB] mb-3">清洗日志</h4>
-        {logs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#9CA3AF]">
-            <svg className="w-10 h-10 text-[#9CA3AF] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            <p className="text-base">暂无清洗记录</p>
-          </div>
-        ) : (
+      {/* 日志列表 — 无记录时隐藏整个区域 */}
+      {logs.length > 0 && (
+        <div className="p-4">
+          <h4 className="text-base font-medium text-[#D1D5DB] mb-3">清洗日志</h4>
           <div className="space-y-2 max-h-[300px] overflow-y-auto">
             {logs.map((log) => (
               <div
@@ -231,8 +224,8 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* 填充空值弹窗 */}
       {showFillModal && (

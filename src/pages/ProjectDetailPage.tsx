@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
@@ -144,6 +144,7 @@ export function ProjectDetailPage() {
   const [editingConclusion, setEditingConclusion] = useState<number | null>(null);
   const [conclusionSaveStatus, setConclusionSaveStatus] = useState<{ [key: number]: 'idle' | 'saving' | 'saved' }>({});
   const [showCleanCode, setShowCleanCode] = useState(false);
+  const codeRef = useRef<HTMLTextAreaElement>(null);
 
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
@@ -180,6 +181,14 @@ export function ProjectDetailPage() {
   useEffect(() => {
     setShowCleanCode(false);
   }, [id]);
+
+  // 代码块展开或内容变化时，自适应 textarea 高度（无内部滚动条）
+  useEffect(() => {
+    const el = codeRef.current;
+    if (!el || !showCleanCode) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }, [showCleanCode, code]);
 
   // 根据当前数据集名称解析对应的图表配置
   const chartMeta = resolveChartMeta(dataset?.name);
@@ -440,10 +449,11 @@ export function ProjectDetailPage() {
                   {showCleanCode && (
                     <div className="bg-gray-900">
                       <textarea
+                        ref={codeRef}
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         spellCheck={false}
-                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
+                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed overflow-hidden outline-none border-0 focus:ring-0"
                         style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
                       />
                     </div>
