@@ -342,13 +342,13 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
             className="bg-[#26262C] rounded-xl shadow-sm border border-[#3A3A44] p-4"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-semibold text-white">{card.title}</h3>
+              <h3 className="text-lg font-semibold text-white">{card.title}</h3>
               {card.canSwitch && (
                 <div className="flex gap-1">
                   <button
                     type="button"
                     onClick={() => handleSwitch(card.id, 'bar')}
-                    className={`px-2 py-1 text-sm rounded transition-colors ${
+                    className={`px-2 py-1 text-base rounded transition-colors ${
                       currentType === 'bar'
                         ? 'bg-[#6BC5E8] text-[#0a0e1a]'
                         : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'
@@ -360,7 +360,7 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
                   <button
                     type="button"
                     onClick={() => handleSwitch(card.id, 'line')}
-                    className={`px-2 py-1 text-sm rounded transition-colors ${
+                    className={`px-2 py-1 text-base rounded transition-colors ${
                       currentType === 'line'
                         ? 'bg-[#6BC5E8] text-[#0a0e1a]'
                         : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'
@@ -372,7 +372,7 @@ export function SmartAnalysis({ data, columns }: SmartAnalysisProps) {
                   <button
                     type="button"
                     onClick={() => handleSwitch(card.id, 'pie')}
-                    className={`px-2 py-1 text-sm rounded transition-colors ${
+                    className={`px-2 py-1 text-base rounded transition-colors ${
                       currentType === 'pie'
                         ? 'bg-[#6BC5E8] text-[#0a0e1a]'
                         : 'bg-[#1E1E24] text-[#D1D5DB] hover:bg-[#3A3A44]'

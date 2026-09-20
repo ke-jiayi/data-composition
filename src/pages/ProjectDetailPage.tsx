@@ -242,7 +242,7 @@ export function ProjectDetailPage() {
     return (
       <Layout>
         <div id="detail-page">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6BC5E8] mx-auto mb-4"></div>
               <p className="text-[#9CA3AF]">正在加载项目...</p>
@@ -258,7 +258,7 @@ export function ProjectDetailPage() {
     return (
       <Layout>
         <div id="detail-page">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="text-center py-12">
               <svg
                 className="mx-auto h-12 w-12 text-[#9CA3AF]"
@@ -273,14 +273,14 @@ export function ProjectDetailPage() {
                   d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-white">项目未找到</h3>
-              <p className="mt-1 text-sm text-[#9CA3AF]">
+              <h3 className="mt-2 text-base font-medium text-white">项目未找到</h3>
+              <p className="mt-1 text-base text-[#9CA3AF]">
                 {error || `项目 ID ${id} 不存在或已被删除`}
               </p>
               <div className="mt-6">
                 <Link
                   to="/home"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-[#0a0e1a] bg-[#6BC5E8] hover:bg-[#5AB4D8]"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-[#0a0e1a] bg-[#6BC5E8] hover:bg-[#5AB4D8]"
                 >
                   返回首页
                 </Link>
@@ -309,7 +309,7 @@ export function ProjectDetailPage() {
   return (
     <Layout>
       <div id="detail-page">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto">
         {/* 返回按钮 */}
         <div className="mb-4">
           <Link
@@ -342,7 +342,7 @@ export function ProjectDetailPage() {
               {dataset.description && (
                 <p className="mt-2 text-[#D1D5DB]">{dataset.description}</p>
               )}
-              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[#9CA3AF]">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-base text-[#9CA3AF]">
                 <span>创建于 {formatDate(dataset.createdAt)}</span>
                 {dataset.updatedAt !== dataset.createdAt && (
                   <span>· 更新于 {formatDate(dataset.updatedAt)}</span>
@@ -353,7 +353,7 @@ export function ProjectDetailPage() {
                   {dataset.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#6BC5E8]/10 text-[#6BC5E8] border border-[#6BC5E8]/20"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-[#6BC5E8]/10 text-[#6BC5E8] border border-[#6BC5E8]/20"
                     >
                       {tag}
                     </span>
@@ -371,25 +371,25 @@ export function ProjectDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
               {/* 文件名 */}
               <div>
-                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件名</h3>
+                <h3 className="text-base font-medium text-[#9CA3AF] mb-1">文件名</h3>
                 <p className="text-white">{dataset.fileName}</p>
               </div>
 
               {/* 文件类型 */}
               <div>
-                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">文件类型</h3>
+                <h3 className="text-base font-medium text-[#9CA3AF] mb-1">文件类型</h3>
                 <p className="text-white uppercase">{dataset.fileType}</p>
               </div>
 
               {/* 数据量 */}
               <div>
-                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">数据行数</h3>
+                <h3 className="text-base font-medium text-[#9CA3AF] mb-1">数据行数</h3>
                 <p className="text-white">{formatNumber(dataset.rowCount)} 行</p>
               </div>
 
               {/* 字段 */}
               <div className="md:col-span-2 lg:col-span-3">
-                <h3 className="text-sm font-medium text-[#9CA3AF] mb-1">数据字段</h3>
+                <h3 className="text-base font-medium text-[#9CA3AF] mb-1">数据字段</h3>
                 <p className="text-white">{dataset.columns.join('、')}</p>
               </div>
             </div>
@@ -424,15 +424,15 @@ export function ProjectDetailPage() {
                     <button
                       type="button"
                       onClick={() => setShowCleanCode(!showCleanCode)}
-                      className="flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-200 transition-colors"
+                      className="flex items-center gap-2 text-base font-medium text-white hover:text-cyan-200 transition-colors"
                     >
-                      <span className="text-[#9CA3AF] text-xs">{showCleanCode ? '▼' : '▶'}</span>
+                      <span className="text-[#9CA3AF] text-sm">{showCleanCode ? '▼' : '▶'}</span>
                       <span>数据清洗与可视化代码</span>
                     </button>
                     <button
                       onClick={handleSaveCode}
                       disabled={saveStatus === 'saving'}
-                      className="px-3 py-1 text-sm font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
+                      className="px-3 py-1 text-base font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
                     >
                       {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
                     </button>
@@ -443,7 +443,7 @@ export function ProjectDetailPage() {
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         spellCheck={false}
-                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-sm leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
+                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed resize-y min-h-[300px] outline-none border-0 focus:ring-0"
                         style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
                       />
                     </div>
@@ -471,7 +471,7 @@ export function ProjectDetailPage() {
                           : 'bg-[#1E1E24] border-[#3A3A44]'
                       }`}
                     >
-                      <div className="flex-shrink-0 w-8 h-8 bg-[#6BC5E8] text-[#0a0e1a] rounded-full flex items-center justify-center text-sm font-bold">
+                      <div className="flex-shrink-0 w-8 h-8 bg-[#6BC5E8] text-[#0a0e1a] rounded-full flex items-center justify-center text-base font-bold">
                         {index + 1}
                       </div>
                       <div className="flex-1">
@@ -483,13 +483,13 @@ export function ProjectDetailPage() {
                               newConclusions[index] = e.target.value;
                               setConclusions(newConclusions);
                             }}
-                            className="w-full p-2 border border-[#3A3A44] rounded-lg text-sm text-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#6BC5E8]/30 focus:border-[#6BC5E8]/60 min-h-[80px] resize-y"
+                            className="w-full p-2 border border-[#3A3A44] rounded-lg text-base text-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#6BC5E8]/30 focus:border-[#6BC5E8]/60 min-h-[80px] resize-y"
                             placeholder="请输入分析结论..."
                             autoFocus
                           />
                         ) : (
                           <p
-                            className="text-sm text-[#D1D5DB] cursor-pointer hover:text-white"
+                            className="text-base text-[#D1D5DB] cursor-pointer hover:text-white"
                             onClick={() => setEditingConclusion(index)}
                           >
                             {conclusion || '点击编辑...'}
@@ -501,13 +501,13 @@ export function ProjectDetailPage() {
                               <button
                                 onClick={() => handleSaveConclusion(index)}
                                 disabled={conclusionSaveStatus[index] === 'saving'}
-                                className="px-3 py-1 text-xs font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
+                                className="px-3 py-1 text-sm font-medium text-[#0a0e1a] bg-[#6BC5E8] rounded-lg hover:bg-[#5AB4D8] transition-colors disabled:opacity-50"
                               >
                                 {conclusionSaveStatus[index] === 'saving' ? '保存中...' : conclusionSaveStatus[index] === 'saved' ? '✓ 已保存' : '保存修改'}
                               </button>
                               <button
                                 onClick={() => setEditingConclusion(null)}
-                                className="px-3 py-1 text-xs font-medium text-[#9CA3AF] bg-[#1E1E24] rounded-lg hover:bg-[#3A3A44] transition-colors"
+                                className="px-3 py-1 text-sm font-medium text-[#9CA3AF] bg-[#1E1E24] rounded-lg hover:bg-[#3A3A44] transition-colors"
                               >
                                 取消
                               </button>
@@ -515,14 +515,14 @@ export function ProjectDetailPage() {
                           ) : (
                             <button
                               onClick={() => setEditingConclusion(index)}
-                              className="text-xs text-[#9CA3AF] hover:text-[#6BC5E8] transition-colors"
+                              className="text-sm text-[#9CA3AF] hover:text-[#6BC5E8] transition-colors"
                             >
                               ✏️ 编辑
                             </button>
                           )}
                           <button
                             onClick={() => handleDeleteConclusion(index)}
-                            className="text-xs text-[#9CA3AF] hover:text-red-500 transition-colors"
+                            className="text-sm text-[#9CA3AF] hover:text-red-500 transition-colors"
                           >
                             🗑️ 删除
                           </button>
@@ -533,7 +533,7 @@ export function ProjectDetailPage() {
                 </div>
                 <button
                   onClick={handleAddConclusion}
-                  className="mt-4 w-full py-2 border-2 border-dashed border-[#3A3A44] rounded-lg text-sm text-[#9CA3AF] hover:border-[#6BC5E8] hover:text-[#6BC5E8] transition-colors"
+                  className="mt-4 w-full py-2 border-2 border-dashed border-[#3A3A44] rounded-lg text-base text-[#9CA3AF] hover:border-[#6BC5E8] hover:text-[#6BC5E8] transition-colors"
                 >
                   + 添加新结论
                 </button>
@@ -558,11 +558,11 @@ export function ProjectDetailPage() {
                     className="w-full max-h-[500px] object-contain rounded"
                   />
                 </div>
-                <p className="text-sm text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
+                <p className="text-base text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
               </div>
             ) : (
               <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-10 flex flex-col items-center justify-center text-center">
-                <p className="text-sm text-[#9CA3AF]">暂无可视化图表，请先上传并分析数据</p>
+                <p className="text-base text-[#9CA3AF]">暂无可视化图表，请先上传并分析数据</p>
               </div>
             )
           )}

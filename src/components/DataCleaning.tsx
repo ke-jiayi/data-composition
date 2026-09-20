@@ -113,7 +113,7 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
       {/* 头部 */}
       <div className="p-4 border-b border-[#3A3A44]">
         <h3 className="text-lg font-semibold text-white">数据清洗</h3>
-        <p className="text-sm text-[#9CA3AF] mt-1">
+        <p className="text-base text-[#9CA3AF] mt-1">
           当前数据：<span className="font-medium text-[#6BC5E8]">{data.length}</span> 行
         </p>
       </div>
@@ -124,7 +124,7 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
           <button
             onClick={handleDeduplicate}
             disabled={data.length === 0}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -136,12 +136,12 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
         {/* 列操作 */}
         {columns.length > 0 && (
           <div className="mt-4">
-            <p className="text-sm text-[#D1D5DB] mb-2">列操作：</p>
+            <p className="text-base text-[#D1D5DB] mb-2">列操作：</p>
             <div className="flex flex-wrap gap-2">
               {columns.map((column) => (
                 <div
                   key={column}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E1E24] text-[#D1D5DB] text-sm rounded-full"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E1E24] text-[#D1D5DB] text-base rounded-full"
                 >
                   <span className="max-w-[120px] truncate">{column}</span>
                   <div className="flex items-center gap-1 ml-1">
@@ -176,7 +176,7 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
         <div className="p-4 border-b border-[#3A3A44] bg-[#1E1E24]">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-[#D1D5DB]">清洗前：</span>
+              <span className="text-base text-[#D1D5DB]">清洗前：</span>
               <span className="text-lg font-semibold text-white">
                 {data.length + (logs.reduce((sum, log) => sum + (log.affectedRows || 0), 0))}
               </span>
@@ -185,10 +185,10 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-[#D1D5DB]">清洗后：</span>
+              <span className="text-base text-[#D1D5DB]">清洗后：</span>
               <span className="text-lg font-semibold text-[#6BC5E8]">{data.length}</span>
             </div>
-            <span className="text-sm text-green-600">
+            <span className="text-base text-green-600">
               (-{logs.reduce((sum, log) => sum + (log.affectedRows || 0), 0)})
             </span>
           </div>
@@ -197,13 +197,13 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
 
       {/* 日志列表 */}
       <div className="p-4">
-        <h4 className="text-sm font-medium text-[#D1D5DB] mb-3">清洗日志</h4>
+        <h4 className="text-base font-medium text-[#D1D5DB] mb-3">清洗日志</h4>
         {logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-[#9CA3AF]">
             <svg className="w-10 h-10 text-[#9CA3AF] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <p className="text-sm">暂无清洗记录</p>
+            <p className="text-base">暂无清洗记录</p>
           </div>
         ) : (
           <div className="space-y-2 max-h-[300px] overflow-y-auto">
@@ -214,17 +214,17 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                    <span className="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-sm font-medium rounded">
                       {log.operation}
                     </span>
-                    <span className="text-sm text-[#D1D5DB]">{log.details}</span>
+                    <span className="text-base text-[#D1D5DB]">{log.details}</span>
                   </div>
-                  <span className="text-xs text-[#9CA3AF] whitespace-nowrap">
+                  <span className="text-sm text-[#9CA3AF] whitespace-nowrap">
                     {formatTimestamp(log.timestamp)}
                   </span>
                 </div>
                 {log.affectedRows !== undefined && log.affectedRows > 0 && (
-                  <p className="text-xs text-green-600 mt-1">
+                  <p className="text-sm text-green-600 mt-1">
                     影响行数：-{log.affectedRows}
                   </p>
                 )}
@@ -240,11 +240,11 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
           <div className="bg-[#26262C] rounded-lg shadow-xl w-full max-w-md mx-4">
             <div className="p-4 border-b border-[#3A3A44]">
               <h4 className="text-lg font-semibold text-white">填充空值</h4>
-              <p className="text-sm text-[#9CA3AF] mt-1">列：{selectedColumn}</p>
+              <p className="text-base text-[#9CA3AF] mt-1">列：{selectedColumn}</p>
             </div>
             <div className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#D1D5DB] mb-2">填充策略</label>
+                <label className="block text-base font-medium text-[#D1D5DB] mb-2">填充策略</label>
                 <div className="flex gap-4">
                   <label className="inline-flex items-center">
                     <input
@@ -255,7 +255,7 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       onChange={() => setFillStrategy('mean')}
                       className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-[#D1D5DB]">均值</span>
+                    <span className="ml-2 text-base text-[#D1D5DB]">均值</span>
                   </label>
                   <label className="inline-flex items-center">
                     <input
@@ -266,7 +266,7 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       onChange={() => setFillStrategy('median')}
                       className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-[#D1D5DB]">中位数</span>
+                    <span className="ml-2 text-base text-[#D1D5DB]">中位数</span>
                   </label>
                   <label className="inline-flex items-center">
                     <input
@@ -277,19 +277,19 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                       onChange={() => setFillStrategy('custom')}
                       className="text-[#6BC5E8] focus:ring-[#6BC5E8]"
                     />
-                    <span className="ml-2 text-sm text-[#D1D5DB]">自定义</span>
+                    <span className="ml-2 text-base text-[#D1D5DB]">自定义</span>
                   </label>
                 </div>
               </div>
               {fillStrategy === 'custom' && (
                 <div>
-                  <label className="block text-sm font-medium text-[#D1D5DB] mb-2">自定义值</label>
+                  <label className="block text-base font-medium text-[#D1D5DB] mb-2">自定义值</label>
                   <input
                     type="text"
                     value={customValue}
                     onChange={(e) => setCustomValue(e.target.value)}
                     placeholder="请输入自定义值"
-                    className="w-full px-3 py-2 border border-[#3A3A44] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[#3A3A44] rounded-md text-base focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
                   />
                 </div>
               )}
@@ -300,13 +300,13 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
                   setShowFillModal(false);
                   setCustomValue('');
                 }}
-                className="px-4 py-2 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
+                className="px-4 py-2 text-base font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
               >
                 取消
               </button>
               <button
                 onClick={handleFillNulls}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors"
+                className="px-4 py-2 text-base font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors"
               >
                 确定
               </button>
@@ -323,20 +323,20 @@ const DataCleaning: React.FC<DataCleaningProps> = ({
               <h4 className="text-lg font-semibold text-white">删除列</h4>
             </div>
             <div className="p-4">
-              <p className="text-sm text-[#D1D5DB]">
+              <p className="text-base text-[#D1D5DB]">
                 确定要删除列 "<span className="font-medium text-white">{selectedColumn}</span>" 吗？此操作不可撤销。
               </p>
             </div>
             <div className="p-4 border-t border-[#3A3A44] flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-sm font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
+                className="px-4 py-2 text-base font-medium text-[#D1D5DB] bg-[#1E1E24] rounded-md hover:bg-[#3A3A44] transition-colors"
               >
                 取消
               </button>
               <button
                 onClick={handleDeleteColumn}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors"
+                className="px-4 py-2 text-base font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors"
               >
                 删除
               </button>

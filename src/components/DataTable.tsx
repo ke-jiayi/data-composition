@@ -126,7 +126,7 @@ const DataTable: React.FC<DataTableProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             {title && <h3 className="text-lg font-semibold text-white">{title}</h3>}
-            <p className="text-sm text-[#9CA3AF] mt-1">
+            <p className="text-base text-[#9CA3AF] mt-1">
               共 <span className="font-medium text-white">{stats.totalRows}</span> 行，
               当前显示 <span className="font-medium text-[#6BC5E8]">{startRow}-{endRow}</span> 行
               {searchTerm && (
@@ -143,7 +143,7 @@ const DataTable: React.FC<DataTableProps> = ({
               placeholder="搜索..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full sm:w-64 px-3 py-2 pl-10 text-sm border border-[#7B4B9E] rounded-md bg-[#1E1E24] text-[#D1D5DB] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
+              className="w-full sm:w-64 px-3 py-2 pl-10 text-base border border-[#7B4B9E] rounded-md bg-[#1E1E24] text-[#D1D5DB] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#6BC5E8] focus:border-transparent"
             />
             <svg
               className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9CA3AF]"
@@ -176,7 +176,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   <th
                     key={column}
                     onClick={() => handleSort(column)}
-                    className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-[#7B4B9E]/80 select-none transition-colors"
+                    className="px-4 py-3 text-left text-sm font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-[#7B4B9E]/80 select-none transition-colors"
                   >
                     <div className="flex items-center gap-1">
                       <span>{column}</span>
@@ -195,7 +195,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   {columns.map((column) => (
                     <td
                       key={column}
-                      className="px-4 py-3 text-sm text-[#D1D5DB] whitespace-nowrap"
+                      className="px-4 py-3 text-base text-[#D1D5DB] whitespace-nowrap"
                     >
                       {formatCellValue(row[column])}
                     </td>
@@ -209,13 +209,13 @@ const DataTable: React.FC<DataTableProps> = ({
             <svg className="w-12 h-12 text-[#9CA3AF] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <p className="text-sm">
+            <p className="text-base">
               {searchTerm ? '未找到匹配的数据' : '暂无数据'}
             </p>
             {searchTerm && (
               <button
                 onClick={() => handleSearch('')}
-                className="mt-2 text-sm text-[#6BC5E8] hover:text-[#5AB4D8]"
+                className="mt-2 text-base text-[#6BC5E8] hover:text-[#5AB4D8]"
               >
                 清除搜索
               </button>

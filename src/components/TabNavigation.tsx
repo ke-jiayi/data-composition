@@ -95,7 +95,7 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
             key={tab.key}
             onClick={() => handleTabClick(tab.key)}
             className={`
-              flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap shrink-0 transition-colors
+              flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-base whitespace-nowrap shrink-0 transition-colors
               ${
                 activeTab === tab.key
                   ? 'border-[#6BC5E8] text-[#6BC5E8]'
