@@ -143,7 +143,6 @@ export function ProjectDetailPage() {
   const [conclusions, setConclusions] = useState<string[]>(DEFAULT_CONCLUSIONS);
   const [editingConclusion, setEditingConclusion] = useState<number | null>(null);
   const [conclusionSaveStatus, setConclusionSaveStatus] = useState<{ [key: number]: 'idle' | 'saving' | 'saved' }>({});
-  const [showCleanCode, setShowCleanCode] = useState(false);
   const codeRef = useRef<HTMLTextAreaElement>(null);
 
   // 从 URL 获取当前 Tab
@@ -177,18 +176,13 @@ export function ProjectDetailPage() {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  // 切换数据集时，重置数据清洗代码块为收起状态
-  useEffect(() => {
-    setShowCleanCode(false);
-  }, [id]);
-
-  // 代码块展开或内容变化时，自适应 textarea 高度（无内部滚动条）
+  // 代码内容变化时，自适应 textarea 高度（无内部滚动条，完整显示所有代码行）
   useEffect(() => {
     const el = codeRef.current;
-    if (!el || !showCleanCode) return;
+    if (!el) return;
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
-  }, [showCleanCode, code]);
+  }, [code]);
 
   // 根据当前数据集名称解析对应的图表配置
   const chartMeta = resolveChartMeta(dataset?.name);
@@ -430,14 +424,7 @@ export function ProjectDetailPage() {
               {chartMeta && (
                 <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
                   <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={() => setShowCleanCode(!showCleanCode)}
-                      className="flex items-center gap-2 text-base font-medium text-white hover:text-cyan-200 transition-colors"
-                    >
-                      <span className="text-[#9CA3AF] text-sm">{showCleanCode ? '▼' : '▶'}</span>
-                      <span>数据清洗与可视化代码</span>
-                    </button>
+                    <h3 className="text-base font-medium text-white">数据清洗与可视化代码</h3>
                     <button
                       onClick={handleSaveCode}
                       disabled={saveStatus === 'saving'}
@@ -446,18 +433,16 @@ export function ProjectDetailPage() {
                       {saveStatus === 'saving' ? '保存中...' : saveStatus === 'saved' ? '✓ 已保存' : '保存修改'}
                     </button>
                   </div>
-                  {showCleanCode && (
-                    <div className="bg-gray-900">
-                      <textarea
-                        ref={codeRef}
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        spellCheck={false}
-                        className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed overflow-hidden outline-none border-0 focus:ring-0"
-                        style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
-                      />
-                    </div>
-                  )}
+                  <div className="bg-gray-900">
+                    <textarea
+                      ref={codeRef}
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      spellCheck={false}
+                      className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed overflow-hidden outline-none border-0 focus:ring-0"
+                      style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
+                    />
+                  </div>
                 </div>
               )}
             </div>

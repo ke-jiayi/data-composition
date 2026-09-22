@@ -1,0 +1,9 @@
+- [x] showCleanCode 状态已删除，全文件 0 引用
+- [x] [id] 重置 effect 已删除
+- [x] 自适应高度 effect 仅依赖 [code]，无 showCleanCode 守卫
+- [x] 折叠按钮已替换为静态标题"数据清洗与可视化代码"，无 ▶/▼
+- [x] textarea 始终渲染（无条件包裹），属性/样式/onChange/ref 不变
+- [x] "保存修改"按钮保留，三态文案与 handleSaveCode 不变
+- [x] 城市2 clean：进入即显全部代码，无内部纵向/横向滚动条
+- [x] 农村1 clean：仍不渲染代码卡片
+- [x] npx tsc --noEmit 退出码 0
