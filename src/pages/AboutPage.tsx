@@ -11,9 +11,9 @@ const futurePlans = [
 export function AboutPage() {
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className="mb-4">
-          <h1 className="text-lg font-bold text-gray-900 dark:text-cyan-300 dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-cyan-300 dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]">
             关于这个数据作品集
           </h1>
         </div>
@@ -21,19 +21,19 @@ export function AboutPage() {
         <div className="space-y-3 md:space-y-4">
           {/* 网站介绍 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">🌐 这个网站是做什么的？</h2>
-            <p className="text-gray-600 dark:text-purple-200/70 leading-relaxed mb-3">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">🌐 这个网站是做什么的？</h2>
+            <p className="text-lg text-gray-600 dark:text-purple-200/70 leading-relaxed mb-3">
               这是我用 TraeCode 从零开始搭建的个人数据分析作品集网站。它把「数据采集 → 清洗 → 分析 → 可视化」的完整流程做成一个可交互的网页工具，方便我展示自己的数据处理能力。
             </p>
-            <p className="text-gray-600 dark:text-purple-200/70 leading-relaxed">
+            <p className="text-lg text-gray-600 dark:text-purple-200/70 leading-relaxed">
               目前支持 CSV / Excel 导入、数据清洗、简单分析，后续还会加入更多图表类型。
             </p>
           </section>
 
           {/* 联系方式 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">📮 联系方式</h2>
-            <p className="text-gray-600 dark:text-purple-200/70 leading-relaxed mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">📮 联系方式</h2>
+            <p className="text-lg text-gray-600 dark:text-purple-200/70 leading-relaxed mb-4">
               如果需要联系我，或对此作品集有任何建议，可以通过以下方式找到我：
             </p>
             <ul className="space-y-3">
@@ -62,17 +62,17 @@ export function AboutPage() {
                 </a>
               </li>
             </ul>
-            <p className="text-gray-500 dark:text-purple-200/50 text-sm mt-4">欢迎交流。</p>
+            <p className="text-gray-500 dark:text-purple-200/50 text-base mt-4">欢迎交流。</p>
           </section>
 
           {/* 技术栈 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-4">🔧 技术栈</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-4">🔧 技术栈</h2>
             <div className="flex flex-wrap gap-2">
               {techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 rounded-full text-sm border bg-cyan-50 border-cyan-200 text-cyan-700 dark:bg-cyan-500/10 dark:border-cyan-400/30 dark:text-cyan-200"
+                  className="px-3 py-1 rounded-full text-base border bg-cyan-50 border-cyan-200 text-cyan-700 dark:bg-cyan-500/10 dark:border-cyan-400/30 dark:text-cyan-200"
                 >
                   {tech}
                 </span>
@@ -82,8 +82,8 @@ export function AboutPage() {
 
           {/* 后续计划 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">🚀 后续计划</h2>
-            <ul className="space-y-2 text-gray-600 dark:text-purple-200/70">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">🚀 后续计划</h2>
+            <ul className="space-y-2 text-lg text-gray-600 dark:text-purple-200/70">
               {futurePlans.map((plan) => (
                 <li key={plan} className="flex items-start gap-2">
                   <span className="text-cyan-500 dark:text-cyan-300">•</span>

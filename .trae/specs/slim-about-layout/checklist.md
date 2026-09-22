@@ -1,0 +1,10 @@
+- [x] AboutPage 容器 max-w-5xl → max-w-4xl mx-auto
+- [x] h1/h2 text-lg → text-xl
+- [x] body 段落加 text-lg
+- [x] text-sm（备注、标签）→ text-base
+- [x] 卡片间距 p-3 md:p-4 / space-y-3 md:space-y-4 / gap-2 不变
+- [x] 容器 max-width=896px 居中
+- [x] 字号：body=18px、标签=16px、h1/h2=20px
+- [x] 无横向滚动
+- [x] npx tsc --noEmit 退出码 0
+- [x] 仅修改 AboutPage.tsx
