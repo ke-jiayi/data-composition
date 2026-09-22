@@ -1,0 +1,7 @@
+- [x] 代码 textarea 增加 resize-none（拖拽手柄消失）
+- [x] 代码 textarea 增加 overflow-hidden（无内部滚动条）
+- [x] 高度自适应保留（fit + resize 监听未动），无 max-height，父容器无高度限制
+- [x] "保存修改"按钮与编辑功能保留
+- [x] 结论 Tab textarea、卡片圆角 overflow-hidden 未改动
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器：resize='none'、overflowY='hidden'、scrollHeight<=clientHeight、代码完整

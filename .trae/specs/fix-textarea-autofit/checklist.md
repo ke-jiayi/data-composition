@@ -1,0 +1,9 @@
+- [x] fit() effect 依赖含 activeTab，切换到 clean Tab 重新执行
+- [x] fit() 用 requestAnimationFrame 等布局完成
+- [x] textarea 有 onFocus 调用 fit()
+- [x] textarea 的 onChange 在 setCode 后调用 fit()
+- [x] resize-none、overflow-hidden 保留不变
+- [x] 城市2：切换到 clean Tab → scrollHeight===clientHeight，代码完整
+- [x] 聚焦/编辑 → 高度即时自适应
+- [x] resize='none'、overflowY='hidden'、maxHeight='none'
+- [x] npx tsc --noEmit 退出码 0

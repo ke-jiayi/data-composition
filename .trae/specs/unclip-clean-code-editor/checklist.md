@@ -1,0 +1,6 @@
+- [x] 自适应高度 effect 含 window resize 监听与 cleanup
+- [x] 代码 textarea 无 overflow-hidden、无 max-height
+- [x] 城市2 进入 Tab：scrollHeight===clientHeight，代码完整可见
+- [x] dispatch resize 后 scrollHeight===clientHeight 仍成立
+- [x] npx tsc --noEmit 退出码 0
+- [x] 结论 Tab textarea、卡片容器 overflow-hidden、日志列表 max-h 均未改动

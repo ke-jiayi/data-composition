@@ -176,13 +176,23 @@ export function ProjectDetailPage() {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  // 代码内容变化时，自适应 textarea 高度（无内部滚动条，完整显示所有代码行）
-  useEffect(() => {
+  // 代码 textarea 高度自适应：rAF 等布局完成后再测 scrollHeight，避免 2-3 行截断
+  const fitCode = useCallback(() => {
     const el = codeRef.current;
     if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
-  }, [code]);
+    requestAnimationFrame(() => {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    });
+  }, []);
+
+  // code 变化或切换到 clean Tab 时重新自适应；窗口宽度变化也重新 fit
+  useEffect(() => {
+    fitCode();
+    const onResize = () => fitCode();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [code, activeTab, fitCode]);
 
   // 根据当前数据集名称解析对应的图表配置
   const chartMeta = resolveChartMeta(dataset?.name);
@@ -437,9 +447,10 @@ export function ProjectDetailPage() {
                     <textarea
                       ref={codeRef}
                       value={code}
-                      onChange={(e) => setCode(e.target.value)}
+                      onChange={(e) => { setCode(e.target.value); fitCode(); }}
+                      onFocus={fitCode}
                       spellCheck={false}
-                      className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed overflow-hidden outline-none border-0 focus:ring-0"
+                      className="w-full bg-gray-900 text-gray-100 p-4 font-mono text-base leading-relaxed resize-none overflow-hidden outline-none border-0 focus:ring-0"
                       style={{ fontFamily: '"Fira code", "Fira Mono", monospace', tabSize: 4 }}
                     />
                   </div>
