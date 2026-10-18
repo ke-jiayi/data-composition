@@ -27,10 +27,18 @@ export function WelcomePage() {
     lineGradStart: isDark ? '#6BC5E8' : '#2B7FA8',
     lineGradEnd:   isDark ? '#7B4B9E' : '#5B2E7D',
     lineGlow:      isDark ? 'rgba(107,197,232,0.55)' : 'rgba(43,127,168,0.35)',
-    cursorFill:    isDark ? '#6BC5E8' : '#2B7FA8',
-    cursorGlow: isDark
-      ? 'drop-shadow(0 0 4px rgba(107,197,232,0.9))'
-      : 'drop-shadow(0 0 3px rgba(43,127,168,0.5))',
+    trackStroke: isDark ? 'rgba(100,116,139,0.30)' : 'rgba(71,85,105,0.25)',
+    heroFill: isDark ? '#E8FDFF' : '#0B7285',
+    heroGlow: isDark
+      ? 'drop-shadow(0 0 6px rgba(95,251,241,0.95)) drop-shadow(0 0 14px rgba(95,251,241,0.6))'
+      : 'drop-shadow(0 0 4px rgba(11,114,133,0.65)) drop-shadow(0 0 8px rgba(11,114,133,0.35))',
+    heroGlowBurst: isDark
+      ? 'drop-shadow(0 0 9px rgba(95,251,241,1)) drop-shadow(0 0 21px rgba(95,251,241,0.8))'
+      : 'drop-shadow(0 0 6px rgba(11,114,133,0.9)) drop-shadow(0 0 12px rgba(11,114,133,0.55))',
+    tailStroke: isDark ? '#5FFBF1' : '#0891B2',
+    tailGlow: isDark
+      ? 'drop-shadow(0 0 6px rgba(95,251,241,0.8))'
+      : 'drop-shadow(0 0 4px rgba(8,145,178,0.5))',
   };
 
   useEffect(() => {
@@ -70,22 +78,36 @@ export function WelcomePage() {
   // 上凸顶点（y 局部最小）所在节点索引
   const peakIndexes = [2, 4, 6, 8, 10];
 
-  // 唯一主角光标的关键帧：波峰处生长+跃起换角，平缓/下降段缩成小光点滑行
-  const cursorKeyframes = linePoints
+  // 位置关键帧：仅 left/top，按累计弧长分配进度，配合 linear 实现全程匀速
+  const moveKeyframes = linePoints
     .map((p, i) => {
       const progress = (trackCumulative[i] / trackTotal) * 100;
-      const isPeak = peakIndexes.includes(i);
-      const nextIsPeak = peakIndexes.includes(i + 1);
-      const peaksPassed = peakIndexes.filter((k) => k <= i).length;
-      const easing = nextIsPeak ? 'ease-out' : isPeak ? 'ease-in' : 'linear';
       return `${progress.toFixed(2)}% {
             left: ${((p.x / 1280) * 100).toFixed(3)}%;
-            top: ${(((p.y / 720) * 100) - (isPeak ? 3 : 0)).toFixed(3)}%;
-            opacity: ${isPeak ? 1 : 0.3};
-            transform: translate(-50%, -50%) rotate(${peaksPassed * 120}deg) scale(${isPeak ? 1.15 : 0.34});
-            animation-timing-function: ${easing};
+            top: ${((p.y / 720) * 100).toFixed(3)}%;
+            animation-timing-function: linear;
           }`;
     })
+    .join('\n          ');
+
+  // 爆闪关键帧：仅在波峰（节点 2/4/6/8/10）处将 drop-shadow 发光增强约 1.5 倍再恢复
+  const burstFrames: { pct: number; glow: string }[] = [{ pct: 0, glow: colors.heroGlow }];
+  peakIndexes.forEach((idx) => {
+    const p = (trackCumulative[idx] / trackTotal) * 100;
+    burstFrames.push(
+      { pct: Math.max(p - 1.3, burstFrames[burstFrames.length - 1].pct + 0.01), glow: colors.heroGlow },
+      { pct: p, glow: colors.heroGlowBurst },
+      { pct: p + 1.3, glow: colors.heroGlow },
+    );
+  });
+  burstFrames.push({ pct: 100, glow: colors.heroGlow });
+  const burstKeyframes = burstFrames
+    .map(
+      (f) => `${f.pct.toFixed(2)}% {
+            filter: ${f.glow};
+            animation-timing-function: linear;
+          }`,
+    )
     .join('\n          ');
 
   return (
@@ -118,8 +140,19 @@ export function WelcomePage() {
             text-shadow: ${colors.neonGlow};
           }
         }
-        @keyframes cursor-run {
-          ${cursorKeyframes}
+        @keyframes line-grow {
+          from { stroke-dashoffset: 100; }
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes cursor-move {
+          ${moveKeyframes}
+        }
+        @keyframes cursor-burst {
+          ${burstKeyframes}
+        }
+        @keyframes line-tail {
+          from { stroke-dashoffset: 6; }
+          to { stroke-dashoffset: -94; }
         }
       `}</style>
       <svg
@@ -137,7 +170,16 @@ export function WelcomePage() {
         <line x1={0} y1={360} x2={1280} y2={360} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
         <line x1={0} y1={540} x2={1280} y2={540} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
         <line x1={0} y1={720} x2={1280} y2={720} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
-        {/* 冰蓝→暗紫渐变实线：沿 12 个节点绘制，带外发光 */}
+        {/* 底层未激活轨道：半透明暗灰细线 */}
+        <path
+          d={linePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}
+          fill="none"
+          stroke={colors.trackStroke}
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {/* 顶层渐变亮线：pathLength 归一化后用 dashoffset 从左到右匀速点亮，与主角光标同步（同 9s linear） */}
         <path
           d={linePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}
           fill="none"
@@ -145,26 +187,67 @@ export function WelcomePage() {
           strokeWidth={4}
           strokeLinecap="round"
           strokeLinejoin="round"
+          pathLength={100}
           style={{
+            strokeDasharray: '100',
+            animation: 'line-grow 9s linear infinite',
             filter: `drop-shadow(0 0 4px ${colors.lineGlow}) drop-shadow(0 0 10px ${colors.lineGlow})`,
+          }}
+        />
+        {/* 彗星尾迹：约 6% 弧长（≈120px）的亮青短划，始终贴在主角身后；dasharray 间隙 200>100，循环无环绕残段 */}
+        <path
+          d={linePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}
+          fill="none"
+          stroke={colors.tailStroke}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          pathLength={100}
+          opacity={0.85}
+          style={{
+            strokeDasharray: '6 200',
+            animation: 'line-tail 9s linear infinite',
+            filter: colors.tailGlow,
           }}
         />
       </svg>
 
-      {/* 唯一主角光标：沿折线从左到右跑酷，波峰处生长跃起换角，平缓段缩成小光点
+      {/* 主角光标 + 3 个拖尾三角：同一动画的相位延迟副本，模拟流星拖尾（Star-trail）
+          外层 span 负责位置（cursor-move），内层 span 负责波峰爆闪（cursor-burst 发光增强），
           位置用与背景 SVG 一致的百分比映射（x/1280、y/720），任意分辨率都贴合折线 */}
-      <span
-        className="absolute pointer-events-none"
-        style={{
-          left: '0%',
-          top: '88.889%',
-          animation: 'cursor-run 9s linear infinite',
-        }}
-      >
-        <svg width="24" height="24" viewBox="0 0 16 16" style={{ display: 'block', filter: colors.cursorGlow }}>
-          <polygon points="8,1.2 14.8,12.9 1.2,12.9" fill={colors.cursorFill} />
-        </svg>
-      </span>
+      {[
+        { size: 24, opacity: 1, delay: 0 },
+        { size: 18, opacity: 0.6, delay: 0.18 },
+        { size: 13, opacity: 0.4, delay: 0.36 },
+        { size: 9, opacity: 0.2, delay: 0.54 },
+      ].map((c) => (
+        <span
+          key={c.delay}
+          className="absolute pointer-events-none"
+          style={{
+            left: '0%',
+            top: '88.889%',
+            transform: 'translate(-50%, -50%)',
+            animation: `cursor-move 9s linear ${c.delay}s infinite both`,
+          }}
+        >
+          <span
+            style={{
+              display: 'block',
+              animation: `cursor-burst 9s linear ${c.delay}s infinite both`,
+            }}
+          >
+            <svg
+              width={c.size}
+              height={c.size}
+              viewBox="0 0 16 16"
+              style={{ display: 'block', opacity: c.opacity, filter: colors.heroGlow }}
+            >
+              <polygon points="8,1.2 14.8,12.9 1.2,12.9" fill={colors.heroFill} />
+            </svg>
+          </span>
+        </span>
+      ))}
 
       <div className="relative z-10 text-center px-4">
         <div className="w-full h-[420px] md:h-[560px] lg:h-[440px] pointer-events-none mb-4 flex items-center justify-center overflow-hidden">
