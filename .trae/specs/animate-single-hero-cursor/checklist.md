@@ -1,0 +1,17 @@
+- [x] 页面上 `<polygon>` 总数 = 1；12 个固定节点三角形已移除
+- [x] 代码中不再有 `linePoints.map` 渲染多层光标的覆盖层
+- [x] 唯一三角形自折线最左端出发、沿折线向右移动并循环
+- [x] 位置使用与 SVG 一致的线性映射（`x/1280`、`y/720`）写进 `left`/`top` 关键帧，任意分辨率都贴合折线
+- [x] 行程时间按累计弧长分配（滑行阶段基本匀速）
+- [x] 波峰（节点 2/4/6/8/10）关键帧：`opacity:1`、`scale≈1.15`、`top` 抬升 3%、`rotate` 累计 +120°
+- [x] 非波峰节点关键帧：`opacity≈0.3`、`scale≈0.34`、`rotate` 保持不变（缩成小光点滑行）
+- [x] 关键帧缓动：进波峰 `ease-out`、离波峰 `ease-in`、其余 `linear`
+- [x] 循环无缝：累计旋转 600° ≡ 0°（等边三角形 120° 对称），无朝向突跳
+- [x] `animation` 为 `cursor-run 9s linear infinite`
+- [x] 背景仍为 1 条 `<path>`：`stroke=url(#glowLineGrad)`、`stroke-width=4`、round 端点/连接、带 `drop-shadow` 发光
+- [x] 4 条装饰网格线未被移除；未使用 `offset-path`/`offset-distance`
+- [x] 未修改 welcome 文字动画、Enter 提示、页脚、路由、ThemeToggle、index.html
+- [x] 浅色模式线条与三角形为加深配色（约 `#2B7FA8` / `#5B2E7D`）且清晰
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器：无 console error、无失败的外部资源请求、双主题截图清晰
+- [x] 仅修改 WelcomePage.tsx；未 push

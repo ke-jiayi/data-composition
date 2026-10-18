@@ -1,0 +1,11 @@
+- [x] 暗色渐变方向为 #6BC5E8(0%) → #7B4B9E(100%)，浅色仍为 #00D4FF → #60A5FA
+- [x] 6 个静态数据点渲染为 🐱 `<text>`，不再有数据点 `<circle>`
+- [x] 移动流光 animateMotion dur 为 8s
+- [x] 线条与移动点应用增强发光 filter（feGaussianBlur stdDeviation 已增大）
+- [x] 路径首点 x=0、末点 x=1280，svg 保持 absolute inset-0 w-full h-full + preserveAspectRatio="none"
+- [x] 背景 svg 仍为 pointer-events-none；装饰网格线未被删除
+- [x] 未新增 echarts import / 实例生命周期
+- [x] 未修改 welcome 文字描边动画、Enter 提示、路由
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器：线条左右铺满无留白、🐱 可见、dur=8s、渐变正确、无 console error
+- [x] 仅修改 WelcomePage.tsx

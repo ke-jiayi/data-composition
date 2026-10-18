@@ -1,0 +1,15 @@
+- [x] 红绿交替像素虚线已移除：无 `stroke-dasharray="10 4"` 跑道分段 `<line>`（`dashLineCount=0`）、无 `brickRed`/`pipeGreen` 常量
+- [x] 金色小鸟已移除：无 `#FFD700`、无 `<rect>` 拼块小鸟（`goldRectCount=0`）、无 `birdFill`/`birdStroke`、无 `pixel-jump`
+- [x] 背景为单条平滑实线 `<path>`：`fill="none"`、`stroke="url(#glowLineGrad)"`、`strokeLinecap/Linejoin="round"`、`stroke-dasharray` 为 null
+- [x] `<linearGradient id="glowLineGrad">` 两档 stop 为冰蓝 `#6BC5E8` → 暗紫 `#7B4B9E`（深色）
+- [x] 折线带 `drop-shadow` 外发光（双档：4px + 10px）；为使发光在深色下读得出来，背景容器透明度由 `opacity-[0.55]` 提升为 `opacity-[0.9]`（spec Open Question 预案）
+- [x] 12 个节点各为内联 SVG 等边三角形 `<polygon>`（三边近似等长），填充冰蓝并带发光
+- [x] 关键帧保留抛物线跳跃（上抛/落回/淡出）且循环
+- [x] 关键帧含顺时针 `rotate` 0deg → 120deg（`styleHasRotate120=true`）
+- [x] 单次跳跃约 1.5s：跳跃段占循环 0%~30%，`animation-duration=5s`
+- [x] `animation-delay` 依次递增 0.25s（`0s/0.25s/0.5s … 2.75s`，实测 12 项）
+- [x] 浅色模式折线与三角形改用加深配色（实测 `#2B7FA8` / `#5B2E7D`、三角形 `#2B7FA8`），清晰可见
+- [x] 未修改网格线（4 条仍在，`bgLineCount=4`）、welcome 文字动画、Enter 提示、页脚、路由、ThemeToggle、index.html
+- [x] npx tsc --noEmit 退出码 0
+- [x] 浏览器：无 console error、无失败的外部资源请求、双主题截图均清晰
+- [x] 仅修改 WelcomePage.tsx；未 push
