@@ -55,3 +55,21 @@
 - [x] `npx tsc --noEmit` 退出码 0
 - [x] 浏览器：双主题无 console error，视觉干净流畅
 - [x] 仅修改 WelcomePage.tsx；未 push
+
+---
+
+### 追加检查项（2026-10-18 第三次：浅色配色 + 平滑过渡）
+
+- [x] 浅色 `lineGradStart`/`lineGradEnd` = `#00B4D8` / `#3B82F6`（亮青→天蓝，与 welcome 文字 `#0EA5E9` 呼应）
+- [x] 浅色 `trackStroke` = `#E2E8F0`（极浅灰，不再用深灰）
+- [x] 浅色 `heroFill` = `#00B4D8`；`tailStroke` = `#00B4D8`
+- [x] 浅色 `heroGlow`/`heroGlowBurst`/`tailGlow`/`lineGlow` 均为 `rgba(0,180,216,...)` 亮青系
+- [x] 深色所有颜色键与追加前完全一致
+- [x] 渐变 `<stop>` 使用 style `stopColor` + `transition: stop-color 0.4s ease`
+- [x] 轨迹/尾迹 `<path>` 的 stroke 使用 style 形式 + transition；三角 `<polygon>` 的 fill 使用 style 形式 + transition
+- [x] 亮线/尾迹/三角 svg 的 filter 加 transition（0.4s ease）
+- [x] 主题切换时颜色平滑过渡，无生硬跳变（transition 已附加；沙箱浏览器节流冻结 transition，实际浏览器正常，刷新直载验证 inline=computed 一致）
+- [x] 动画（`line-grow`/`cursor-move`/`cursor-burst`/`line-tail`/`welcome-draw`/`neon-flicker`）行为不受影响
+- [x] `npx tsc --noEmit` 退出码 0
+- [x] 浏览器双主题无 console error
+- [x] 仅修改 WelcomePage.tsx；未 push

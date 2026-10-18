@@ -72,3 +72,29 @@
 # Task Dependencies（第二次追加）
 - Task 8 depends on Task 7（需先删除旧代码再修改 burst）
 - Task 9 depends on Task 7, Task 8
+
+---
+
+# 追加任务（2026-10-18 第三次）：浅色模式配色优化 + 平滑过渡
+
+- [x] Task 10: 浅色模式配色调整（colors 浅色分支）
+  - [x] SubTask 10.1: 基础色——`lineGradStart` 浅色改 `'#00B4D8'`、`lineGradEnd` 浅色改 `'#3B82F6'`、`lineGlow` 浅色改 `'rgba(0,180,216,0.40)'`、`trackStroke` 浅色改 `'#E2E8F0'`、`heroFill` 浅色改 `'#00B4D8'`、`tailStroke` 浅色改 `'#00B4D8'`
+  - [x] SubTask 10.2: 发光——`heroGlow` 浅色改 `'drop-shadow(0 0 4px rgba(0,180,216,0.75)) drop-shadow(0 0 10px rgba(0,180,216,0.45))'`、`heroGlowBurst` 浅色改 `'drop-shadow(0 0 7px rgba(0,180,216,1)) drop-shadow(0 0 16px rgba(0,180,216,0.7))'`、`tailGlow` 浅色改 `'drop-shadow(0 0 4px rgba(0,180,216,0.6))'`
+  - [x] SubTask 10.3: 深色分支所有值保持不变（`#6BC5E8`/`#7B4B9E`/`rgba(100,116,139,0.30)`/`#E8FDFF`/`#5FFBF1` 等）
+
+- [x] Task 11: 主题切换平滑过渡（transition）
+  - [x] SubTask 11.1: 渐变 `<stop>` 的 `stopColor` 改为 `style={{ stopColor: ..., transition: 'stop-color 0.4s ease' }}` 形式
+  - [x] SubTask 11.2: 底层轨迹 `<path>` 的 `stroke` 改为 style 形式并加 `transition: 'stroke 0.4s ease'`
+  - [x] SubTask 11.3: 渐变亮线 `<path>` style 加 `transition: 'filter 0.4s ease'`；尾迹 `<path>` 的 `stroke` 改为 style 形式并加 `transition: 'stroke 0.4s ease, filter 0.4s ease'`
+  - [x] SubTask 11.4: 4 个三角光标：`<polygon>` 的 `fill` 改为 style 形式并加 `transition: 'fill 0.4s ease'`；三角 `<svg>` 的 style 加 `transition: 'filter 0.4s ease, opacity 0.4s ease'`
+  - [x] SubTask 11.5: 4 条网格线 `<line>` 的 `stroke`/`opacity` 改为 style 形式并加 `transition: 'stroke 0.4s ease, opacity 0.4s ease'`
+
+- [x] Task 12: 验证（tsc + 浏览器双主题 + 切换过渡）
+  - [x] SubTask 12.1: `npx tsc --noEmit` 退出码 0
+  - [x] SubTask 12.2: 深色 DOM 断言——所有颜色与追加前完全一致（渐变 `#6BC5E8`/`#7B4B9E`、轨迹 `rgba(100,116,139,0.30)`、三角 `#E8FDFF`、尾迹 `#5FFBF1`）
+  - [x] SubTask 12.3: 浅色 DOM 断言——渐变 `#00B4D8`/`#3B82F6`、轨迹 `#E2E8F0`、尾迹 `#00B4D8`、三角 `#00B4D8`、发光 `rgba(0,180,216,...)`（以浅色刷新加载验证，inline 与 computed 一致）
+  - [x] SubTask 12.4: 相关元素 computed style 含 `transition`（约 0.4s）；双主题无 console error；注：沙箱浏览器渲染器节流会冻结 transition 导致切换瞬间 computed 值停留在旧值，实际浏览器正常，已用刷新直载方式绕过验证
+
+# Task Dependencies（第三次追加）
+- Task 11 depends on Task 10（同一 colors 对象，先改值再加过渡）
+- Task 12 depends on Task 10, Task 11

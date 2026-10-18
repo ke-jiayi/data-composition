@@ -23,22 +23,22 @@ export function WelcomePage() {
       : '0 0 6px rgba(8,145,178,0.5), 0 0 12px rgba(8,145,178,0.35), 0 0 18px rgba(8,145,178,0.25)',
     gridLineStroke:  isDark ? '#7B4B9E' : '#34D399',
     gridLineOpacity: isDark ? 0.08 : 0,
-    // 冰蓝 → 暗紫 渐变实线 + 三角光标；浅色模式加深保证对比度
-    lineGradStart: isDark ? '#6BC5E8' : '#2B7FA8',
-    lineGradEnd:   isDark ? '#7B4B9E' : '#5B2E7D',
-    lineGlow:      isDark ? 'rgba(107,197,232,0.55)' : 'rgba(43,127,168,0.35)',
-    trackStroke: isDark ? 'rgba(100,116,139,0.30)' : 'rgba(71,85,105,0.25)',
-    heroFill: isDark ? '#E8FDFF' : '#0B7285',
+    // 冰蓝 → 暗紫 渐变实线 + 三角光标；浅色模式亮青/天蓝系
+    lineGradStart: isDark ? '#6BC5E8' : '#00B4D8',
+    lineGradEnd:   isDark ? '#7B4B9E' : '#3B82F6',
+    lineGlow:      isDark ? 'rgba(107,197,232,0.55)' : 'rgba(0,180,216,0.40)',
+    trackStroke: isDark ? 'rgba(100,116,139,0.30)' : '#E2E8F0',
+    heroFill: isDark ? '#E8FDFF' : '#00B4D8',
     heroGlow: isDark
       ? 'drop-shadow(0 0 6px rgba(95,251,241,0.95)) drop-shadow(0 0 14px rgba(95,251,241,0.6))'
-      : 'drop-shadow(0 0 4px rgba(11,114,133,0.65)) drop-shadow(0 0 8px rgba(11,114,133,0.35))',
+      : 'drop-shadow(0 0 4px rgba(0,180,216,0.75)) drop-shadow(0 0 10px rgba(0,180,216,0.45))',
     heroGlowBurst: isDark
       ? 'drop-shadow(0 0 9px rgba(95,251,241,1)) drop-shadow(0 0 21px rgba(95,251,241,0.8))'
-      : 'drop-shadow(0 0 6px rgba(11,114,133,0.9)) drop-shadow(0 0 12px rgba(11,114,133,0.55))',
-    tailStroke: isDark ? '#5FFBF1' : '#0891B2',
+      : 'drop-shadow(0 0 7px rgba(0,180,216,1)) drop-shadow(0 0 16px rgba(0,180,216,0.7))',
+    tailStroke: isDark ? '#5FFBF1' : '#00B4D8',
     tailGlow: isDark
       ? 'drop-shadow(0 0 6px rgba(95,251,241,0.8))'
-      : 'drop-shadow(0 0 4px rgba(8,145,178,0.5))',
+      : 'drop-shadow(0 0 4px rgba(0,180,216,0.6))',
   };
 
   useEffect(() => {
@@ -162,22 +162,25 @@ export function WelcomePage() {
       >
         <defs>
           <linearGradient id="glowLineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={colors.lineGradStart} />
-            <stop offset="100%" stopColor={colors.lineGradEnd} />
+            <stop offset="0%" style={{ stopColor: colors.lineGradStart, transition: 'stop-color 0.4s ease' }} />
+            <stop offset="100%" style={{ stopColor: colors.lineGradEnd, transition: 'stop-color 0.4s ease' }} />
           </linearGradient>
         </defs>
-        <line x1={0} y1={180} x2={1280} y2={180} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
-        <line x1={0} y1={360} x2={1280} y2={360} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
-        <line x1={0} y1={540} x2={1280} y2={540} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
-        <line x1={0} y1={720} x2={1280} y2={720} stroke={colors.gridLineStroke} strokeWidth="0.5" opacity={`${colors.gridLineOpacity}`} />
+        <line x1={0} y1={180} x2={1280} y2={180} strokeWidth="0.5" style={{ stroke: colors.gridLineStroke, opacity: colors.gridLineOpacity, transition: 'stroke 0.4s ease, opacity 0.4s ease' }} />
+        <line x1={0} y1={360} x2={1280} y2={360} strokeWidth="0.5" style={{ stroke: colors.gridLineStroke, opacity: colors.gridLineOpacity, transition: 'stroke 0.4s ease, opacity 0.4s ease' }} />
+        <line x1={0} y1={540} x2={1280} y2={540} strokeWidth="0.5" style={{ stroke: colors.gridLineStroke, opacity: colors.gridLineOpacity, transition: 'stroke 0.4s ease, opacity 0.4s ease' }} />
+        <line x1={0} y1={720} x2={1280} y2={720} strokeWidth="0.5" style={{ stroke: colors.gridLineStroke, opacity: colors.gridLineOpacity, transition: 'stroke 0.4s ease, opacity 0.4s ease' }} />
         {/* 底层未激活轨道：半透明暗灰细线 */}
         <path
           d={linePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}
           fill="none"
-          stroke={colors.trackStroke}
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          style={{
+            stroke: colors.trackStroke,
+            transition: 'stroke 0.4s ease',
+          }}
         />
         {/* 顶层渐变亮线：pathLength 归一化后用 dashoffset 从左到右匀速点亮，与主角光标同步（同 9s linear） */}
         <path
@@ -192,22 +195,24 @@ export function WelcomePage() {
             strokeDasharray: '100',
             animation: 'line-grow 9s linear infinite',
             filter: `drop-shadow(0 0 4px ${colors.lineGlow}) drop-shadow(0 0 10px ${colors.lineGlow})`,
+            transition: 'filter 0.4s ease',
           }}
         />
         {/* 彗星尾迹：约 6% 弧长（≈120px）的亮青短划，始终贴在主角身后；dasharray 间隙 200>100，循环无环绕残段 */}
         <path
           d={linePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}
           fill="none"
-          stroke={colors.tailStroke}
           strokeWidth={3}
           strokeLinecap="round"
           strokeLinejoin="round"
           pathLength={100}
           opacity={0.85}
           style={{
+            stroke: colors.tailStroke,
             strokeDasharray: '6 200',
             animation: 'line-tail 9s linear infinite',
             filter: colors.tailGlow,
+            transition: 'stroke 0.4s ease, filter 0.4s ease',
           }}
         />
       </svg>
@@ -241,9 +246,9 @@ export function WelcomePage() {
               width={c.size}
               height={c.size}
               viewBox="0 0 16 16"
-              style={{ display: 'block', opacity: c.opacity, filter: colors.heroGlow }}
+              style={{ display: 'block', opacity: c.opacity, filter: colors.heroGlow, transition: 'filter 0.4s ease, opacity 0.4s ease' }}
             >
-              <polygon points="8,1.2 14.8,12.9 1.2,12.9" fill={colors.heroFill} />
+              <polygon points="8,1.2 14.8,12.9 1.2,12.9" style={{ fill: colors.heroFill, transition: 'fill 0.4s ease' }} />
             </svg>
           </span>
         </span>

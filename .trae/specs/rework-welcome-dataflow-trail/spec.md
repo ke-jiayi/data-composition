@@ -219,3 +219,62 @@ At each polyline peak (vertex 2/4/6/8/10), the hero cursor SHALL briefly intensi
 - **When**: 双主题打开页面 + `npx tsc --noEmit`
 - **THEN**: 渐变亮线、底层轨道、主角与拖尾三角颜色/尺寸、`cursor-move`/`line-grow` 关键帧均未改动；tsc 退出码 0；无 console error；页面无十字星、无圆环等多余图形；双主题视觉清晰
 - **Evidence**: tsc 输出 + DOM 断言 + 截图
+
+---
+
+## 追加需求（2026-10-18 第三次）：浅色模式配色优化 + 主题切换平滑过渡
+
+### Why
+浅色模式下背景折线、拖尾与三角沿用深青/暗紫色系（`#2B7FA8` / `#5B2E7D` / `#0B7285` / `#0891B2`），在浅背景上发黑、观感如铁丝。需改为亮青/天蓝系并与 welcome 文字天蓝色（`#0EA5E9`）呼应，同时让主题切换时颜色平滑过渡。
+
+### What Changes
+- **浅色折线渐变**：`lineGradStart`/`lineGradEnd` 由 `#2B7FA8`/`#5B2E7D` 改为 **`#00B4D8`（亮青）→ `#3B82F6`（天蓝）**，与 welcome 文字 `#0EA5E9` 同色系呼应
+- **浅色底层轨迹线**：`trackStroke` 由 `rgba(71,85,105,0.25)` 改为 **`#E2E8F0`**（极浅灰、不透明）
+- **浅色主角/拖尾三角**：`heroFill` 由 `#0B7285` 改为 **`#00B4D8`**；发光 `heroGlow`/`heroGlowBurst` 改为 `rgba(0,180,216,...)` 亮青系（发光半径与深色一致：4/10px 与 7/16px）
+- **浅色彗星尾迹**：`tailStroke` 由 `#0891B2` 改为 **`#00B4D8`**；`tailGlow` 改为 `drop-shadow(0 0 4px rgba(0,180,216,0.6))`
+- **浅色亮线发光**：`lineGlow` 由 `rgba(43,127,168,0.35)` 改为 `rgba(0,180,216,0.40)`
+- **深色模式全部颜色保持不变**
+- **主题切换平滑过渡**：背景 SVG 的轨迹/亮线/尾迹、渐变 stop、网格线、主角与拖尾三角的 `stroke`/`fill`/`stop-color`/`filter`/`opacity` 增加 `transition: ... 0.4s ease`；为此将相关 SVG 的 `stroke`/`fill`/`stopColor` 从属性形式改为 style（CSS 属性）形式，使其可被 transition 过渡
+- **不变项**：动画（`line-grow`/`cursor-move`/`cursor-burst`/`line-tail`/`welcome-draw`/`neon-flicker`）、结构、尺寸、welcome 文字、Enter 提示、页脚、ThemeToggle、路由、index.html
+
+### MODIFIED Requirements（第三次追加）
+
+#### Requirement: 浅色模式背景流光配色（亮青/天蓝系）
+In light theme, the polyline gradient, hero triangle, trailing triangles and comet tail SHALL use a bright-cyan-to-sky palette (`#00B4D8` → `#3B82F6`) that echoes the welcome text sky-blue (`#0EA5E9`); the inactive track SHALL be a very light gray (`#E2E8F0`).
+
+##### Scenario: 切换到浅色模式
+- **WHEN** 用户切换到浅色主题
+- **THEN**: 渐变亮线为亮青→天蓝（`#00B4D8`→`#3B82F6`）；底层轨迹线为极浅灰 `#E2E8F0`；主角与拖尾三角填充亮青 `#00B4D8`；彗星尾迹亮青 `#00B4D8`；所有发光为亮青系 `rgba(0,180,216,...)`；视觉明亮通透、不发黑
+
+#### Requirement: 主题切换颜色平滑过渡
+Color changes on theme toggle SHALL animate smoothly via CSS transitions (~0.4s ease) instead of switching instantly.
+
+##### Scenario: 点击主题切换
+- **WHEN** 用户点击 ThemeToggle 切换主题
+- **THEN**: 折线渐变、轨迹线、尾迹、三角填充与发光颜色在约 0.4s 内平滑过渡，无生硬跳变
+
+### Acceptance Criteria（第三次追加）
+
+#### AC-15: 浅色配色值正确
+- **Type**: `rule`
+- **When**: 浅色主题下浏览器 DOM 断言
+- **THEN**: 渐变 stop 为 `#00B4D8`/`#3B82F6`；轨迹 stroke 为 `#E2E8F0`；尾迹 stroke 为 `#00B4D8`；三角 fill 为 `#00B4D8`；发光均为 `rgba(0,180,216,...)` 亮青系
+- **Evidence**: 浏览器 DOM 断言
+
+#### AC-16: 深色模式零变化
+- **Type**: `rule`
+- **When**: 深色主题下浏览器 DOM 断言
+- **THEN**: 所有颜色键与追加前完全一致（`#6BC5E8`/`#7B4B9E`/`rgba(100,116,139,0.30)`/`#E8FDFF`/`#5FFBF1` 等）
+- **Evidence**: 浏览器 DOM 断言
+
+#### AC-17: 过渡生效
+- **Type**: `rule`
+- **When**: 审查相关元素 computed style 并切换主题
+- **THEN**: 轨迹/亮线/尾迹 path、渐变 stop、三角 polygon 的 computed style 含 `transition`（`stroke`/`fill`/`stop-color`/`filter`，约 0.4s ease）；切换主题时颜色平滑变化、无跳变
+- **Evidence**: 浏览器 DOM 断言 + 人眼观察
+
+#### AC-18: 零回归
+- **Type**: `rule`
+- **When**: 双主题 + `npx tsc --noEmit`
+- **THEN**: tsc 退出码 0；双主题无 console error；所有动画行为不变；仅修改 WelcomePage.tsx；未 push
+- **Evidence**: tsc 输出 + 浏览器 console
