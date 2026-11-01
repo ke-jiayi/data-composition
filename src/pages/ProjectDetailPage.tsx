@@ -70,10 +70,42 @@ plt.tight_layout()
 plt.savefig('城市2_柱状图.png', dpi=150, bbox_inches='tight')
 plt.show()`;
 
+const CITY3_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+df = pd.read_excel('城市3.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+pivot_df = df_long.pivot(index='月份', columns='指标', values='指数')
+pivot_df = pivot_df.iloc[:, :5]
+
+plt.figure(figsize=(10, 5))
+for col in pivot_df.columns:
+    plt.plot(pivot_df.index, pivot_df[col], marker='o', label=col)
+
+plt.title('城市3居民消费价格指数趋势', fontsize=14)
+plt.xlabel('月份')
+plt.ylabel('指数（上年同月=100）')
+plt.legend(loc='best')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+
+plt.savefig('城市3_手工图.png', dpi=150)
+plt.show()`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
   '城市2': CITY2_CODE,
+  '城市3': CITY3_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -298,10 +330,104 @@ plt.close(fig)
 print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))
 `;
 
+// WorkBuddy 生成的清洗与可视化脚本（城市3）
+const CITY3_WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
+SRC, LONG, FIG = "城市3.xlsx", "城市3_长格式.xlsx", "城市3_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+
+long["分类"] = (
+    long["指标"]
+    .str.replace(r"类?城市居民消费价格指数.*", "", regex=True)
+    .str.replace("类", "", regex=False)
+    .str.strip()
+    .replace({"": "城市总体"})
+)
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+pivot = long.pivot(index="月份", columns="分类", values="指数")
+pivot = pivot.drop(columns=["城市总体"], errors="ignore")
+pivot = pivot[sorted(pivot.columns, key=lambda c: pivot[c].iloc[-1] - pivot[c].iloc[0], reverse=True)]
+
+BG, ICE, PURPLE, TEXT, GRID = "#0B1220", "#5EE7FF", "#A78BFA", "#E6EDF7", "#243147"
+COLORS = ["#5EE7FF", "#67E8F9", "#7DD3FC", "#8B9DFF", "#93C5FD",
+          "#A78BFA", "#C084FC", "#D8B4FE"]
+
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+fig, ax = plt.subplots(figsize=(11.5, 6.2), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.072, right=0.855, top=0.88, bottom=0.14)
+
+x = range(len(pivot.index))
+for i, col in enumerate(pivot.columns):
+    ax.plot(x, pivot[col], color=COLORS[i % len(COLORS)], lw=2.2,
+            marker="o", ms=4.8, mec=BG, mew=1.2,
+            label=f"{col}  {pivot[col].iloc[-1]:.1f}", alpha=0.95, zorder=3)
+
+ax.axhline(100, color="#64748B", lw=1, ls="--", alpha=0.75, zorder=1)
+ax.set_xlim(-0.35, len(x) - 0.65)
+ax.set_ylim(94, 111.5)
+
+ax.set_xticks(list(x))
+ax.set_xticklabels([f"{d[:4]}\\n{d[5:]}月" for d in pivot.index], color=TEXT, fontsize=9.5)
+ax.set_ylabel("指数（上年同月=100）", color=TEXT, fontsize=10.5, labelpad=8)
+ax.yaxis.set_major_locator(MultipleLocator(2))
+ax.tick_params(axis="y", colors=TEXT, labelsize=9.5)
+ax.tick_params(axis="x", colors=TEXT, length=0, pad=6)
+
+ax.grid(axis="y", color=GRID, lw=0.8, alpha=0.55)
+ax.set_axisbelow(True)
+for s in ("top", "right"):
+    ax.spines[s].set_visible(False)
+for s in ("left", "bottom"):
+    ax.spines[s].set_color(GRID)
+
+ax.set_title("2020年4月-12月城市各分类消费价格指数趋势", color="#F8FAFC",
+             fontsize=15, fontweight="bold", pad=18, loc="left")
+
+hi = pivot.columns[-1]
+ax.annotate(f"{hi}  {pivot[hi].iloc[0]:.1f}→{pivot[hi].iloc[-1]:.1f}",
+            xy=(0, pivot[hi].iloc[0]), xytext=(8, 10), textcoords="offset points",
+            color=COLORS[-1], fontsize=9, fontweight="bold")
+
+leg = ax.legend(loc="center left", bbox_to_anchor=(1.012, 0.5), frameon=False,
+                fontsize=9.5, handlelength=1.8, labelspacing=0.85)
+for t in leg.get_texts():
+    t.set_color(TEXT)
+
+ax.text(0, -0.165, "数据来源：国家统计局　|　虚线为荣枯线 100", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+
+print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
   '城市2': CITY2_WORKBUDDY_CODE,
+  '城市3': CITY3_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底

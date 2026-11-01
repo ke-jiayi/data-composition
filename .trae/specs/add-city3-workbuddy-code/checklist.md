@@ -1,0 +1,8 @@
+- [x] `CITY3_WORKBUDDY_CODE` 常量存在，内容与用户脚本逐字一致（首行 `import pandas as pd`，含 `城市3.xlsx`、`城市3_长格式.xlsx`、`城市3_WorkBuddy图.png`、`ax.set_ylim(94, 111.5)`，末行 `print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))`）
+- [x] 源码中 `f"{d[:4]}\\n{d[5:]}月"` 以双反斜杠写法存在，代码框显示字面 `\n`
+- [x] `WORKBUDDY_CODE_MAP` 包含 `城市1`、`城市2`、`城市3` 三个键，前两项值未被改动
+- [x] smart Tab 仍渲染 `workbuddyCode`，未命中映射的数据集仍回退 `WORKBUDDY_CODE`
+- [x] `CODE_MAP` / `CITY3_CODE` 未被本次修改影响
+- [x] 图片部分仍为动态路径，未新增图片资源
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

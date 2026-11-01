@@ -1,0 +1,7 @@
+- [x] `CITY3_CODE` 常量存在，内容与用户脚本逐字一致（首行 `import pandas as pd`，含 `城市3.xlsx`、`城市3_手工图.png`、`plt.figure(figsize=(10, 5))`，末行 `plt.show()`）
+- [x] `CODE_MAP` 包含 `城市1`、`城市2`、`城市3` 三个键，城市1/城市2 值未被改动
+- [x] 城市3 进入「数据清洗」Tab 时 `hasCleanCode` 为真，代码卡片渲染
+- [x] 代码输入框预填城市3 脚本，`resolveDefaultCode` 的精确匹配与名称包含兜底均生效
+- [x] 未修改 `WORKBUDDY_CODE_MAP`、Tab 顺序、图片路径与卡片样式
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
