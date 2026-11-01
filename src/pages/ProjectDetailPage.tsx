@@ -205,6 +205,114 @@ fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
 plt.close(fig)
 `;
 
+// WorkBuddy 生成的清洗与可视化脚本（城市2）
+const CITY2_WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
+SRC, LONG, FIG = "城市2.xlsx", "城市2_长格式.xlsx", "城市2_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+
+long["分类"] = (
+    long["指标"]
+    .str.replace(r"类?城市居民消费价格指数.*", "", regex=True)
+    .str.replace("类", "", regex=False)
+    .str.strip()
+    .replace({"": "城市总体"})
+)
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+pivot = long.pivot(index="月份", columns="分类", values="指数")
+pivot = pivot.drop(columns=["城市总体"], errors="ignore")
+pivot = pivot[sorted(pivot.columns, key=lambda c: pivot[c].iloc[-1] - pivot[c].iloc[0], reverse=True)]
+
+BG, ICE, PURPLE, TEXT, GRID = "#0B1220", "#5EE7FF", "#A78BFA", "#E6EDF7", "#243147"
+COLORS = ["#5EE7FF", "#67E8F9", "#7DD3FC", "#8B9DFF", "#93C5FD",
+          "#A78BFA", "#C084FC", "#D8B4FE"]
+
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+fig, ax = plt.subplots(figsize=(11.5, 6.2), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.072, right=0.855, top=0.88, bottom=0.14)
+
+x = range(len(pivot.index))
+for i, col in enumerate(pivot.columns):
+    ax.plot(x, pivot[col], color=COLORS[i % len(COLORS)], lw=2.2,
+            marker="o", ms=4.8, mec=BG, mew=1.2,
+            label=f"{col}  {pivot[col].iloc[-1]:.1f}", alpha=0.95, zorder=3)
+
+ax.axhline(100, color="#64748B", lw=1, ls="--", alpha=0.75, zorder=1)
+ax.set_xlim(-0.35, len(x) - 0.65)
+ax.set_ylim(95, 119)
+
+ax.set_xticks(list(x))
+ax.set_xticklabels([f"{d[:4]}\\n{d[5:]}月" for d in pivot.index], color=TEXT, fontsize=9.5)
+ax.set_ylabel("指数（上年同月=100）", color=TEXT, fontsize=10.5, labelpad=8)
+ax.yaxis.set_major_locator(MultipleLocator(2))
+ax.tick_params(axis="y", colors=TEXT, labelsize=9.5)
+ax.tick_params(axis="x", colors=TEXT, length=0, pad=6)
+
+ax.grid(axis="y", color=GRID, lw=0.8, alpha=0.55)
+ax.set_axisbelow(True)
+for s in ("top", "right"):
+    ax.spines[s].set_visible(False)
+for s in ("left", "bottom"):
+    ax.spines[s].set_color(GRID)
+
+ax.set_title("2025年4月-12月城市各分类消费价格指数趋势", color="#F8FAFC",
+             fontsize=15, fontweight="bold", pad=18, loc="left")
+
+top = pivot.columns[0]
+ax.annotate(f"{top}  {pivot[top].iloc[-1]:.1f}", xy=(len(x) - 1, pivot[top].iloc[-1]),
+            xytext=(-6, 8), textcoords="offset points", ha="right",
+            color=COLORS[0], fontsize=9, fontweight="bold")
+
+leg = ax.legend(loc="center left", bbox_to_anchor=(1.012, 0.5), frameon=False,
+                fontsize=9.5, handlelength=1.8, labelspacing=0.85)
+for t in leg.get_texts():
+    t.set_color(TEXT)
+
+ax.text(0, -0.165, "数据来源：国家统计局　|　虚线为荣枯线 100", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+
+print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))
+`;
+
+// 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
+const WORKBUDDY_CODE_MAP: Record<string, string> = {
+  '城市1': WORKBUDDY_CODE,
+  '城市2': CITY2_WORKBUDDY_CODE,
+};
+
+// 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
+function resolveWorkbuddyCode(name?: string): string {
+  if (!name) return '';
+  const trimmed = name.trim();
+  if (WORKBUDDY_CODE_MAP[trimmed]) return WORKBUDDY_CODE_MAP[trimmed];
+  const fallback = Object.entries(WORKBUDDY_CODE_MAP).find(([key]) => trimmed.includes(key));
+  return fallback ? fallback[1] : '';
+}
+
 const DEFAULT_CONCLUSIONS = [
   '食品烟酒类价格波动最大，是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著',
   '衣着类价格呈现持续上涨趋势，1-5月累计上涨 1.8%，涨幅较为明显，需关注后续价格走势',
@@ -307,6 +415,9 @@ export function ProjectDetailPage() {
 
   // 当前数据集名称，用于动态拼接图片路径
   const datasetName = dataset?.name ?? '';
+
+  // 当前数据集对应的 WorkBuddy 代码；未命中映射时回退城市1 脚本
+  const workbuddyCode = resolveWorkbuddyCode(dataset?.name) || WORKBUDDY_CODE;
 
   // 是否存在可显示的清洗代码（已保存代码或默认代码）
   const hasCleanCode = Boolean(dataset?.code || resolveDefaultCode(dataset?.name));
@@ -687,7 +798,7 @@ export function ProjectDetailPage() {
               <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
                 <h3 className="text-lg font-semibold text-white mb-4 text-center">WorkBuddy 生成的数据处理与可视化代码</h3>
                 <pre className="bg-[#1E1E24] text-[#D1D5DB] p-4 rounded-lg font-mono text-base leading-relaxed whitespace-pre overflow-x-auto max-h-[400px] overflow-y-auto">
-                  {WORKBUDDY_CODE}
+                  {workbuddyCode}
                 </pre>
               </div>
             </div>

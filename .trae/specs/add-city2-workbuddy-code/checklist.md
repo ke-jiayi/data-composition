@@ -1,0 +1,10 @@
+- [x] `CITY2_WORKBUDDY_CODE` 常量存在，内容与用户提供脚本逐字一致（首行 `import pandas as pd`，含 `城市2.xlsx`、`城市2_长格式.xlsx`、`城市2_WorkBuddy图.png`、`ax.set_ylim(95, 119)`，末行 `print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))`）
+- [x] `WORKBUDDY_CODE_MAP` 同时包含 `城市1` 与 `城市2` 两个键
+- [x] `resolveWorkbuddyCode` 采用精确匹配 + 名称包含兜底，未命中返回空字符串
+- [x] WorkBuddy 代码块渲染 `workbuddyCode` 而非固定 `WORKBUDDY_CODE`
+- [x] 未命中映射的数据集回退展示原 `WORKBUDDY_CODE`
+- [x] `CODE_MAP` 保持原样（城市1 → `PYTHON_CODE`，城市2 → `CITY2_CODE`），未被新脚本覆盖
+- [x] 城市2 的 WorkBuddy 图片 `public/images/城市2_WorkBuddy图.png` 存在且路径仍为动态拼接
+- [x] WorkBuddy 代码块标题、样式与 `max-h-[400px]` 滚动行为未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
