@@ -1,0 +1,16 @@
+- [x] `TabNavigation.tsx` 中 `smart` Tab 的 `label` 为「WorkBuddy 分析」，`key` 仍为 `smart`，图标不变
+- [x] 全仓库不再出现「智能分析」文案
+- [x] `src/components/SmartAnalysis.tsx` 已删除，`ProjectDetailPage.tsx` 不再 import/渲染 `SmartAnalysis`
+- [x] `smart` Tab 内无任何 ECharts 组件或分析交互
+- [x] 图表展示区在 DOM 中位于代码展示区之前
+- [x] 两张卡片容器类名与「可视化分析」Tab 一致（`bg-[#26262C]`、`border-[#3A3A44]`、`rounded-lg`、`p-2`），标题居中 `text-lg font-semibold text-white`
+- [x] 数据表格 / 数据清洗 / 分析结论 / 可视化分析 Tab 行为不变
+- [x] 深色与浅色模式下 WorkBuddy 分析 Tab 均正常显示，console 无 error
+- [x] `npx tsc --noEmit` 退出码 0
+- [x] 仅修改 `TabNavigation.tsx`、`ProjectDetailPage.tsx`，删除 `SmartAnalysis.tsx`；未 push
+- [x] `public/images/城市1_WorkBuddy图.png` 存在（由 `城市1_WorkBuddy图.png.png` 复制而来，原文件保留）
+- [x] 图表展示区渲染图片 `/images/城市1_WorkBuddy图.png`，加载成功（HTTP 200）且居中、不溢出卡片
+- [x] 代码展示区标题为「WorkBuddy 生成的数据处理与可视化代码」
+- [x] 代码区具备 `max-h-[400px]` 与 `overflow-y-auto`，超长内容在框内纵向滚动
+- [x] `WORKBUDDY_CODE` 内容与用户提供的脚本逐字一致（首行 `import pandas as pd`，含 `MultipleLocator`，末行 `plt.close(fig)`）
+- [x] 新增改动后 `npx tsc --noEmit` 仍为退出码 0；未 push

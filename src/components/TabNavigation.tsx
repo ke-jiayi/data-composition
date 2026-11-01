@@ -59,7 +59,7 @@ const tabs: TabItem[] = [
   },
   {
     key: 'smart' as TabType,
-    label: '智能分析',
+    label: 'WorkBuddy 分析',
     icon: <span className="text-lg leading-5">🤖</span>,
   },
   {

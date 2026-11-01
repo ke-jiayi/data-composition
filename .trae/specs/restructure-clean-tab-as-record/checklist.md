@@ -1,0 +1,17 @@
+- [x] `ProjectDetailPage.tsx` 不再 import `DataCleaning`
+- [x] `clean` Tab 不再渲染 `DataCleaning` 组件
+- [x] `src/components/DataCleaning.tsx` 已删除，仓库内无残留引用
+- [x] 「去重」按钮、「列操作：」区块、「清洗日志」区块、清洗前后对比均已不存在
+- [x] `cleanedData` 状态、`handleCleanedDataChange`、`saveData` 解构已清理（`noUnusedLocals` 下 tsc 通过）
+- [x] `SmartAnalysis` 使用 `rawData`
+- [x] 新增 `CLEANING_STEPS_MAP`（城市1/城市2）与 `DEFAULT_CLEANING_STEPS`，并有 `resolveCleaningSteps`
+- [x] 「数据清洗记录」卡片含标题、说明文案与编号步骤列表
+- [x] 步骤卡片在 DOM 中位于代码卡片之前
+- [x] 城市1 步骤含「宽表转置为长表」；城市2 步骤含「宽表转长表」「筛选」（城市2 六步与农村1 四步经浏览器实测；城市1 由同源 `resolveCleaningSteps` 逻辑与源码常量核对，沙箱 IndexedDB 中无城市1 数据集）
+- [x] 无映射数据集显示通用步骤，代码卡片按既有逻辑不显示（农村1 实测：四步通用步骤、无代码卡片与保存按钮）
+- [x] 代码卡片保持标题「数据清洗与可视化代码」+「保存修改」按钮 + 可编辑 textarea + `fitCode` 自适应
+- [x] 代码保存后显示「✓ 已保存」，刷新后已保存内容优先（实测保存后刷新内容保留；按钮文案 2 秒后自动回到「保存修改」，属既有设计）
+- [x] 数据表格 / 分析结论 / 智能分析 / 可视化分析 Tab 行为不变（四个 Tab 均实测正常渲染）
+- [x] `npx tsc --noEmit` 退出码 0
+- [x] 浏览器双主题无 console error（深色、浅色各自加载 clean Tab 均为 0 error）
+- [x] 仅修改 `ProjectDetailPage.tsx`、删除 `DataCleaning.tsx`；未 push

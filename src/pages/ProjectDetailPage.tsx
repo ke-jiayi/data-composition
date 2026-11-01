@@ -3,8 +3,6 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { TabNavigation, type TabType } from '../components/TabNavigation';
 import DataTable from '../components/DataTable';
-import DataCleaning from '../components/DataCleaning';
-import { SmartAnalysis } from '../components/SmartAnalysis';
 import { useDB } from '../hooks/useDB';
 
 import type { Dataset, DataRow } from '../utils/db';
@@ -81,7 +79,7 @@ interface ChartMeta {
 // 按数据集名称绑定对应的可视化图表与代码
 const CHART_MAP: Record<string, ChartMeta> = {
   '城市1': {
-    image: '/images/城市价格指数趋势图.png',
+    image: '/images/城市1_手工图.png',
     code: PYTHON_CODE,
     title: '城市居民消费价格指数趋势图',
   },
@@ -100,6 +98,126 @@ function resolveChartMeta(name?: string): ChartMeta | null {
   const fallback = Object.entries(CHART_MAP).find(([key]) => trimmed.includes(key));
   return fallback ? fallback[1] : null;
 }
+
+// 按数据集名称绑定数据清洗步骤，作为「清洗记录」展示内容
+const CLEANING_STEPS_MAP: Record<string, string[]> = {
+  '城市1': [
+    '读取原始宽表（表头在第 1 行）',
+    '去除全空行列（dropna how=all）',
+    '宽表转置为长表（df.T）',
+    '选取前 5 个指标绘制趋势曲线',
+  ],
+  '城市2': [
+    '读取原始宽表（表头在第 2 行）',
+    '去除全空行列（dropna how=all）',
+    '宽表转长表（stack + reset_index）',
+    '过滤「数据来源：国家统计局」汇总行',
+    '筛选 2025 年 12 月数据',
+    '简化指标名称（去除指数后缀）',
+  ],
+};
+
+const DEFAULT_CLEANING_STEPS = [
+  '读取原始数据表',
+  '去除空值记录',
+  '宽表转长表',
+  '统一字段命名',
+];
+
+// 根据数据集名称解析清洗步骤：先精确匹配，未命中再按名称包含兜底，仍无则返回通用步骤
+function resolveCleaningSteps(name?: string): string[] {
+  if (!name) return DEFAULT_CLEANING_STEPS;
+  const trimmed = name.trim();
+  if (CLEANING_STEPS_MAP[trimmed]) return CLEANING_STEPS_MAP[trimmed];
+  const fallback = Object.entries(CLEANING_STEPS_MAP).find(([key]) => trimmed.includes(key));
+  return fallback ? fallback[1] : DEFAULT_CLEANING_STEPS;
+}
+
+// WorkBuddy 生成的清洗与可视化脚本
+const WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
+SRC = "城市1.xlsx"
+LONG = "城市1_长格式.xlsx"
+FIG = "城市1_折线图.png"
+
+raw = pd.read_excel(SRC, header=None)
+
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+
+long["分类"] = (
+    long["指标"]
+    .str.replace(r"类?城市居民消费价格指数.*", "", regex=True)
+    .str.replace("类", "", regex=False)
+    .str.strip()
+    .replace({"": "城市总体"})
+)
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+pivot = long.pivot(index="月份", columns="分类", values="指数")
+pivot = pivot.drop(columns=["城市总体"], errors="ignore")
+pivot = pivot[sorted(pivot.columns, key=lambda c: pivot[c].iloc[-1] - pivot[c].iloc[0], reverse=True)]
+
+BG, ICE, PURPLE, TEXT, GRID = "#0B1220", "#5EE7FF", "#A78BFA", "#E6EDF7", "#243147"
+COLORS = ["#5EE7FF", "#7DD3FC", "#8B9DFF", "#A78BFA", "#C084FC",
+          "#67E8F9", "#93C5FD", "#D8B4FE"]
+
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+fig, ax = plt.subplots(figsize=(11, 6), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.075, right=0.86, top=0.88, bottom=0.13)
+
+x = range(len(pivot.index))
+for i, col in enumerate(pivot.columns):
+    ax.plot(x, pivot[col], color=COLORS[i % len(COLORS)], lw=2.2,
+            marker="o", ms=5, mec=BG, mew=1.2,
+            label=f"{col}  {pivot[col].iloc[-1]:.1f}", alpha=0.95, zorder=3)
+
+ax.axhline(100, color="#64748B", lw=1, ls="--", alpha=0.75, zorder=1)
+
+ax.set_xticks(list(x))
+ax.set_xticklabels([d.replace("-", "年") + "月" for d in pivot.index], color=TEXT, fontsize=10)
+ax.set_ylabel("指数（上年同月=100）", color=TEXT, fontsize=10.5, labelpad=8)
+ax.yaxis.set_major_locator(MultipleLocator(2))
+ax.tick_params(axis="y", colors=TEXT, labelsize=9.5)
+ax.tick_params(axis="x", colors=TEXT, length=0, pad=6)
+
+ax.grid(axis="y", color=GRID, lw=0.8, alpha=0.55)
+ax.set_axisbelow(True)
+for s in ("top", "right"):
+    ax.spines[s].set_visible(False)
+for s in ("left", "bottom"):
+    ax.spines[s].set_color(GRID)
+
+ax.set_title("2026年1-5月各分类消费价格指数趋势", color="#F8FAFC",
+             fontsize=15, fontweight="bold", pad=18, loc="left")
+
+leg = ax.legend(loc="center left", bbox_to_anchor=(1.015, 0.5), frameon=False,
+                fontsize=9.5, labelcolor=TEXT, handlelength=1.8, labelspacing=0.9)
+for t in leg.get_texts():
+    t.set_color(TEXT)
+
+ax.text(0, -0.155, "数据来源：国家统计局　|　虚线为荣枯线 100", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
 
 const DEFAULT_CONCLUSIONS = [
   '食品烟酒类价格波动最大，是影响总指数的主要因素，占 CPI 权重的 30% 以上，价格变动对整体指数影响显著',
@@ -131,11 +249,10 @@ function resolveConclusions(name?: string): string[] {
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { getDataset, getData, saveData, updateDataset } = useDB();
+  const { getDataset, getData, updateDataset } = useDB();
 
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [rawData, setRawData] = useState<DataRow[]>([]);
-  const [cleanedData, setCleanedData] = useState<DataRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [code, setCode] = useState('');
@@ -167,7 +284,6 @@ export function ProjectDetailPage() {
           setCode(datasetData.code || resolveChartMeta(datasetData.name)?.code || '');
           setConclusions(datasetData.conclusions && datasetData.conclusions.length > 0 ? datasetData.conclusions : resolveConclusions(datasetData.name));
           setRawData(data);
-          setCleanedData(data); // 初始化清洗后数据为原始数据
         }
       })
       .catch((err) => {
@@ -197,18 +313,13 @@ export function ProjectDetailPage() {
   // 根据当前数据集名称解析对应的图表配置
   const chartMeta = resolveChartMeta(dataset?.name);
 
+  // 根据当前数据集名称解析清洗步骤
+  const cleaningSteps = resolveCleaningSteps(dataset?.name);
+
   // 切换 Tab
   const handleTabChange = (tab: TabType) => {
     setSearchParams({ tab });
   };
-
-  // 数据清洗变化
-  const handleCleanedDataChange = useCallback(async (newData: DataRow[]) => {
-    if (!id) return;
-    setCleanedData(newData);
-    // 保存清洗后的数据
-    await saveData(id, newData);
-  }, [id, saveData]);
 
   const handleSaveCode = async () => {
     if (!id || !dataset) return;
@@ -424,13 +535,23 @@ export function ProjectDetailPage() {
           {/* Tab 2: 数据清洗 */}
           {activeTab === 'clean' && (
             <div className="space-y-4">
-              {id && (
-                <DataCleaning
-                  data={cleanedData}
-                  projectId={id}
-                  onDataChange={handleCleanedDataChange}
-                />
-              )}
+              {/* 数据清洗记录：只读展示清洗步骤，位于代码卡片之上 */}
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
+                <div className="px-4 py-3 border-b border-[#3A3A44]">
+                  <h3 className="text-base font-medium text-white">数据清洗记录</h3>
+                  <p className="text-sm text-[#9CA3AF] mt-1">从原始宽表到可用长表的完整处理步骤</p>
+                </div>
+                <ol className="p-4 space-y-2">
+                  {cleaningSteps.map((step, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#6BC5E8]/15 text-[#6BC5E8] text-xs font-semibold flex items-center justify-center mt-0.5">
+                        {(index + 1).toString().padStart(2, '0')}
+                      </span>
+                      <span className="text-base text-[#D1D5DB] leading-relaxed">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
               {chartMeta && (
                 <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
                   <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
@@ -547,9 +668,26 @@ export function ProjectDetailPage() {
             </div>
           )}
 
-          {/* Tab: 智能分析 */}
+          {/* Tab: WorkBuddy 分析（WorkBuddy 生成的图表与代码） */}
           {activeTab === 'smart' && (
-            <SmartAnalysis data={cleanedData.length > 0 ? cleanedData : rawData} columns={dataset?.columns || []} />
+            <div className="space-y-4">
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
+                <h3 className="text-lg font-semibold text-white mb-4 text-center">图表展示区</h3>
+                <div className="flex justify-center">
+                  <img
+                    src="/images/城市1_WorkBuddy图.png"
+                    alt="WorkBuddy 生成的城市1消费价格指数趋势图"
+                    className="w-full max-h-[500px] object-contain rounded"
+                  />
+                </div>
+              </div>
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
+                <h3 className="text-lg font-semibold text-white mb-4 text-center">WorkBuddy 生成的数据处理与可视化代码</h3>
+                <pre className="bg-[#1E1E24] text-[#D1D5DB] p-4 rounded-lg font-mono text-base leading-relaxed whitespace-pre overflow-x-auto max-h-[400px] overflow-y-auto">
+                  {WORKBUDDY_CODE}
+                </pre>
+              </div>
+            </div>
           )}
 
           {/* Tab 4: 可视化分析（按当前数据集绑定图表，代码已移至数据清洗 Tab） */}

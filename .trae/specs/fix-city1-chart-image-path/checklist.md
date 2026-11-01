@@ -1,0 +1,8 @@
+- [x] `CHART_MAP['城市1'].image` 恰为 `/images/城市1_手工图.png`
+- [x] 全局搜索 `城市价格指数趋势图` 无任何引用
+- [x] `public/images/城市1_手工图.png` 已存在（由 `城市1_手工图.png.png` 复制而来，原文件保留）
+- [x] `/images/城市1_手工图.png` 请求返回 200 且为 image/png（286,988 字节）
+- [x] 城市1「可视化分析」Tab 图片正常显示（`naturalWidth > 0`、`complete = true`），无破裂图标（沙箱无城市1 数据集，按图片 URL 直接验证：3120×1638）
+- [x] 城市2 图表、WorkBuddy Tab、其他 Tab 不受影响，console 无 error
+- [x] `npx tsc --noEmit` 退出码 0
+- [x] 未 push
