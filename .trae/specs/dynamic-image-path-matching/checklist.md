@@ -1,0 +1,10 @@
+- [x] `src/pages/ProjectDetailPage.tsx` 中不再存在 `CHART_MAP`、`ChartMeta`、`resolveChartMeta`
+- [x] 「可视化分析」Tab 图片 `src` 为动态模板 `` `/images/${dataset.name}_手工图.png` ``
+- [x] 「WorkBuddy 分析」Tab 图片 `src` 为动态模板 `` `/images/${dataset.name}_WorkBuddy图.png` ``
+- [x] 城市2 图片资源已重命名为 `城市2_手工图.png`，旧文件名 `城市2_柱状图.png` 不再存在
+- [x] `public/images` 中同时存在 城市1/城市2 的 `_手工图.png` 与 `_WorkBuddy图.png` 四个文件
+- [x] 城市1 的默认代码回退仍生效（`CODE_MAP` 保留原示例代码，内容未改动）
+- [x] 无代码数据集（如农村1）仍不渲染「数据清洗与可视化代码」卡片
+- [x] 图片加载失败时两个 Tab 均显示提示文案，不残留破图
+- [x] `npx tsc -b` 类型检查通过
+- [x] 未执行任何 git commit / push

@@ -70,33 +70,19 @@ plt.tight_layout()
 plt.savefig('城市2_柱状图.png', dpi=150, bbox_inches='tight')
 plt.show()`;
 
-interface ChartMeta {
-  image: string;
-  code: string;
-  title: string;
-}
-
-// 按数据集名称绑定对应的可视化图表与代码
-const CHART_MAP: Record<string, ChartMeta> = {
-  '城市1': {
-    image: '/images/城市1_手工图.png',
-    code: PYTHON_CODE,
-    title: '城市居民消费价格指数趋势图',
-  },
-  '城市2': {
-    image: '/images/城市2_柱状图.png',
-    code: CITY2_CODE,
-    title: '2025年12月城市居民消费价格指数（分指标）',
-  },
+// 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
+const CODE_MAP: Record<string, string> = {
+  '城市1': PYTHON_CODE,
+  '城市2': CITY2_CODE,
 };
 
-// 根据数据集名称解析图表配置：先精确匹配，未命中再按名称包含兜底
-function resolveChartMeta(name?: string): ChartMeta | null {
-  if (!name) return null;
+// 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
+function resolveDefaultCode(name?: string): string {
+  if (!name) return '';
   const trimmed = name.trim();
-  if (CHART_MAP[trimmed]) return CHART_MAP[trimmed];
-  const fallback = Object.entries(CHART_MAP).find(([key]) => trimmed.includes(key));
-  return fallback ? fallback[1] : null;
+  if (CODE_MAP[trimmed]) return CODE_MAP[trimmed];
+  const fallback = Object.entries(CODE_MAP).find(([key]) => trimmed.includes(key));
+  return fallback ? fallback[1] : '';
 }
 
 // 按数据集名称绑定数据清洗步骤，作为「清洗记录」展示内容
@@ -262,6 +248,15 @@ export function ProjectDetailPage() {
   const [conclusionSaveStatus, setConclusionSaveStatus] = useState<{ [key: number]: 'idle' | 'saving' | 'saved' }>({});
   const codeRef = useRef<HTMLTextAreaElement>(null);
 
+  const [chartImageError, setChartImageError] = useState(false);
+  const [workbuddyImageError, setWorkbuddyImageError] = useState(false);
+
+  // 切换数据集时重置图片加载失败状态
+  useEffect(() => {
+    setChartImageError(false);
+    setWorkbuddyImageError(false);
+  }, [dataset?.name]);
+
   // 从 URL 获取当前 Tab
   const activeTab = (searchParams.get('tab') as TabType) || 'table';
 
@@ -281,7 +276,7 @@ export function ProjectDetailPage() {
           setError('数据集未找到');
         } else {
           setDataset(datasetData);
-          setCode(datasetData.code || resolveChartMeta(datasetData.name)?.code || '');
+          setCode(datasetData.code || resolveDefaultCode(datasetData.name) || '');
           setConclusions(datasetData.conclusions && datasetData.conclusions.length > 0 ? datasetData.conclusions : resolveConclusions(datasetData.name));
           setRawData(data);
         }
@@ -310,8 +305,11 @@ export function ProjectDetailPage() {
     return () => window.removeEventListener('resize', onResize);
   }, [code, activeTab, fitCode]);
 
-  // 根据当前数据集名称解析对应的图表配置
-  const chartMeta = resolveChartMeta(dataset?.name);
+  // 当前数据集名称，用于动态拼接图片路径
+  const datasetName = dataset?.name ?? '';
+
+  // 是否存在可显示的清洗代码（已保存代码或默认代码）
+  const hasCleanCode = Boolean(dataset?.code || resolveDefaultCode(dataset?.name));
 
   // 根据当前数据集名称解析清洗步骤
   const cleaningSteps = resolveCleaningSteps(dataset?.name);
@@ -552,7 +550,7 @@ export function ProjectDetailPage() {
                   ))}
                 </ol>
               </div>
-              {chartMeta && (
+              {hasCleanCode && (
                 <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] overflow-hidden">
                   <div className="px-4 py-3 border-b border-[#3A3A44] flex items-center justify-between">
                     <h3 className="text-base font-medium text-white">数据清洗与可视化代码</h3>
@@ -674,11 +672,16 @@ export function ProjectDetailPage() {
               <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
                 <h3 className="text-lg font-semibold text-white mb-4 text-center">图表展示区</h3>
                 <div className="flex justify-center">
-                  <img
-                    src="/images/城市1_WorkBuddy图.png"
-                    alt="WorkBuddy 生成的城市1消费价格指数趋势图"
-                    className="w-full max-h-[500px] object-contain rounded"
-                  />
+                  {workbuddyImageError ? (
+                    <p className="text-base text-[#9CA3AF] py-8">暂无 WorkBuddy 图表</p>
+                  ) : (
+                    <img
+                      src={`/images/${datasetName}_WorkBuddy图.png`}
+                      alt={`${datasetName} WorkBuddy 分析图`}
+                      className="w-full max-h-[500px] object-contain rounded"
+                      onError={() => setWorkbuddyImageError(true)}
+                    />
+                  )}
                 </div>
               </div>
               <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
@@ -690,23 +693,24 @@ export function ProjectDetailPage() {
             </div>
           )}
 
-          {/* Tab 4: 可视化分析（按当前数据集绑定图表，代码已移至数据清洗 Tab） */}
+          {/* Tab: 可视化分析（按数据集名称动态拼接图片路径） */}
           {activeTab === 'chart' && (
-            chartMeta ? (
+            chartImageError ? (
+              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-10 flex flex-col items-center justify-center text-center">
+                <p className="text-base text-[#9CA3AF]">暂无可视化图表，请先上传并分析数据</p>
+              </div>
+            ) : (
               <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
-                <h3 className="text-lg font-semibold text-white mb-4 text-center">{chartMeta.title}</h3>
+                <h3 className="text-lg font-semibold text-white mb-4 text-center">{datasetName} 可视化图表</h3>
                 <div className="flex justify-center">
                   <img
-                    src={chartMeta.image}
-                    alt={chartMeta.title}
+                    src={`/images/${datasetName}_手工图.png`}
+                    alt={`${datasetName} 可视化图表`}
                     className="w-full max-h-[500px] object-contain rounded"
+                    onError={() => setChartImageError(true)}
                   />
                 </div>
                 <p className="text-base text-[#9CA3AF] mt-4 text-center">数据来源：国家统计局 | 使用 Python Matplotlib 生成</p>
-              </div>
-            ) : (
-              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-10 flex flex-col items-center justify-center text-center">
-                <p className="text-base text-[#9CA3AF]">暂无可视化图表，请先上传并分析数据</p>
               </div>
             )
           )}
