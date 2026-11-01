@@ -1,0 +1,7 @@
+- [x] `src/components/TabNavigation.tsx` 中 `tabs` 数组顺序为 `table → clean → chart → conclusion → smart`
+- [x] 各 Tab 的 key、label、icon 均未被修改，仅顺序变化
+- [x] 默认 Tab（未带 `tab` 参数）仍为「数据表格」
+- [x] 点击「可视化分析」渲染图表内容，点击「分析结论」渲染结论内容，二者未错位
+- [x] 点击「数据清洗」渲染清洗记录与代码，「WorkBuddy 分析」渲染 WorkBuddy 图表与代码
+- [x] 项目可正常构建/类型检查通过
+- [x] 未执行任何 git push
