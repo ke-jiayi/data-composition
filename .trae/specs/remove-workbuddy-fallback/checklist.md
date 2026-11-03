@@ -1,0 +1,8 @@
+- [x] `workbuddyCode` 计算不再包含 `|| WORKBUDDY_CODE`
+- [x] 未配置数据集（如农村1）在「WorkBuddy 分析」Tab 不渲染代码卡片
+- [x] 未配置数据集图表区仍显示「暂无 WorkBuddy 图表」（图片缺失时）
+- [x] 城市1-4 的映射条目仍为各自常量，代码可正常展示
+- [x] `resolveWorkbuddyCode` 未命中返回空字符串，名称包含兜底保留
+- [x] 图片动态路径与失败提示未改动
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

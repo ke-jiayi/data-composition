@@ -671,8 +671,8 @@ export function ProjectDetailPage() {
   // 当前数据集名称，用于动态拼接图片路径
   const datasetName = dataset?.name ?? '';
 
-  // 当前数据集对应的 WorkBuddy 代码；未命中映射时回退城市1 脚本
-  const workbuddyCode = resolveWorkbuddyCode(dataset?.name) || WORKBUDDY_CODE;
+  // 当前数据集对应的 WorkBuddy 代码；未命中映射时为空
+  const workbuddyCode = resolveWorkbuddyCode(dataset?.name);
 
   // 是否存在可显示的清洗代码（已保存代码或默认代码）
   const hasCleanCode = Boolean(dataset?.code || resolveDefaultCode(dataset?.name));
@@ -1053,12 +1053,14 @@ export function ProjectDetailPage() {
                   )}
                 </div>
               </div>
-              <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
-                <h3 className="text-lg font-semibold text-white mb-4 text-center">WorkBuddy 生成的数据处理与可视化代码</h3>
-                <pre className="bg-[#1E1E24] text-[#D1D5DB] p-4 rounded-lg font-mono text-base leading-relaxed whitespace-pre overflow-x-auto max-h-[400px] overflow-y-auto">
-                  {workbuddyCode}
-                </pre>
-              </div>
+              {workbuddyCode && (
+                <div className="bg-[#26262C] rounded-lg border border-[#3A3A44] p-2">
+                  <h3 className="text-lg font-semibold text-white mb-4 text-center">WorkBuddy 生成的数据处理与可视化代码</h3>
+                  <pre className="bg-[#1E1E24] text-[#D1D5DB] p-4 rounded-lg font-mono text-base leading-relaxed whitespace-pre overflow-x-auto max-h-[400px] overflow-y-auto">
+                    {workbuddyCode}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 
