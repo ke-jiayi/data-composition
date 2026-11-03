@@ -101,11 +101,40 @@ plt.tight_layout()
 plt.savefig('城市3_手工图.png', dpi=150)
 plt.show()`;
 
+const CITY4_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 读取城市4
+df = pd.read_excel('城市4.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+
+# 筛选最新月份的数据进行对比
+latest_month = df_long['月份'].max()
+df_latest = df_long[df_long['月份'] == latest_month].copy()
+df_latest = df_latest[df_latest['指标'] != '数据来源：国家统计局']
+
+# 画横向柱状图
+plt.figure(figsize=(10, 6))
+plt.barh(df_latest['指标'], df_latest['指数'], color='#6BC5E8')
+plt.title(f'城市4各分类消费价格指数对比（{latest_month}）', fontsize=14)
+plt.xlabel('指数')
+plt.tight_layout()
+
+plt.savefig('城市4_手工图.png', dpi=150)
+plt.show()`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
   '城市2': CITY2_CODE,
   '城市3': CITY3_CODE,
+  '城市4': CITY4_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -423,11 +452,94 @@ plt.close(fig)
 print(long.groupby("分类")["指数"].agg(["min", "max", "first", "last"]).round(2))
 `;
 
+// WorkBuddy 生成的清洗与可视化脚本（城市4）
+const CITY4_WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
+from matplotlib.ticker import MultipleLocator
+
+SRC, LONG, FIG = "城市4.xlsx", "城市4_长格式.xlsx", "城市4_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+df = raw.iloc[2:].copy()
+df.columns = ["指标", str(raw.iloc[2, 1])]
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间|^注：")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).reset_index(drop=True)
+long["分类"] = (long["指标"].str.replace(r"类?城市居民消费价格指数.*", "", regex=True)
+              .str.strip().replace({"": "城市总体"}))
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+ser = long.set_index("分类")["指数"].drop("城市总体", errors="ignore").sort_values()
+total = long.loc[long["分类"] == "城市总体", "指数"].iloc[0]
+
+BG, TEXT, GRID = "#0B1220", "#E6EDF7", "#243147"
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+cmap = LinearSegmentedColormap.from_list(
+    "tech",
+    [(0.00, "#DDD6FE"), (0.16, "#C084FC"), (0.34, "#7C3AED"),
+     (0.50, "#1E3A5F"), (0.62, "#0E7490"), (0.80, "#22B8E6"), (1.00, "#A5F3FC")],
+    N=256,
+)
+norm = TwoSlopeNorm(vmin=min(98.4, ser.min()), vcenter=100, vmax=max(104.2, ser.max()))
+
+fig, ax = plt.subplots(figsize=(11, 6.8), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.245, right=0.955, top=0.815, bottom=0.135)
+
+ax.barh(ser.index, ser.values - 100, left=100, height=0.62,
+        color=[cmap(norm(v)) for v in ser.values],
+        edgecolor=BG, linewidth=0.9, zorder=3)
+
+for y, v in enumerate(ser.values):
+    ax.text(v + (0.09 if v >= 100 else -0.09), y, f"{v:.1f}",
+            va="center", ha="left" if v >= 100 else "right",
+            color=TEXT, fontsize=10.5, fontweight="bold", zorder=4)
+
+ax.axvline(100, color="#6B7F99", lw=1.3, zorder=2)
+ax.axvline(total, color="#94A3B8", lw=1.1, ls=(0, (4, 3)), alpha=0.85, zorder=2)
+ax.text(total - 0.06, len(ser) - 0.42, f"城市总体 {total:.1f}",
+        color="#A9B8CC", fontsize=9.5, ha="right", va="center")
+
+ax.set_xlim(97.9, 104.5)
+ax.xaxis.set_major_locator(MultipleLocator(1))
+ax.set_ylim(-0.75, len(ser) - 0.15)
+ax.set_xlabel("指数（上年同月=100）", color=TEXT, fontsize=10.5, labelpad=10)
+ax.tick_params(axis="x", colors=TEXT, labelsize=9.5, length=0, pad=6)
+ax.tick_params(axis="y", colors=TEXT, labelsize=10.5, length=0, pad=10)
+ax.grid(axis="x", color=GRID, lw=0.8, alpha=0.45)
+ax.set_axisbelow(True)
+for s in ("top", "right", "left"):
+    ax.spines[s].set_visible(False)
+ax.spines["bottom"].set_color(GRID)
+
+ax.set_title("2015年12月城市居民消费分类价格指数差异", color="#F8FAFC",
+             fontsize=15.5, fontweight="bold", pad=44, loc="left")
+ax.text(0, 1.048, "条形以荣枯线 100 为基线，向右为同比上涨，向左为下跌",
+        transform=ax.transAxes, color="#7C8CA6", fontsize=9.5, va="bottom")
+
+ax.text(0, -0.128, "数据来源：国家统计局", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
   '城市2': CITY2_WORKBUDDY_CODE,
   '城市3': CITY3_WORKBUDDY_CODE,
+  '城市4': CITY4_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底

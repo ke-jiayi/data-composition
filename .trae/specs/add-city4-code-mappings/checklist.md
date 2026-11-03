@@ -1,0 +1,9 @@
+- [x] `CITY4_CODE` 常量存在，内容与用户脚本逐字一致（首行 `import pandas as pd`，含 `# 读取城市4`、`城市4.xlsx`、`城市4_手工图.png`，末行 `plt.show()`）
+- [x] `CODE_MAP` 包含 `城市1`、`城市2`、`城市3`、`城市4` 四个键，前三项值未改动
+- [x] `CITY4_WORKBUDDY_CODE` 常量存在，内容逐字一致（首行 `import pandas as pd`，含 `TwoSlopeNorm`、`城市4.xlsx`、`城市4_长格式.xlsx`、`城市4_WorkBuddy图.png`，末行 `plt.close(fig)`）
+- [x] `WORKBUDDY_CODE_MAP` 包含 `城市1`、`城市2`、`城市3`、`城市4` 四个键，前三项值未改动
+- [x] 城市4 进入「数据清洗」Tab 时 `hasCleanCode` 为真，代码框预填清洗脚本
+- [x] 城市4 进入「WorkBuddy 分析」Tab 时代码块展示 WorkBuddy 脚本
+- [x] `resolveDefaultCode` / `resolveWorkbuddyCode`、图片动态路径、Tab 渲染与样式未改动
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
