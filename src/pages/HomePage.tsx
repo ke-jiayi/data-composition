@@ -272,18 +272,18 @@ export function HomePage() {
               </div>
               <div className="flex items-center gap-2 md:gap-3">
                 <button
-                  onClick={handleOpenCreateFolder}
-                  disabled={dbLoading}
-                  className="px-4 py-2 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
-                >
-                  + 新建文件夹
-                </button>
-                <button
                   onClick={handleImport}
                   disabled={isImporting || dbLoading}
                   className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
                 >
                   {isImporting ? '导入中...' : '导 入 数 据'}
+                </button>
+                <button
+                  onClick={handleOpenCreateFolder}
+                  disabled={dbLoading}
+                  className="px-4 py-2 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
+                >
+                  + 新建文件夹
                 </button>
                 <input
                   ref={fileInputRef}
@@ -451,72 +451,6 @@ export function HomePage() {
                     to={`/project/${dataset.id}`}
                     className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-2 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                   >
-                    {/* 删除按钮 */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setDeleteTarget(dataset);
-                      }}
-                      className="absolute top-3 right-3 p-1.5 rounded-lg text-purple-300/50 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
-                      aria-label="删除数据集"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                    {/* 移动到文件夹按钮 */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setMovingDatasetId(movingDatasetId === dataset.id ? null : dataset.id);
-                      }}
-                      className="absolute top-3 right-11 p-1.5 rounded-lg text-purple-300/50 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors opacity-0 group-hover:opacity-100"
-                      aria-label="移动到文件夹"
-                      title="移动到文件夹"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                      </svg>
-                    </button>
-                    {/* 移动到文件夹下拉菜单 */}
-                    {movingDatasetId === dataset.id && (
-                      <div
-                        className="absolute top-10 right-3 z-10 bg-[#0f1424] border border-purple-500/30 rounded-lg shadow-lg py-1 w-40"
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleMoveToFolder(dataset.id, null)}
-                          className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors ${!dataset.folderId ? 'text-cyan-300' : 'text-purple-100/80'}`}
-                        >
-                          未分类
-                        </button>
-                        {folders.map(folder => (
-                          <button
-                            key={folder.id}
-                            type="button"
-                            onClick={() => handleMoveToFolder(dataset.id, folder.id)}
-                            className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors truncate ${dataset.folderId === folder.id ? 'text-cyan-300' : 'text-purple-100/80'}`}
-                          >
-                            📁 {folder.name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
                     {/* 卡片顶部色条 */}
                     <div
                       className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity"
@@ -529,23 +463,91 @@ export function HomePage() {
                             : 'linear-gradient(to right, #38bdf8, #0ea5e9)',
                       }}
                     />
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-base font-semibold text-cyan-100 group-hover:text-cyan-200 line-clamp-1">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="text-base font-semibold text-cyan-100 group-hover:text-cyan-200 line-clamp-1 min-w-0">
                         {dataset.name}
                       </h3>
-                      <span
-                        className="shrink-0 ml-2 text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{
-                          backgroundColor:
-                            dataset.fileType === 'csv'
-                              ? 'rgba(34, 211, 238, 0.1)'
-                              : 'rgba(167, 139, 250, 0.1)',
-                          color:
-                            dataset.fileType === 'csv' ? '#0891b2' : '#7c3aed',
-                        }}
-                      >
-                        {dataset.fileType.toUpperCase()}
-                      </span>
+                      <div className="relative flex items-center gap-2 shrink-0">
+                        {/* 移动到文件夹按钮 */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setMovingDatasetId(movingDatasetId === dataset.id ? null : dataset.id);
+                          }}
+                          className="p-1.5 rounded-lg text-purple-300/50 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                          aria-label="移动到文件夹"
+                          title="移动到文件夹"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                          </svg>
+                        </button>
+                        {/* 删除按钮 */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setDeleteTarget(dataset);
+                          }}
+                          className="p-1.5 rounded-lg text-purple-300/50 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                          aria-label="删除数据集"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <span
+                          className="shrink-0 text-xs px-2 py-0.5 rounded-full font-medium"
+                          style={{
+                            backgroundColor:
+                              dataset.fileType === 'csv'
+                                ? 'rgba(34, 211, 238, 0.1)'
+                                : 'rgba(167, 139, 250, 0.1)',
+                            color:
+                              dataset.fileType === 'csv' ? '#0891b2' : '#7c3aed',
+                          }}
+                        >
+                          {dataset.fileType.toUpperCase()}
+                        </span>
+                        {/* 移动到文件夹下拉菜单 */}
+                        {movingDatasetId === dataset.id && (
+                          <div
+                            className="absolute right-0 top-full mt-1 z-10 bg-[#0f1424] border border-purple-500/30 rounded-lg shadow-lg py-1 w-40"
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleMoveToFolder(dataset.id, null)}
+                              className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors ${!dataset.folderId ? 'text-cyan-300' : 'text-purple-100/80'}`}
+                            >
+                              未分类
+                            </button>
+                            {folders.map(folder => (
+                              <button
+                                key={folder.id}
+                                type="button"
+                                onClick={() => handleMoveToFolder(dataset.id, folder.id)}
+                                className={`w-full text-left px-3 py-1.5 text-sm hover:bg-cyan-500/10 transition-colors truncate ${dataset.folderId === folder.id ? 'text-cyan-300' : 'text-purple-100/80'}`}
+                              >
+                                📁 {folder.name}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm text-purple-100/80 flex items-center gap-1.5">
@@ -622,17 +624,17 @@ export function HomePage() {
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
-              >
-                取消
-              </button>
-              <button
-                type="button"
                 onClick={handleDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
               >
                 确认删除
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
+              >
+                取消
               </button>
             </div>
           </div>
@@ -661,18 +663,18 @@ export function HomePage() {
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                onClick={() => setShowFolderModal(false)}
-                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
-              >
-                取消
-              </button>
-              <button
-                type="button"
                 onClick={handleConfirmFolder}
                 disabled={!folderNameInput.trim()}
                 className="px-4 py-2 text-sm font-medium text-white bg-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {folderModalMode === 'create' ? '创建' : '保存'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowFolderModal(false)}
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
+              >
+                取消
               </button>
             </div>
           </div>

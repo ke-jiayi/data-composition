@@ -1,0 +1,10 @@
+- [x] 「确认删除」弹窗底部顺序为「确认删除」在左、「取消」在右
+- [x] 确认删除按钮仍为 `bg-red-500` 且调用 `handleDelete`；取消按钮仍为深色并关闭弹窗
+- [x] 卡片顶部为单一 Flex 行：标题、删除图标、移动图标、XLSX 徽标
+- [x] 两个图标与徽标无重叠，间距为 `gap-2`，同处 `items-center`
+- [x] 图标默认透明、`group-hover` 时完全显现
+- [x] 移动下拉菜单贴近操作组右对齐，`z-10`，功能正常
+- [x] 无 `absolute top-3 right-3` / `right-11` 残留
+- [x] 「删除文件夹」弹窗按钮顺序未改动
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
