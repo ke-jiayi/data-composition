@@ -564,18 +564,35 @@ const CITY2_CONCLUSIONS = [
   '食品烟酒类价格波动较大，5月为100.4，9月降至97.6，12月回升至101.0，呈现“V型”走势，需关注其波动对总指数的影响。',
 ];
 
+// 城市3 专属分析结论
+const CITY3_CONCLUSIONS = [
+  '总指数保持温和：城市3总体CPI在2025年期间保持平稳，处于温和区间，未出现大幅波动。',
+  '食品烟酒类为核心变量：食品烟酒类价格年内波动最为明显，是拉动总指数起伏的最主要因素。',
+  '居住类价格底盘稳固：居住类价格全年维持在100左右，对整体物价稳定起到了压舱石的作用。',
+];
+
+// 城市4 专属分析结论
+const CITY4_CONCLUSIONS = [
+  '服务消费韧性凸显：教育文化娱乐、医疗保健等升级类消费价格呈现稳步微涨，反映出服务消费需求具有较强韧性。',
+  '交通通信类持续承压：受大宗商品价格及行业竞争影响，交通通信类价格持续低于荣枯线（100），是拖累总指数的因素。',
+  '衣着与生活用品走势分化：衣着类价格温和上涨，而生活用品及服务类价格出现阶段性下行，反映居民日常消费结构的变化。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
+  '城市1': DEFAULT_CONCLUSIONS,
   '城市2': CITY2_CONCLUSIONS,
+  '城市3': CITY3_CONCLUSIONS,
+  '城市4': CITY4_CONCLUSIONS,
 };
 
-// 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底，仍无则返回默认结论
+// 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）
 function resolveConclusions(name?: string): string[] {
-  if (!name) return DEFAULT_CONCLUSIONS;
+  if (!name) return [];
   const trimmed = name.trim();
   if (CONCLUSIONS_MAP[trimmed]) return CONCLUSIONS_MAP[trimmed];
   const fallback = Object.entries(CONCLUSIONS_MAP).find(([key]) => trimmed.includes(key));
-  return fallback ? fallback[1] : DEFAULT_CONCLUSIONS;
+  return fallback ? fallback[1] : [];
 }
 
 export function ProjectDetailPage() {
@@ -936,6 +953,9 @@ export function ProjectDetailPage() {
                   数据分析结论
                 </h3>
                 <div className="space-y-2">
+                  {conclusions.length === 0 && (
+                    <p className="text-base text-[#9CA3AF] py-6 text-center">暂无分析结论</p>
+                  )}
                   {conclusions.map((conclusion, index) => (
                     <div
                       key={index}

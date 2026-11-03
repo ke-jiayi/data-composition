@@ -1,0 +1,10 @@
+- [x] `CITY3_CONCLUSIONS` 存在，三条内容逐字一致（首条以 `总指数保持温和：` 开头，末条以 `居住类价格底盘稳固：` 开头）
+- [x] `CITY4_CONCLUSIONS` 存在，三条内容逐字一致（首条以 `服务消费韧性凸显：` 开头，末条以 `衣着与生活用品走势分化：` 开头）
+- [x] `CONCLUSIONS_MAP` 含城市1、城市2、城市3、城市4 四个键，城市1 值为 `DEFAULT_CONCLUSIONS`
+- [x] `resolveConclusions` 未命中时返回 `[]`，不回退 `DEFAULT_CONCLUSIONS`
+- [x] 空列表时「分析结论」Tab 显示「暂无分析结论」
+- [x] 农村1 不显示城市1/城市2 的默认结论
+- [x] 已保存的 `dataset.conclusions` 仍优先于默认映射
+- [x] 编辑/保存/删除/添加结论的交互与样式未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
