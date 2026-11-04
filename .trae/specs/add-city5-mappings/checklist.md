@@ -1,0 +1,10 @@
+- [x] `CODE_MAP` 含 `'城市5'`，值为 `CITY5_CODE`
+- [x] `CITY5_CODE` 与用户脚本逐字一致：`#读取城市5`、`城市5居民消费价格指数趋势`、`plt.savefig('城市5_手工图.png', dpi=150)`、`print("城市5手工图已保存！")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'城市5'`，值为 `CITY5_WORKBUDDY_CODE`
+- [x] `CITY5_WORKBUDDY_CODE` 与用户脚本逐字一致：`LinearSegmentedColormap, Normalize`、`replace({"": "总体"})`、`ax.set_xlim(77.8, 121.5)`、标题 `2025年5月-2026年5月城市食品类消费价格指数区间`
+- [x] `CONCLUSIONS_MAP` 含 `'城市5'`，三条结论逐字一致
+- [x] 城市1-4 已有映射条目与文案未改变
+- [x] `resolveWorkbuddyCode` / `resolveConclusions` 的解析与兜底逻辑未改变
+- [x] 图片动态路径与空态文案未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
