@@ -1,0 +1,10 @@
+- [x] `CODE_MAP` 含 `'农村1'`，值为 `RURAL1_CODE`
+- [x] `RURAL1_CODE` 与用户脚本逐字一致：`# 1. 读取农村1`、`# 2. 修复日期排序（重点！）`、`format='%Y年%m月'`、`plt.xticks(rotation=45) # 日期倾斜一下，防止字挤在一起`、`plt.savefig('农村1_手工图.png', dpi=150)`、`print("农村1手工图已保存！")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'农村1'`，值为 `RURAL1_WORKBUDDY_CODE`
+- [x] `RURAL1_WORKBUDDY_CODE` 与用户脚本逐字一致：`import numpy as np`、`from matplotlib.patches import Rectangle`、`Normalize(vmin=95, vmax=115.5)`、`ScalarMappable`、标题 `2026年1-5月农村居民消费价格分类指数`
+- [x] `CONCLUSIONS_MAP` 含 `'农村1'`，三条结论逐字一致
+- [x] 城市1-5 既有映射条目与文案未改变
+- [x] 解析函数（含 WorkBuddy 未命中隐藏代码框、结论未命中空数组）未改变
+- [x] 图片动态路径与空态文案未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

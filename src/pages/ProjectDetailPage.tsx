@@ -165,6 +165,52 @@ plt.show()
 print("城市5手工图已保存！")
 `;
 
+// 农村1 专属数据处理代码
+const RURAL1_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取农村1
+df = pd.read_excel('农村1.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+# 2. 修复日期排序（重点！）
+# 把 "2026年1月" 变成真正的时间格式，按时间排序
+df_long['月份_时间'] = pd.to_datetime(df_long['月份'], format='%Y年%m月')
+df_long = df_long.sort_values('月份_时间')
+
+# 3. 画图
+pivot_df = df_long.pivot(index='月份', columns='指标', values='指数')
+# 重新按时间排序一下列名，确保横坐标从左到右按月份递增
+pivot_df = pivot_df.reindex(df_long['月份'].unique())
+
+pivot_df = pivot_df.iloc[:, :5]
+
+plt.figure(figsize=(10, 5))
+for col in pivot_df.columns:
+    plt.plot(pivot_df.index, pivot_df[col], marker='o', label=col)
+
+plt.title('农村1居民消费价格指数趋势', fontsize=14)
+plt.xlabel('月份')
+plt.ylabel('指数（上年同月=100）')
+plt.legend(loc='best')
+plt.grid(True, alpha=0.3)
+plt.xticks(rotation=45) # 日期倾斜一下，防止字挤在一起
+plt.tight_layout()
+
+# 4. 保存
+plt.savefig('农村1_手工图.png', dpi=150)
+plt.show()
+print("农村1手工图已保存！")
+`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
@@ -172,6 +218,7 @@ const CODE_MAP: Record<string, string> = {
   '城市3': CITY3_CODE,
   '城市4': CITY4_CODE,
   '城市5': CITY5_CODE,
+  '农村1': RURAL1_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -657,6 +704,98 @@ fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
 plt.close(fig)
 `;
 
+// 农村1 专属 WorkBuddy 代码
+const RURAL1_WORKBUDDY_CODE = `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib.patches import Rectangle
+
+SRC, LONG, FIG = "农村1.xlsx", "农村1_长格式.xlsx", "农村1_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间|^注：")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+long["分类"] = (long["指标"].str.replace(r"类?农村居民消费价格指数.*", "", regex=True)
+              .str.strip().replace({"": "农村总体"}))
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+pivot = long.pivot(index="分类", columns="月份", values="指数")
+body = pivot.drop("农村总体", errors="ignore")
+body = body.sort_values(body.columns[-1], ascending=False)
+pivot = pd.concat([body, pivot.loc[pivot.index.intersection(["农村总体"])]])
+
+BG, TEXT, GRID = "#0B1220", "#E6EDF7", "#243147"
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+cmap = LinearSegmentedColormap.from_list("heat", [
+    (0.00, "#091625"), (0.10, "#102A44"), (0.22, "#16375C"),
+    (0.28, "#1F5BA8"), (0.40, "#2F6FEA"), (0.52, "#4F46E5"),
+    (0.72, "#8B5CF6"), (0.86, "#C4A5F8"), (1.00, "#F3E8FF")], N=256)
+norm = Normalize(vmin=95, vmax=115.5)
+
+fig, ax = plt.subplots(figsize=(9.9, 6.6), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.235, right=0.885, top=0.775, bottom=0.135)
+
+nr, nc = pivot.shape
+for i in range(nr):
+    for j in range(nc):
+        v = pivot.iloc[i, j]
+        c = cmap(norm(v))
+        ax.add_patch(Rectangle((j + 0.04, i + 0.04), 0.92, 0.92,
+                               facecolor=c, edgecolor="none", zorder=2))
+        lum = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+        ax.text(j + 0.5, i + 0.5, f"{v:.1f}", ha="center", va="center",
+                color="#0A1524" if lum > 0.55 else "#EDF2FA",
+                fontsize=11, fontweight="bold", zorder=3)
+
+if "农村总体" in pivot.index:
+    ax.axhline(nr - 1, color="#44576F", lw=1.4, zorder=4)
+
+ax.set_xlim(0, nc)
+ax.set_ylim(nr, 0)
+ax.set_xticks(np.arange(nc) + 0.5)
+ax.set_xticklabels([f"{m[5:].lstrip('0')}月" for m in pivot.columns], fontsize=11)
+ax.set_yticks(np.arange(nr) + 0.5)
+ax.set_yticklabels(pivot.index, fontsize=11)
+ax.tick_params(axis="x", colors=TEXT, length=0, pad=10)
+ax.tick_params(axis="y", colors=TEXT, length=0, pad=8)
+for s in ax.spines.values():
+    s.set_visible(False)
+
+sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+sm.set_array([])
+cb = fig.colorbar(sm, ax=ax, fraction=0.036, pad=0.025,
+                  ticks=[96, 98, 100, 102, 104, 106, 108, 110, 112, 114])
+cb.ax.tick_params(colors=TEXT, labelsize=9, length=0, pad=4)
+cb.outline.set_visible(False)
+cb.set_label("指数（上年同月=100）", color=TEXT, fontsize=9.5, labelpad=10)
+
+ax.text(0, 1.105, "2026年1-5月农村居民消费价格分类指数",
+        transform=ax.transAxes, color="#F8FAFC", fontsize=15.5,
+        fontweight="bold", va="bottom")
+ax.text(0, 1.045, "颜色越亮表示指数越高，越暗表示越低；数值为当月同比指数",
+        transform=ax.transAxes, color="#7C8CA6", fontsize=9.5, va="bottom")
+
+ax.text(0, -0.105, "数据来源：国家统计局", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
@@ -664,6 +803,7 @@ const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市3': CITY3_WORKBUDDY_CODE,
   '城市4': CITY4_WORKBUDDY_CODE,
   '城市5': CITY5_WORKBUDDY_CODE,
+  '农村1': RURAL1_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
@@ -709,6 +849,13 @@ const CITY5_CONCLUSIONS = [
   '粮食类价格底盘极稳：粮食类价格全年在98.5-99.8的极窄区间内运行，展现出极强的刚性需求与稳定性。',
 ];
 
+// 农村1 专属分析结论
+const RURAL1_CONCLUSIONS = [
+  '交通通信类涨幅居前：农村1的交通通信类价格从年初的96.8一路攀升至5月的105.4，上行趋势显著，是拉动总指数的主要因素。',
+  '食品烟酒类整体走势偏弱：食品烟酒及在外餐饮类多数月份处于100荣枯线以下（最低98.8），反映出基础食品消费价格面临一定的下行压力。',
+  '其他用品及服务类维持高位：该类价格指数全年维持在109以上，显著高于其他分类，体现出农村居民在特定服务领域的较高成本。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市1': DEFAULT_CONCLUSIONS,
@@ -716,6 +863,7 @@ const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市3': CITY3_CONCLUSIONS,
   '城市4': CITY4_CONCLUSIONS,
   '城市5': CITY5_CONCLUSIONS,
+  '农村1': RURAL1_CONCLUSIONS,
 };
 
 // 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）
