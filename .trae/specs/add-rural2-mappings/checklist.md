@@ -1,0 +1,10 @@
+- [x] `CODE_MAP` 含 `'农村2'`，值为 `RURAL2_CODE`
+- [x] `RURAL2_CODE` 与用户脚本逐字一致：`# 1. 读取并清洗数据`、`df_dec = df_long[df_long['月份'] == '2025年12月'].copy()`、`r'^(.*?)类'`、`projection: 'polar'`、`plt.cm.cool`、`ax.set_xticks([])` 前的 `ax.set_yticks([]) # 隐藏Y轴刻度`、`plt.savefig('农村2_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')`、`print("农村2手工玫瑰图已保存！")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'农村2'`，值为 `RURAL2_WORKBUDDY_CODE`
+- [x] `RURAL2_WORKBUDDY_CODE` 与 `RURAL2_CODE` 内容逐字相同
+- [x] `CONCLUSIONS_MAP` 含 `'农村2'`，三条结论逐字一致
+- [x] 城市1-5、农村1 已有映射条目与文案未改变
+- [x] 解析函数（WorkBuddy 未命中隐藏代码框、结论未命中空数组）未改变
+- [x] 图片动态路径与空态文案未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

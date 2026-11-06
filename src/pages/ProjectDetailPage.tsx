@@ -211,6 +211,57 @@ plt.show()
 print("农村1手工图已保存！")
 `;
 
+// 农村2 专属数据处理代码
+const RURAL2_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取并清洗数据
+df = pd.read_excel('农村2.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+# 2. 提取 2025年12月 的数据画玫瑰图
+df_dec = df_long[df_long['月份'] == '2025年12月'].copy()
+# 简化一下指标名称，不然雷达/玫瑰图字太长了
+df_dec['简称'] = df_dec['指标'].str.extract(r'^(.*?)类')
+df_dec['简称'] = df_dec['简称'].fillna('总指数')
+
+# 3. 画南丁格尔玫瑰图
+angles = np.linspace(0, 2*np.pi, len(df_dec), endpoint=False)
+# 为了让图闭合，需要把首尾数据拼起来
+values = np.concatenate((df_dec['指数'], [df_dec['指数'].iloc[0]]))
+angles_closed = np.concatenate((angles, [angles[0]]))
+
+fig, ax = plt.subplots(figsize=(8, 8), subplot_kw={'projection': 'polar'}, facecolor='#0B1220')
+ax.set_facecolor('#0B1220')
+
+# 绘制柱状区域
+bars = ax.bar(angles, df_dec['指数'] - 95, width=0.6, color=plt.cm.cool(np.linspace(0, 1, len(df_dec))), alpha=0.8)
+ax.plot(angles_closed, np.concatenate((df_dec['指数'] - 95, [df_dec['指数'].iloc[0] - 95])), color='#5EE7FF', lw=2, alpha=0.5)
+
+# 设置刻度和标签
+ax.set_xticks(angles)
+ax.set_xticklabels(df_dec['简称'], color='#E6EDF7', fontsize=11)
+ax.set_yticks([]) # 隐藏Y轴刻度
+ax.spines['polar'].set_color('#243147')
+
+plt.title('农村2各分类CPI对比 (2025年12月)', color='#F8FAFC', fontsize=15, pad=20)
+plt.tight_layout()
+
+# 4. 保存
+plt.savefig('农村2_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')
+plt.show()
+print("农村2手工玫瑰图已保存！")
+`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
@@ -219,6 +270,7 @@ const CODE_MAP: Record<string, string> = {
   '城市4': CITY4_CODE,
   '城市5': CITY5_CODE,
   '农村1': RURAL1_CODE,
+  '农村2': RURAL2_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -796,6 +848,57 @@ fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
 plt.close(fig)
 `;
 
+// 农村2 专属 WorkBuddy 代码
+const RURAL2_WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取并清洗数据
+df = pd.read_excel('农村2.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+# 2. 提取 2025年12月 的数据画玫瑰图
+df_dec = df_long[df_long['月份'] == '2025年12月'].copy()
+# 简化一下指标名称，不然雷达/玫瑰图字太长了
+df_dec['简称'] = df_dec['指标'].str.extract(r'^(.*?)类')
+df_dec['简称'] = df_dec['简称'].fillna('总指数')
+
+# 3. 画南丁格尔玫瑰图
+angles = np.linspace(0, 2*np.pi, len(df_dec), endpoint=False)
+# 为了让图闭合，需要把首尾数据拼起来
+values = np.concatenate((df_dec['指数'], [df_dec['指数'].iloc[0]]))
+angles_closed = np.concatenate((angles, [angles[0]]))
+
+fig, ax = plt.subplots(figsize=(8, 8), subplot_kw={'projection': 'polar'}, facecolor='#0B1220')
+ax.set_facecolor('#0B1220')
+
+# 绘制柱状区域
+bars = ax.bar(angles, df_dec['指数'] - 95, width=0.6, color=plt.cm.cool(np.linspace(0, 1, len(df_dec))), alpha=0.8)
+ax.plot(angles_closed, np.concatenate((df_dec['指数'] - 95, [df_dec['指数'].iloc[0] - 95])), color='#5EE7FF', lw=2, alpha=0.5)
+
+# 设置刻度和标签
+ax.set_xticks(angles)
+ax.set_xticklabels(df_dec['简称'], color='#E6EDF7', fontsize=11)
+ax.set_yticks([]) # 隐藏Y轴刻度
+ax.spines['polar'].set_color('#243147')
+
+plt.title('农村2各分类CPI对比 (2025年12月)', color='#F8FAFC', fontsize=15, pad=20)
+plt.tight_layout()
+
+# 4. 保存
+plt.savefig('农村2_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')
+plt.show()
+print("农村2手工玫瑰图已保存！")
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
@@ -804,6 +907,7 @@ const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市4': CITY4_WORKBUDDY_CODE,
   '城市5': CITY5_WORKBUDDY_CODE,
   '农村1': RURAL1_WORKBUDDY_CODE,
+  '农村2': RURAL2_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
@@ -856,6 +960,13 @@ const RURAL1_CONCLUSIONS = [
   '其他用品及服务类维持高位：该类价格指数全年维持在109以上，显著高于其他分类，体现出农村居民在特定服务领域的较高成本。',
 ];
 
+// 农村2 专属分析结论
+const RURAL2_CONCLUSIONS = [
+  '食品价格先抑后扬：农村2食品烟酒类价格在8月触底（96.9）后快速回升，至12月已重回100以上，反弹趋势明显。',
+  '其他服务成本持续推高：其他用品及服务类价格从年初的106.1一路攀升至115.4，涨幅居所有分类之首，是拉动总指数的核心动力。',
+  '交通通信类处于低位：全年大部分时间在96-98区间徘徊，反映出农村交通通信消费价格整体偏弱。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市1': DEFAULT_CONCLUSIONS,
@@ -864,6 +975,7 @@ const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市4': CITY4_CONCLUSIONS,
   '城市5': CITY5_CONCLUSIONS,
   '农村1': RURAL1_CONCLUSIONS,
+  '农村2': RURAL2_CONCLUSIONS,
 };
 
 // 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）
