@@ -1,0 +1,11 @@
+- [x] `package.json` 的 `dependencies` 中已含 `remixicon`（`^4.9.1`）
+- [x] `src/main.tsx` 已引入 `remixicon/fonts/remixicon.css`（位于 `./index.css` 之后）
+- [x] `remixicon.css` 中确实存在 `.ri-settings-4-fill`（第 1812 行）与 `.ri-quill-pen-ai-fill`（第 3010 行）
+- [x] 「技术栈」h2 内已无 `<svg>`，改为 `<i className="ri-settings-4-fill w-6 h-6 inline-flex items-center justify-center mr-2 text-[#00B4D8] dark:text-[#6BC5E8]"></i>`（第 82 行）
+- [x] 「后续计划」h2 内已无 `<svg>`，改为 `<i className="ri-quill-pen-ai-fill ...">`（第 100 行）
+- [x] 两个 h2 分别保留 `mb-4` 与 `mb-3`，标题文字「技术栈」「后续计划」存在
+- [x] 图标颜色无红色，均为 `#00B4D8` / `dark:text-[#6BC5E8]`
+- [x] 饼图（第 25 行）与笑脸（第 41 行）SVG 未被改动；联系方式正文原有的 GitHub / 邮箱 SVG 同样未变
+- [x] 未修改技术栈标签列表、计划列表、其它文案
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
