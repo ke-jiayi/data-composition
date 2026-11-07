@@ -376,6 +376,56 @@ plt.show()
 print("农村4手工图已保存")
 `;
 
+// 农村5 专属数据处理代码
+const RURAL5_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+df = pd.read_excel('农村5.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+df_long['月份_时间'] = pd.to_datetime(df_long['月份'], format='%Y年%m月')
+df_long = df_long.sort_values('月份_时间')
+
+df_long['简称'] = df_long['指标'].str.extract(r'^(.*?)类')
+df_long['简称'] = df_long['简称'].fillna('未知')
+
+pivot_df = df_long.pivot(index='月份', columns='简称', values='指数')
+pivot_df = pivot_df.reindex(df_long['月份'].unique())
+
+fig, ax = plt.subplots(figsize=(12, 6), facecolor='#0B1220')
+ax.set_facecolor('#0B1220')
+
+colors = ['#5EE7FF', '#A78BFA', '#F472B6', '#34D399', '#FBBF24', '#F87171']
+markers = ['o', 's', '^', 'D', 'v', 'p']
+
+for i, col in enumerate(pivot_df.columns):
+    ax.plot(pivot_df.index, pivot_df[col], color=colors[i%len(colors)], marker=markers[i%len(markers)], 
+            lw=2.5, ms=6, label=col)
+
+ax.axhline(100, color='#64748B', lw=1.5, ls='--', alpha=0.8)
+ax.set_title('农村5农副产品消费价格指数趋势', color='#F8FAFC', fontsize=15, pad=15)
+ax.set_ylabel('指数（上年同月=100）', color='#E6EDF7', fontsize=11)
+ax.tick_params(colors='#E6EDF7', rotation=45, labelsize=10)
+ax.grid(axis='y', color='#243147', lw=0.8, alpha=0.5)
+ax.legend(facecolor='#0B1220', labelcolor='#E6EDF7', edgecolor='#243147', loc='upper left')
+
+for spine in ax.spines.values():
+    spine.set_color('#243147')
+
+plt.tight_layout()
+plt.savefig('农村5_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')
+plt.show()
+print("农村5手工图已保存")
+`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
@@ -387,6 +437,7 @@ const CODE_MAP: Record<string, string> = {
   '农村2': RURAL2_CODE,
   '农村3': RURAL3_CODE,
   '农村4': RURAL4_CODE,
+  '农村5': RURAL5_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -1183,6 +1234,102 @@ fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
 plt.close(fig)
 `;
 
+// 农村5 专属 WorkBuddy 处理与可视化代码
+const RURAL5_WORKBUDDY_CODE = `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib.patches import Rectangle
+
+SRC, LONG, FIG = "农村5.xlsx", "农村5_长格式.xlsx", "农村5_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间|^注：")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+long["分类"] = (long["指标"].str.replace(r"农村居民消费价格指数.*", "", regex=True)
+              .str.replace("类", "", regex=False).str.strip())
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+pivot = long.pivot(index="分类", columns="月份", values="指数")
+pivot = pivot.sort_values(pivot.columns[-1], ascending=False)
+
+BG, TEXT, GRID = "#0B1220", "#E6EDF7", "#243147"
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+cmap = LinearSegmentedColormap.from_list("heat", [
+    (0.000, "#04121F"), (0.015, "#071B33"), (0.159, "#113A78"),
+    (0.304, "#1C63C4"), (0.400, "#3B82D6"), (0.432, "#3E7FBE"),
+    (0.449, "#5B7593"), (0.472, "#7156B0"), (0.556, "#8B3FD0"),
+    (0.700, "#C42B8E"), (0.884, "#EE4A63"), (1.000, "#FF8FA0")], N=512)
+norm = Normalize(vmin=84.5, vmax=119)
+
+rel_lum = lambda c: (0.2126 * (c[0] / 12.92 if c[0] <= 0.03928 else ((c[0] + 0.055) / 1.055) ** 2.4)
+                     + 0.7152 * (c[1] / 12.92 if c[1] <= 0.03928 else ((c[1] + 0.055) / 1.055) ** 2.4)
+                     + 0.0722 * (c[2] / 12.92 if c[2] <= 0.03928 else ((c[2] + 0.055) / 1.055) ** 2.4))
+
+fig, ax = plt.subplots(figsize=(13.0, 5.4), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.098, right=0.905, top=0.755, bottom=0.185)
+
+nr, nc = pivot.shape
+for i in range(nr):
+    for j in range(nc):
+        v = pivot.iloc[i, j]
+        c = cmap(norm(v))
+        ax.add_patch(Rectangle((j + 0.035, i + 0.045), 0.93, 0.91,
+                               facecolor=c, edgecolor="none", zorder=2))
+        lum = rel_lum(c)
+        ax.text(j + 0.5, i + 0.5, f"{v:.1f}", ha="center", va="center",
+                color="#0D0A1A" if lum > 0.22 else "#EDF2FA",
+                fontsize=11, fontweight="bold", zorder=3)
+
+ax.set_xlim(0, nc)
+ax.set_ylim(nr, 0)
+ax.set_xticks(np.arange(nc) + 0.5)
+ax.set_xticklabels([f"{m[:4]}\\n{m[5:]}月" for m in pivot.columns], fontsize=9.5)
+ax.set_yticks(np.arange(nr) + 0.5)
+ax.set_yticklabels(pivot.index, fontsize=11.5)
+ax.tick_params(axis="x", colors=TEXT, length=0, pad=8)
+ax.tick_params(axis="y", colors=TEXT, length=0, pad=8)
+for s in ax.spines.values():
+    s.set_visible(False)
+
+sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+sm.set_array([])
+cb = fig.colorbar(sm, ax=ax, fraction=0.028, pad=0.018,
+                  ticks=[85, 90, 95, 100, 105, 110, 115])
+cb.ax.tick_params(colors=TEXT, labelsize=9, length=0, pad=4)
+cb.outline.set_visible(False)
+cb.set_label("指数（上年同月=100）", color=TEXT, fontsize=9.5, labelpad=10)
+cb.ax.axhline(100, color="#E2E8F5", lw=1.2, alpha=0.7)
+
+ax.text(0, 1.115, "2025年5月-2026年5月农村主要农产品消费价格指数",
+        transform=ax.transAxes, color="#F8FAFC", fontsize=16,
+        fontweight="bold", va="bottom")
+ax.text(0, 1.048, "深蓝为低于 100 的通缩区间，紫红为高于 100 的上涨区间，颜色饱和度随偏离幅度递增",
+        transform=ax.transAxes, color="#7C8CA6", fontsize=9.5, va="bottom")
+
+ax.text(0, -0.245, "数据来源：国家统计局", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+ax.text(1, -0.245, "按 2026 年 5 月指数由高到低排列", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5, ha="right")
+
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
@@ -1194,6 +1341,7 @@ const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '农村2': RURAL2_WORKBUDDY_CODE,
   '农村3': RURAL3_WORKBUDDY_CODE,
   '农村4': RURAL4_WORKBUDDY_CODE,
+  '农村5': RURAL5_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
@@ -1267,6 +1415,13 @@ const RURAL4_CONCLUSIONS = [
   '居住类略微承压：居住类指数为99.5，略低于100，显示农村居住相关消费价格处于平稳偏弱的态势。',
 ];
 
+// 农村5 专属分析结论
+const RURAL5_CONCLUSIONS = [
+  '鲜菜类呈现过山车行情：鲜菜价格从最低的84.9暴涨至118.8，随后又快速回落，是农村5波动最剧烈的品类，受季节和气候影响显著。',
+  '畜肉类长期处于低位：畜肉类价格全年大部分时间低于95，甚至在89左右徘徊，持续拖累食品类总指数。',
+  '蛋类价格触底反弹：蛋类从年初的86.0一路飙升，至最后一个月达到107.7，涨幅惊人，反映出市场供需关系的剧烈变化。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市1': DEFAULT_CONCLUSIONS,
@@ -1278,6 +1433,7 @@ const CONCLUSIONS_MAP: Record<string, string[]> = {
   '农村2': RURAL2_CONCLUSIONS,
   '农村3': RURAL3_CONCLUSIONS,
   '农村4': RURAL4_CONCLUSIONS,
+  '农村5': RURAL5_CONCLUSIONS,
 };
 
 // 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）

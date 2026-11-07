@@ -1,0 +1,12 @@
+- [x] `CODE_MAP` 含 `'农村5'`，值为 `RURAL5_CODE`
+- [x] `RURAL5_CODE` 与用户脚本逐字一致：`df = pd.read_excel('农村5.xlsx', header=2)`、`df_long.columns = ['指标', '月份', '指数']`、`format='%Y年%m月'`、`df_long['简称'] = df_long['指标'].str.extract(r'^(.*?)类')`、`df_long['简称'] = df_long['简称'].fillna('未知')`、`colors = ['#5EE7FF', '#A78BFA', '#F472B6', '#34D399', '#FBBF24', '#F87171']`、`ax.set_title('农村5农副产品消费价格指数趋势', color='#F8FAFC', fontsize=15, pad=15)`、`plt.savefig('农村5_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')`、`print("农村5手工图已保存")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'农村5'`，值为 `RURAL5_WORKBUDDY_CODE`
+- [x] `RURAL5_WORKBUDDY_CODE` 与用户脚本逐字一致：`SRC, LONG, FIG = "农村5.xlsx", "农村5_长格式.xlsx", "农村5_WorkBuddy图.png"`、`from matplotlib.patches import Rectangle`、`(0.000, "#04121F")`、`norm = Normalize(vmin=84.5, vmax=119)`、`rel_lum = lambda c: (0.2126 * ...)`、`ax.add_patch(Rectangle((j + 0.035, i + 0.045), 0.93, 0.91, ...))`、`cb.ax.axhline(100, color="#E2E8F5", lw=1.2, alpha=0.7)`、`fig.savefig(FIG, facecolor=BG, bbox_inches="tight")`
+- [x] 刻度标签转义正确：源码为 `\\n`，最终字符串为字面 `\n`（渲染为 `f"{m[:4]}\n{m[5:]}月"`）
+- [x] `CONCLUSIONS_MAP` 含 `'农村5'`，三条结论逐字一致（含「鲜菜类呈现过山车行情：」「畜肉类长期处于低位：」「蛋类价格触底反弹：」及 84.9 / 118.8 / 95 / 89 / 86.0 / 107.7 等数值）
+- [x] 城市1-5、农村1-4 已有映射条目与文案未改变
+- [x] 解析函数（精确匹配 + 名称包含兜底、WorkBuddy 未命中隐藏代码框、结论未命中空数组）未改变
+- [x] 图片动态路径 `/images/${datasetName}_手工图.png`、`/images/${datasetName}_WorkBuddy图.png` 与空态文案未改变
+- [x] `CLEANING_STEPS_MAP` 等其他映射未被修改
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
