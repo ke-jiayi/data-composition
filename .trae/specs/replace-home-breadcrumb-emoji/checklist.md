@@ -1,0 +1,9 @@
+- [x] `src/pages/HomePage.tsx` 面包屑「首页」按钮中 `🏠` 已被移除，替换为内联 SVG 图标
+- [x] 图标位于「首页」文字之前，包含 `mr-2`，视觉上与文字有间距且垂直居中（`inline-block` + `align-[-2px]`）
+- [x] 图标尺寸为 `h-4 w-4`，与按钮 `text-sm` 文字协调，不撑高按钮行高
+- [x] 图标颜色类为 `text-[#00B4D8] dark:text-[#6BC5E8]`，且 SVG 使用 `fill="currentColor"` 使颜色生效
+- [x] 按钮原有 `onClick={() => { setCurrentFolderId(null); setSearchQuery(''); }}`、`px-2 py-1 rounded transition-colors` 及选中/悬浮颜色逻辑未改变
+- [x] 文件夹层级 `📁` Emoji 与面包屑分隔符 `/` 未改动
+- [x] 未新增 remixicon 依赖，未修改 `index.html`、`package.json`
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

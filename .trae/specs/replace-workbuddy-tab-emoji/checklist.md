@@ -1,0 +1,10 @@
+- [x] `src/components/TabNavigation.tsx` 的 `smart` Tab 图标已由 `🤖` 替换为内联 SVG
+- [x] SVG 含 `fill="currentColor"` 与 `text-[#00B4D8] dark:text-[#6BC5E8]`，未使用任何红色值
+- [x] SVG className 含 `w-5 h-5 inline-block mr-1`，显式宽高与相邻 Tab 图标一致
+- [x] `path` 的 `d` 属性与题目给定内容逐字一致（`M11 2V4H8C6.89543 ... V12H10Z`），`viewBox="0 0 24 24"`
+- [x] `label: 'WorkBuddy 分析'`、`key: 'smart' as TabType` 未变
+- [x] 数据表格、数据清洗、可视化分析、分析结论四个 Tab 的 SVG 图标与配置未改变
+- [x] `TabNavigation` 组件的 `onTabChange`、`setSearchParams({ tab })`、激活态配色逻辑未改变
+- [x] 未修改 `ProjectDetailPage.tsx`，未新增任何依赖
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

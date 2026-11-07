@@ -349,7 +349,15 @@ export function HomePage() {
               onClick={() => { setCurrentFolderId(null); setSearchQuery(''); }}
               className={`px-2 py-1 rounded transition-colors ${currentFolderId === null ? 'text-cyan-300 font-medium' : 'text-purple-200/60 hover:text-cyan-300'}`}
             >
-              🏠 首页
+              <svg
+                className="mr-2 inline-block h-4 w-4 align-[-2px] text-[#00B4D8] dark:text-[#6BC5E8]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 2.5 2.5 9.9V21h6.5v-6h6v6h6.5V9.9L12 2.5zM12 5.02l7.5 6.08V19h-4.5v-6H9v6H4.5V11.1L12 5.02z" />
+              </svg>
+              首页
             </button>
             {currentFolderId !== null && (
               <>

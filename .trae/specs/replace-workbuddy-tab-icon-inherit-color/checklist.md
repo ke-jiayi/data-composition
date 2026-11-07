@@ -1,0 +1,10 @@
+- [x] `smart` Tab 的旧 `<svg>...</svg>` 已被整体删除并替换为新 SVG
+- [x] 新 SVG className 恰为 `w-5 h-5 flex-shrink-0 inline-block mr-1`，不含任何 `text-[#...]` / `dark:text-[#...]` 硬编码颜色
+- [x] 新 SVG 含 `xmlns="http://www.w3.org/2000/svg"`、`viewBox="0 0 24 24"`、`fill="currentColor"`
+- [x] `path` 的 `d` 与题目给定逐字一致：`M13 2V4H15C15.5523 4 16 4.44772 16 5V6.5H17.5C19.433 6.5 21 8.067 21 10V11H22V14H21V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V14H2V11H3V10C3 8.067 4.567 6.5 6.5 6.5H8V5C8 4.44772 8.44772 4 9 4H11V2H13ZM16 11H8V15H16V11ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H11C11.5523 18 12 17.5523 12 17C12 16.4477 11.5523 16 11 16H7ZM13 16C12.4477 16 12 16.4477 12 17C12 17.5523 12.4477 18 13 18H17C17.5523 18 18 17.5523 18 17C18 16.4477 17.5523 16 17 16H13Z`
+- [x] 旧路径 `M12 2a2 2 0 0 1 2 2c0 .74` 及更早的 `M11 2V4H8C6.89543` 均已不存在
+- [x] 未再出现 `width="20"` / `height="20"` 属性（完全以 className 控制尺寸）
+- [x] `label: 'WorkBuddy 分析'`、`key: 'smart' as TabType` 未变，其他四个 Tab 图标与配置未变
+- [x] 未修改 `ProjectDetailPage.tsx`，未新增依赖
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

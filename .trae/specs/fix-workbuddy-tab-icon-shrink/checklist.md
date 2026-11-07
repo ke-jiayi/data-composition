@@ -1,0 +1,9 @@
+- [x] `smart` Tab 图标 SVG 的 className 含 `flex-shrink-0`，防止 flex 挤压
+- [x] SVG className 含固定宽高 `w-5 h-5`（`w-5` 未删除），保持 20×20 正方形
+- [x] SVG className 保留 `text-[#00B4D8] dark:text-[#6BC5E8]`、`inline-block`、`mr-1`
+- [x] `path` 的 `d` 为新圆角机器人路径，逐字一致：`M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a5 5 0 0 1 5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-1H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1v-1a5 5 0 0 1 5-5h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2zM7 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z`
+- [x] 旧路径 `M11 2V4H8C6.89543` 已不存在
+- [x] `viewBox="0 0 24 24"`、`fill="currentColor"` 保留；未新增红色配色
+- [x] 其他四个 Tab 的 SVG 图标与 `label`/`key` 配置未改变
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push

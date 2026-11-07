@@ -74,7 +74,11 @@ const tabs: TabItem[] = [
   {
     key: 'smart' as TabType,
     label: 'WorkBuddy 分析',
-    icon: <span className="text-lg leading-5">🤖</span>,
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0 inline-block mr-1">
+        <path d="M13 2V4H15C15.5523 4 16 4.44772 16 5V6.5H17.5C19.433 6.5 21 8.067 21 10V11H22V14H21V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V14H2V11H3V10C3 8.067 4.567 6.5 6.5 6.5H8V5C8 4.44772 8.44772 4 9 4H11V2H13ZM16 11H8V15H16V11ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H11C11.5523 18 12 17.5523 12 17C12 16.4477 11.5523 16 11 16H7ZM13 16C12.4477 16 12 16.4477 12 17C12 17.5523 12.4477 18 13 18H17C17.5523 18 18 17.5523 18 17C18 16.4477 17.5523 16 17 16H13Z"></path>
+      </svg>
+    ),
   },
 ];
 
