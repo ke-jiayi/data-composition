@@ -21,12 +21,10 @@ export function AboutPage() {
         <div className="space-y-3 md:space-y-4">
           {/* 网站介绍 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 flex-shrink-0 inline-block mr-2 text-[#00B4D8] dark:text-[#6BC5E8]">
-              <path d="M11 2.04938V12H20.9506C20.4481 6.44668 15.5533 1.55185 11 2.04938ZM11 14H2.04938C2.55185 19.5533 7.44668 24.4482 11 23.9506V14ZM13 2.04938V12H22.9506C22.4482 6.44668 18.5533 1.55185 13 2.04938ZM13 14V23.9506C18.5533 23.4482 22.4482 18.5533 22.9506 14H13Z"></path>
-            </svg>
-            这个网站是做什么的？
-          </h2>
+            <h2 className="flex items-center text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
+              <i className="ri-pie-chart-2-fill w-7 h-7 text-2xl flex-shrink-0 inline-flex items-center justify-center mr-3 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
+              这个网站是做什么的？
+            </h2>
             <p className="text-lg text-gray-600 dark:text-purple-200/70 leading-relaxed mb-3">
               这是我用 TraeCode 从零开始搭建的个人数据分析作品集网站。它把「数据采集 → 清洗 → 分析 → 可视化」的完整流程做成一个可交互的网页工具，方便我展示自己的数据处理能力。
             </p>
@@ -37,13 +35,10 @@ export function AboutPage() {
 
           {/* 联系方式 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 flex-shrink-0 inline-block mr-2 text-[#00B4D8] dark:text-[#6BC5E8]">
-              <path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM9.5 10C10.3284 10 11 10.6716 11 11.5C11 12.3284 10.3284 13 9.5 13C8.67157 13 8 12.3284 8 11.5C8 10.6716 8.67157 10 9.5 10ZM14.5 10C15.3284 10 16 10.6716 16 11.5C16 12.3284 15.3284 13 14.5 13C13.6716 13 13 12.3284 13 11.5C13 10.6716 13.6716 10 14.5 10ZM12 17.5C10.067 17.5 8.38045 16.3231 7.55119 14.6413C7.70515 14.5785 7.87322 14.5435 8.05 14.5435H15.95C16.1268 14.5435 16.2948 14.5785 16.4488 14.6413C15.6195 16.3231 13.933 17.5 12 17.5Z"></path>
-              <path d="M19.5 2L20.5 4.5L23 5.5L20.5 6.5L19.5 9L18.5 6.5L16 5.5L18.5 4.5L19.5 2Z"></path>
-            </svg>
-            联系方式
-          </h2>
+            <h2 className="flex items-center text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
+              <i className="ri-chat-smile-2-fill w-7 h-7 text-2xl flex-shrink-0 inline-flex items-center justify-center mr-3 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
+              联系方式
+            </h2>
             <p className="text-lg text-gray-600 dark:text-purple-200/70 leading-relaxed mb-4">
               如果需要联系我，或对此作品集有任何建议，可以通过以下方式找到我：
             </p>
@@ -78,8 +73,8 @@ export function AboutPage() {
 
           {/* 技术栈 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-4">
-              <i className="ri-settings-4-fill w-6 h-6 inline-flex items-center justify-center mr-2 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
+            <h2 className="flex items-center text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-4">
+              <i className="ri-settings-4-fill w-7 h-7 text-2xl flex-shrink-0 inline-flex items-center justify-center mr-3 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
               技术栈
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -96,8 +91,8 @@ export function AboutPage() {
 
           {/* 后续计划 */}
           <section className="bg-white dark:bg-[#26262C] rounded-lg border border-gray-200 dark:border-[#3A3A44] shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)] p-3 md:p-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
-              <i className="ri-quill-pen-ai-fill w-6 h-6 inline-flex items-center justify-center mr-2 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
+            <h2 className="flex items-center text-xl font-semibold text-gray-900 dark:text-[#E2E8F0] mb-3">
+              <i className="ri-quill-pen-ai-fill w-7 h-7 text-2xl flex-shrink-0 inline-flex items-center justify-center mr-3 text-[#00B4D8] dark:text-[#6BC5E8]"></i>
               后续计划
             </h2>
             <ul className="space-y-2 text-lg text-gray-600 dark:text-purple-200/70">

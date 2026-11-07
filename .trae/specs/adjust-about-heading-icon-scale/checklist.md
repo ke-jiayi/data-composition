@@ -1,0 +1,12 @@
+- [x] 「这个网站是做什么的？」h2 内已无 `<svg>`，改为 `ri-pie-chart-2-fill` 的 `<i>`（第 25 行）
+- [x] 「联系方式」h2 内已无 `<svg>`，改为 `ri-chat-smile-2-fill` 的 `<i>`（第 39 行）
+- [x] 「技术栈」仍为 `ri-settings-4-fill`（第 77 行），「后续计划」仍为 `ri-quill-pen-ai-fill`（第 95 行）
+- [x] 四个 `<i>` 均含 `w-7 h-7`、`text-2xl`、`flex-shrink-0`、`inline-flex items-center justify-center`、`mr-3`
+- [x] 四个 `<i>` 均含 `text-[#00B4D8] dark:text-[#6BC5E8]`，无红色
+- [x] 四个 h2 的 className 均含 `flex items-center`，并保留 `text-xl font-semibold text-gray-900 dark:text-[#E2E8F0]`
+- [x] 技术栈 h2 仍为 `mb-4`，其余三个 h2 仍为 `mb-3`
+- [x] 标题文字「这个网站是做什么的？」「联系方式」「技术栈」「后续计划」存在且未改写
+- [x] 联系方式正文中的 GitHub / 邮箱 SVG 图标未改动（第 53、64 行）
+- [x] 全文件不再有 `w-6 h-6`、`mr-2`（仅标题图标范围内）；无手写标题 SVG
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
