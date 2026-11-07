@@ -327,6 +327,55 @@ plt.show()
 print("农村3手工面积图已保存！")
 `;
 
+// 农村4 专属数据处理代码
+const RURAL4_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取并清洗（由于是单月数据，结构比较简单）
+df = pd.read_excel('农村4.xlsx', header=2)
+df.columns = ['指标', '指数']
+df = df.dropna(subset=['指数'])
+# 剔除注释和数据来源行
+df = df[~df['指标'].str.contains('注：|数据来源', na=False)]
+
+# 简化分类名称
+df['简称'] = df['指标'].str.extract(r'^(.*?)类')
+df['简称'] = df['简称'].fillna('总指数')
+df = df.sort_values('指数', ascending=True)
+
+# 2. 画横向条形图
+fig, ax = plt.subplots(figsize=(10, 6), facecolor='#0B1220')
+ax.set_facecolor('#0B1220')
+
+colors = ['#5EE7FF' if x < 100 else '#A78BFA' for x in df['指数']]
+bars = ax.barh(df['简称'], df['指数'], color=colors, height=0.6)
+
+# 添加基准线 100
+ax.axvline(100, color='#64748B', lw=1.5, ls='--')
+ax.set_title('农村4消费价格指数对比（2015年12月）', color='#F8FAFC', fontsize=15, pad=15)
+ax.set_xlim(95, 106)
+ax.tick_params(colors='#E6EDF7', labelsize=10)
+ax.grid(axis='x', color='#243147', lw=0.8, alpha=0.5)
+
+# 隐藏边框
+for spine in ax.spines.values():
+    spine.set_visible(False)
+
+# 在柱子末端显示数值
+for bar in bars:
+    width = bar.get_width()
+    ax.text(width + 0.15, bar.get_y() + bar.get_height()/2, f'{width:.1f}', 
+            va='center', color='#E6EDF7', fontsize=10)
+
+plt.tight_layout()
+plt.savefig('农村4_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')
+plt.show()
+print("农村4手工图已保存")
+`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
@@ -337,6 +386,7 @@ const CODE_MAP: Record<string, string> = {
   '农村1': RURAL1_CODE,
   '农村2': RURAL2_CODE,
   '农村3': RURAL3_CODE,
+  '农村4': RURAL4_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -1052,6 +1102,87 @@ fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
 plt.close(fig)
 `;
 
+// 农村4 专属 WorkBuddy 处理与可视化代码
+const RURAL4_WORKBUDDY_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
+SRC, LONG, FIG = "农村4.xlsx", "农村4_长格式.xlsx", "农村4_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+df = raw.iloc[2:].copy()
+df.columns = ["指标", str(raw.iloc[2, 1])]
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间|^注：")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).reset_index(drop=True)
+long["分类"] = (long["指标"].str.replace(r"类?农村居民消费价格指数.*", "", regex=True)
+              .str.strip().replace({"": "农村总体"}))
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+ser = long.set_index("分类")["指数"].drop("农村总体", errors="ignore").sort_values()
+total = long.loc[long["分类"] == "农村总体", "指数"].iloc[0]
+up = int((ser > 100).sum())
+
+BG, TEXT, GRID = "#0B1220", "#E6EDF7", "#243147"
+C_UP, C_DOWN = "#C084FC", "#5EE7FF"
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+fig, ax = plt.subplots(figsize=(10.4, 6.2), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.238, right=0.958, top=0.775, bottom=0.175)
+
+for i, v in enumerate(ser.values):
+    c = C_UP if v >= 100 else C_DOWN
+    ax.plot([100, v], [i, i], color=c, lw=2.0, alpha=0.5,
+            solid_capstyle="round", zorder=3)
+    ax.scatter(v, i, s=260, color=c, alpha=0.15, zorder=4)
+    ax.scatter(v, i, s=98, color=c, edgecolor=BG, linewidth=1.6, zorder=5)
+    ax.text(v + (0.075 if v >= 100 else -0.075), i, f"{v:.1f}",
+            ha="left" if v >= 100 else "right", va="center",
+            color=c, fontsize=11, fontweight="bold", zorder=6)
+
+ax.axvline(100, color="#7E90A8", lw=1.3, zorder=2)
+ax.axvline(total, color="#8798AF", lw=1.1, ls=(0, (4, 3)), alpha=0.85, zorder=2)
+ax.text(100, len(ser) - 0.30, "100", color="#A9B8CC", fontsize=9.5,
+        ha="center", va="center", zorder=6)
+
+ax.set_xlim(97.95, 104.95)
+ax.set_ylim(-0.72, len(ser) - 0.28)
+ax.set_yticks(range(len(ser)))
+ax.set_yticklabels(ser.index)
+ax.xaxis.set_major_locator(MultipleLocator(1))
+ax.set_xlabel("指数（上年同月=100）", color=TEXT, fontsize=10.5, labelpad=10)
+ax.tick_params(axis="x", colors=TEXT, labelsize=9.5, length=0, pad=6)
+ax.tick_params(axis="y", colors=TEXT, labelsize=10.5, length=0, pad=12)
+ax.grid(axis="x", color=GRID, lw=0.8, alpha=0.42)
+ax.set_axisbelow(True)
+for s in ("top", "right", "left"):
+    ax.spines[s].set_visible(False)
+ax.spines["bottom"].set_color(GRID)
+
+ax.set_title("2015年12月农村居民消费分类价格指数", color="#F8FAFC",
+             fontsize=15.5, fontweight="bold", pad=44, loc="left")
+ax.text(0, 1.05, f"圆点即当月指数，竖线为基准 100；紫为上涨、青为下跌（8 类中 {up} 类高于 100）",
+        transform=ax.transAxes, color="#7C8CA6", fontsize=9.5, va="bottom")
+
+ax.text(0, -0.205, f"农村总体 {total:.1f}（虚线）", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+ax.text(1, -0.205, "数据来源：国家统计局", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5, ha="right")
+
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
@@ -1062,6 +1193,7 @@ const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '农村1': RURAL1_WORKBUDDY_CODE,
   '农村2': RURAL2_WORKBUDDY_CODE,
   '农村3': RURAL3_WORKBUDDY_CODE,
+  '农村4': RURAL4_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
@@ -1128,6 +1260,13 @@ const RURAL3_CONCLUSIONS = [
   '医疗保健类韧性微涨：在多数品类回落或持平的情况下，医疗保健类逆势维持在102左右，体现了刚需消费的价格刚性。',
 ];
 
+// 农村4 专属分析结论
+const RURAL4_CONCLUSIONS = [
+  '烟酒及用品类领涨：该类价格指数达到104.2，居各类之首，显示出较强的价格上行压力。',
+  '交通和通讯类出现下跌：该类指数为98.5，是唯一明显低于100荣枯线的类别，反映出当时交通通讯成本的下降。',
+  '居住类略微承压：居住类指数为99.5，略低于100，显示农村居住相关消费价格处于平稳偏弱的态势。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市1': DEFAULT_CONCLUSIONS,
@@ -1138,6 +1277,7 @@ const CONCLUSIONS_MAP: Record<string, string[]> = {
   '农村1': RURAL1_CONCLUSIONS,
   '农村2': RURAL2_CONCLUSIONS,
   '农村3': RURAL3_CONCLUSIONS,
+  '农村4': RURAL4_CONCLUSIONS,
 };
 
 // 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）

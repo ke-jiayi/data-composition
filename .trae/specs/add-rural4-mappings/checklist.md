@@ -1,0 +1,11 @@
+- [x] `CODE_MAP` 含 `'农村4'`，值为 `RURAL4_CODE`
+- [x] `RURAL4_CODE` 与用户脚本逐字一致：`df = pd.read_excel('农村4.xlsx', header=2)`、`df.columns = ['指标', '指数']`、`df = df[~df['指标'].str.contains('注：|数据来源', na=False)]`、`df['简称'] = df['指标'].str.extract(r'^(.*?)类')`、`ax.axvline(100, color='#64748B', lw=1.5, ls='--')`、`ax.set_xlim(95, 106)`、`f'{width:.1f}'`、`plt.savefig('农村4_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')`、`print("农村4手工图已保存")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'农村4'`，值为 `RURAL4_WORKBUDDY_CODE`
+- [x] `RURAL4_WORKBUDDY_CODE` 与用户脚本逐字一致：`SRC, LONG, FIG = "农村4.xlsx", "农村4_长格式.xlsx", "农村4_WorkBuddy图.png"`、`from matplotlib.ticker import MultipleLocator`、`up = int((ser > 100).sum())`、`ax.scatter(v, i, s=98, color=c, edgecolor=BG, linewidth=1.6, zorder=5)`、`ax.set_xlim(97.95, 104.95)`、`f"圆点即当月指数，竖线为基准 100；紫为上涨、青为下跌（8 类中 {up} 类高于 100）"`、`fig.savefig(FIG, facecolor=BG, bbox_inches="tight")`
+- [x] `CONCLUSIONS_MAP` 含 `'农村4'`，三条结论逐字一致（含「烟酒及用品类领涨：」「交通和通讯类出现下跌：」「居住类略微承压：」及 104.2 / 98.5 / 99.5 等数值）
+- [x] 城市1-5、农村1-3 已有映射条目与文案未改变
+- [x] 解析函数（精确匹配 + 名称包含兜底、WorkBuddy 未命中隐藏代码框、结论未命中空数组）未改变
+- [x] 图片动态路径 `/images/${datasetName}_手工图.png`、`/images/${datasetName}_WorkBuddy图.png` 与空态文案未改变
+- [x] `CLEANING_STEPS_MAP` 等其他映射未被修改
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
