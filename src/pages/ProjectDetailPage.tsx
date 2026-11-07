@@ -262,6 +262,71 @@ plt.show()
 print("农村2手工玫瑰图已保存！")
 `;
 
+// 农村3 专属数据处理代码
+const RURAL3_CODE = `import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 1. 读取并清洗
+df = pd.read_excel('农村3.xlsx', header=2)
+df = df.dropna(how='all', axis=0).dropna(how='all', axis=1)
+df = df.set_index(df.columns[0])
+
+df_long = df.stack().reset_index()
+df_long.columns = ['指标', '月份', '指数']
+df_long = df_long[df_long['指标'] != '数据来源：国家统计局']
+
+# 2. 修复时间排序
+df_long['月份_时间'] = pd.to_datetime(df_long['月份'], format='%Y年%m月')
+df_long = df_long.sort_values('月份_时间')
+
+# 3. 改用关键词匹配（解决Excel文本有空格不匹配的问题）
+def get_simple_name(name):
+    name = str(name)
+    if '食品' in name:
+        return '食品烟酒类'
+    elif '居民消费价格指数' in name and '类' not in name:
+        return '总指数'
+    return '其他'
+
+df_long['简称'] = df_long['指标'].apply(get_simple_name)
+
+# 只要食品和总指数
+df_target = df_long[df_long['简称'].isin(['总指数', '食品烟酒类'])].copy()
+
+# 透视表
+pivot_df = df_target.pivot(index='月份', columns='简称', values='指数')
+pivot_df = pivot_df.reindex(df_long['月份'].unique())
+
+# 4. 画面积折线图
+fig, ax = plt.subplots(figsize=(10, 5), facecolor='#0B1220')
+ax.set_facecolor('#0B1220')
+
+# 食品烟酒类（画面积填充）
+ax.plot(pivot_df.index, pivot_df['食品烟酒类'], color='#A78BFA', marker='o', lw=3, label='食品烟酒类')
+ax.fill_between(pivot_df.index, 100, pivot_df['食品烟酒类'], color='#A78BFA', alpha=0.2)
+
+# 总指数（画普通折线）
+ax.plot(pivot_df.index, pivot_df['总指数'], color='#5EE7FF', marker='s', lw=2, label='农村总指数')
+
+ax.axhline(100, color='#64748B', lw=1, ls='--', alpha=0.7)
+ax.set_title('农村3核心CPI趋势：食品价格大幅回落', color='#F8FAFC', fontsize=14)
+ax.set_ylabel('指数（上年同月=100）', color='#E6EDF7')
+ax.tick_params(colors='#E6EDF7', rotation=45)
+ax.grid(axis='y', color='#243147', lw=0.8, alpha=0.5)
+ax.legend(facecolor='#0B1220', labelcolor='#E6EDF7', edgecolor='#243147')
+
+for spine in ax.spines.values():
+    spine.set_color('#243147')
+
+plt.tight_layout()
+plt.savefig('农村3_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')
+plt.show()
+print("农村3手工面积图已保存！")
+`;
+
 // 数据集默认 Python 代码：仅用于「数据清洗」Tab 的代码回退，与图片映射无关
 const CODE_MAP: Record<string, string> = {
   '城市1': PYTHON_CODE,
@@ -271,6 +336,7 @@ const CODE_MAP: Record<string, string> = {
   '城市5': CITY5_CODE,
   '农村1': RURAL1_CODE,
   '农村2': RURAL2_CODE,
+  '农村3': RURAL3_CODE,
 };
 
 // 按数据集名称解析默认代码：先精确匹配，未命中再按名称包含兜底
@@ -899,6 +965,93 @@ plt.show()
 print("农村2手工玫瑰图已保存！")
 `;
 
+// 农村3 专属 WorkBuddy 代码
+const RURAL3_WORKBUDDY_CODE = `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib.lines import Line2D
+
+SRC, LONG, FIG = "农村3.xlsx", "农村3_长格式.xlsx", "农村3_WorkBuddy图.png"
+
+raw = pd.read_excel(SRC, header=None)
+df = raw.iloc[2:].copy()
+df.columns = ["指标"] + list(raw.iloc[2, 1:])
+df = df[df["指标"].notna()]
+df = df[~df["指标"].astype(str).str.contains("数据来源|数据库|时间|^注：")]
+df["指标"] = df["指标"].astype(str).str.strip()
+
+long = df.melt(id_vars="指标", var_name="月份", value_name="指数")
+long["指数"] = pd.to_numeric(long["指数"], errors="coerce")
+long["月份"] = long["月份"].astype(str).str.replace("年", "-").str.replace("月", "")
+long["月份"] = pd.to_datetime(long["月份"], format="%Y-%m").dt.to_period("M")
+long = long.dropna(subset=["指数"]).sort_values(["月份", "指标"]).reset_index(drop=True)
+long["分类"] = (long["指标"].str.replace(r"类?农村居民消费价格指数.*", "", regex=True)
+              .str.strip().replace({"": "农村总体"}))
+long = long[["月份", "分类", "指标", "指数"]]
+long["月份"] = long["月份"].astype(str)
+long.to_excel(LONG, index=False)
+
+last = long["月份"].max()
+snap = long[long["月份"] == last].set_index("分类")["指数"]
+total = snap.get("农村总体", np.nan)
+dev = (snap.drop("农村总体") - 100).sort_values()
+
+BG, TEXT, GRID = "#0B1220", "#E6EDF7", "#243147"
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+
+pos_cmap = LinearSegmentedColormap.from_list("pos", ["#6D28D9", "#A855F7", "#D8B4FE"], N=256)
+neg_cmap = LinearSegmentedColormap.from_list("neg", ["#1E5F73", "#0891B2", "#5EE7FF"], N=256)
+norm = Normalize(0, dev.abs().max())
+
+fig, ax = plt.subplots(figsize=(10.6, 6.2), dpi=160, facecolor=BG)
+ax.set_facecolor(BG)
+fig.subplots_adjust(left=0.215, right=0.955, top=0.785, bottom=0.145)
+
+colors = [pos_cmap(norm(v)) if v >= 0 else neg_cmap(norm(-v)) for v in dev.values]
+ax.barh(dev.index, dev.values, height=0.56, color=colors,
+        edgecolor=BG, linewidth=1.0, zorder=3)
+
+for y, v in enumerate(dev.values):
+    ax.text(v + (0.08 if v >= 0 else -0.08), y,
+            f"{v:+.1f}".replace("-", "−"), va="center",
+            ha="left" if v >= 0 else "right",
+            color="#EDE9FE" if v >= 0 else "#5EE7FF",
+            fontsize=11, fontweight="bold", zorder=5)
+
+ax.axvline(0, color="#E2E8F5", lw=1.6, alpha=0.85, zorder=4)
+tdev = total - 100
+ax.axvline(tdev, color="#8798AF", lw=1.1, ls=(0, (4, 3)), alpha=0.85, zorder=2)
+
+ax.set_xlim(-3.55, 2.65)
+ax.set_ylim(-0.72, len(dev) - 0.28)
+ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+ax.set_xlabel("相对 100 的偏离（百分点）", color=TEXT, fontsize=10.5, labelpad=10)
+ax.tick_params(axis="x", colors=TEXT, labelsize=9.5, length=0, pad=6)
+ax.tick_params(axis="y", colors=TEXT, labelsize=11, length=0, pad=10)
+ax.grid(axis="x", color=GRID, lw=0.8, alpha=0.45)
+ax.set_axisbelow(True)
+for s in ("top", "right", "left"):
+    ax.spines[s].set_visible(False)
+ax.spines["bottom"].set_color(GRID)
+
+ax.legend(handles=[Line2D([], [], color="#8798AF", ls=(0, (4, 3)), lw=1.2,
+                          label=f"农村总体 {total:.1f}")],
+          loc="lower right", frameon=False, fontsize=9,
+          handlelength=2.2, labelcolor="#A9B8CC", bbox_to_anchor=(1.0, 0.02))
+
+ax.set_title(f"{last[:4]}年{int(last[5:])}月农村居民消费分类价格指数偏离度",
+             color="#F8FAFC", fontsize=15.5, fontweight="bold", pad=44, loc="left")
+ax.text(0, 1.05, "条形长度＝相对荣枯线 100 的偏离点数，向右为上涨、向左为下跌",
+        transform=ax.transAxes, color="#7C8CA6", fontsize=9.5, va="bottom")
+
+ax.text(0, -0.145, "数据来源：国家统计局", transform=ax.transAxes,
+        color="#7C8CA6", fontsize=8.5)
+fig.savefig(FIG, facecolor=BG, bbox_inches="tight")
+plt.close(fig)
+`;
+
 // 按数据集名称绑定 WorkBuddy 生成的处理与可视化代码
 const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市1': WORKBUDDY_CODE,
@@ -908,6 +1061,7 @@ const WORKBUDDY_CODE_MAP: Record<string, string> = {
   '城市5': CITY5_WORKBUDDY_CODE,
   '农村1': RURAL1_WORKBUDDY_CODE,
   '农村2': RURAL2_WORKBUDDY_CODE,
+  '农村3': RURAL3_WORKBUDDY_CODE,
 };
 
 // 按数据集名称解析 WorkBuddy 代码：先精确匹配，未命中再按名称包含兜底
@@ -967,6 +1121,13 @@ const RURAL2_CONCLUSIONS = [
   '交通通信类处于低位：全年大部分时间在96-98区间徘徊，反映出农村交通通信消费价格整体偏弱。',
 ];
 
+// 农村3 专属分析结论
+const RURAL3_CONCLUSIONS = [
+  '食品价格大幅回落：农村3食品烟酒类价格从年中高点（113.5）一路下跌至年底的101.0，是拖累总指数下行的绝对主力。',
+  '交通通信持续通缩：该类价格全年维持在95-97区间，处于明显低位，反映出农村地区交通通信成本面临持续的下行压力。',
+  '医疗保健类韧性微涨：在多数品类回落或持平的情况下，医疗保健类逆势维持在102左右，体现了刚需消费的价格刚性。',
+];
+
 // 按数据集名称绑定默认结论
 const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市1': DEFAULT_CONCLUSIONS,
@@ -976,6 +1137,7 @@ const CONCLUSIONS_MAP: Record<string, string[]> = {
   '城市5': CITY5_CONCLUSIONS,
   '农村1': RURAL1_CONCLUSIONS,
   '农村2': RURAL2_CONCLUSIONS,
+  '农村3': RURAL3_CONCLUSIONS,
 };
 
 // 根据数据集名称解析结论：先精确匹配，未命中再按名称包含兜底；仍无匹配则返回空数组（页面显示暂无分析结论）

@@ -1,0 +1,11 @@
+- [x] `CODE_MAP` 含 `'农村3'`，值为 `RURAL3_CODE`
+- [x] `RURAL3_CODE` 与用户脚本逐字一致：`df = pd.read_excel('农村3.xlsx', header=2)`、`df_long.columns = ['指标', '月份', '指数']`、`format='%Y年%m月'`、`def get_simple_name(name):`、`return '总指数'`、`ax.fill_between(pivot_df.index, 100, pivot_df['食品烟酒类'], color='#A78BFA', alpha=0.2)`、`plt.savefig('农村3_手工图.png', dpi=150, bbox_inches='tight', facecolor='#0B1220')`、`print("农村3手工面积图已保存！")`
+- [x] `WORKBUDDY_CODE_MAP` 含 `'农村3'`，值为 `RURAL3_WORKBUDDY_CODE`
+- [x] `RURAL3_WORKBUDDY_CODE` 与用户脚本逐字一致：`SRC, LONG, FIG = "农村3.xlsx", "农村3_长格式.xlsx", "农村3_WorkBuddy图.png"`、`LinearSegmentedColormap.from_list("pos", ...)`、`dev = (snap.drop("农村总体") - 100).sort_values()`、`ax.barh(dev.index, dev.values, height=0.56, ...)`、`f"{v:+.1f}".replace("-", "−")`、`f"{last[:4]}年{int(last[5:])}月农村居民消费分类价格指数偏离度"`、`fig.savefig(FIG, facecolor=BG, bbox_inches="tight")`
+- [x] `CONCLUSIONS_MAP` 含 `'农村3'`，三条结论逐字一致（含「食品价格大幅回落：」「交通通信持续通缩：」「医疗保健类韧性微涨：」及 113.5 / 101.0 / 95-97 / 102 等数值）
+- [x] 城市1-5、农村1-2 已有映射条目与文案未改变
+- [x] 解析函数（精确匹配 + 名称包含兜底、WorkBuddy 未命中隐藏代码框、结论未命中空数组）未改变
+- [x] 图片动态路径 `/images/${datasetName}_手工图.png`、`/images/${datasetName}_WorkBuddy图.png` 与空态文案未改变
+- [x] `CLEANING_STEPS_MAP` 等其他映射未被修改
+- [x] `npx tsc -b --pretty false` 退出码 0
+- [x] 未执行任何 git commit / push
