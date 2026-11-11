@@ -18,7 +18,7 @@ function formatNumber(num: number): string {
 }
 
 export function HomePage() {
-  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder, updateDataset } = useDB();
+  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder, updateDataset, reorderFolders } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
@@ -181,6 +181,22 @@ export function HomePage() {
       setMovingDatasetId(null);
     } catch (error) {
       console.error('移动数据集失败:', error);
+    }
+  };
+
+  // 拖拽文件夹互相交换顺序
+  const handleReorderFolders = async (sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return;
+    const sourceIndex = folders.findIndex(f => f.id === sourceId);
+    const targetIndex = folders.findIndex(f => f.id === targetId);
+    if (sourceIndex === -1 || targetIndex === -1) return;
+    const nextFolders = [...folders];
+    [nextFolders[sourceIndex], nextFolders[targetIndex]] = [nextFolders[targetIndex], nextFolders[sourceIndex]];
+    try {
+      await reorderFolders(nextFolders.map(f => f.id));
+      await loadFolders();
+    } catch (error) {
+      console.error('调整文件夹顺序失败:', error);
     }
   };
 
@@ -397,6 +413,12 @@ export function HomePage() {
                 {folders.map(folder => (
                   <div
                     key={folder.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData('application/x-folder-id', folder.id);
+                      e.dataTransfer.effectAllowed = 'move';
+                    }}
+                    onDragEnd={() => setDragOverFolderId(null)}
                     className={`group relative flex items-center gap-3 bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-2 hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer${dragOverFolderId === folder.id ? ' border-cyan-400 bg-cyan-500/10 shadow-[0_0_35px_rgba(34,211,238,0.35)] scale-[1.02]' : ''}`}
                     onClick={() => { setCurrentFolderId(folder.id); setSearchQuery(''); }}
                     onDragOver={(e) => {
@@ -411,9 +433,12 @@ export function HomePage() {
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
+                      const sourceFolderId = e.dataTransfer.getData('application/x-folder-id');
                       const datasetId = e.dataTransfer.getData('text/plain');
                       setDragOverFolderId(null);
-                      if (datasetId) {
+                      if (sourceFolderId) {
+                        void handleReorderFolders(sourceFolderId, folder.id);
+                      } else if (datasetId) {
                         void handleMoveToFolder(datasetId, folder.id);
                       }
                     }}

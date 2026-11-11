@@ -21,6 +21,7 @@ import {
   updateFolder,
   updateFolderName,
   deleteFolder,
+  reorderFolders,
   getDatasetsByFolderId,
 } from '../utils/db';
 
@@ -43,6 +44,7 @@ interface UseDBReturn {
   updateFolder: (id: string, patch: Partial<Omit<Folder, 'id'>>) => Promise<void>;
   updateFolderName: (id: string, newName: string) => Promise<void>;
   deleteFolder: (id: string) => Promise<void>;
+  reorderFolders: (orderedIds: string[]) => Promise<void>;
   getDatasetsByFolderId: (folderId: string | null) => Promise<Dataset[]>;
 
   // 数据操作
@@ -106,6 +108,7 @@ export function useDB(): UseDBReturn {
     updateFolder: wrapOperation(updateFolder),
     updateFolderName: wrapOperation(updateFolderName),
     deleteFolder: wrapOperation(deleteFolder),
+    reorderFolders: wrapOperation(reorderFolders),
     getDatasetsByFolderId: wrapOperation(getDatasetsByFolderId),
 
     // 数据操作

@@ -90,7 +90,7 @@ export function ComparisonPage() {
           </div>
 
           <div className="min-w-0">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-cyan-300 dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] text-center">
+            <h1 className="text-xl md:text-2xl font-bold text-[#00B4D8] dark:text-[#6BC5E8] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] text-center">
               {data.title}
             </h1>
             <div className="mt-2 mx-auto w-24 h-0.5 bg-gradient-to-r from-cyan-500 via-purple-500 to-sky-500 rounded-full" />
@@ -102,7 +102,7 @@ export function ComparisonPage() {
               value={selectedKey}
               onChange={(e) => setSelectedKey(e.target.value as ComparisonKey)}
               aria-label="选择对比组"
-              className="px-3 py-2 pr-9 rounded-lg bg-[#26262C] border border-[#3A3A44] text-[#E2E8F0] text-sm focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/30 transition-colors cursor-pointer"
+              className="px-3 py-2 pr-9 rounded-lg bg-white dark:bg-[#1E1E24] text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 text-sm focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/30 transition-colors cursor-pointer"
             >
               <option value="city1">城市1 vs 农村1</option>
               <option value="city2">城市2 vs 农村2</option>

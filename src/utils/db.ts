@@ -6,6 +6,7 @@ export interface Folder {
   id: string;
   name: string;
   createdAt: number;
+  order?: number;
 }
 
 // 数据集元信息
@@ -210,10 +211,12 @@ export async function deleteDataset(id: string): Promise<void> {
 
 export async function createFolder(name: string): Promise<Folder> {
   const db = await initDB();
+  const existingFolders = await getAllFolders();
   const newFolder: Folder = {
     id: uuidv4(),
     name,
     createdAt: Date.now(),
+    order: existingFolders.length,
   };
   await db.put('folders', newFolder);
   return newFolder;
@@ -222,7 +225,18 @@ export async function createFolder(name: string): Promise<Folder> {
 export async function getAllFolders(): Promise<Folder[]> {
   const db = await initDB();
   const folders = await db.getAll('folders');
-  return folders.sort((a, b) => a.createdAt - b.createdAt);
+  const sorted = folders.sort(
+    (a, b) => (a.order ?? a.createdAt) - (b.order ?? b.createdAt) || a.createdAt - b.createdAt
+  );
+  const needsNormalize = sorted.some((folder, index) => folder.order !== index);
+  if (needsNormalize) {
+    const tx = db.transaction('folders', 'readwrite');
+    await Promise.all(
+      sorted.map((folder, index) => tx.store.put({ ...folder, order: index }))
+    );
+    await tx.done;
+  }
+  return sorted.map((folder, index) => ({ ...folder, order: index }));
 }
 
 export async function updateFolder(id: string, patch: Partial<Omit<Folder, 'id'>>): Promise<void> {
@@ -240,6 +254,20 @@ export async function updateFolder(id: string, patch: Partial<Omit<Folder, 'id'>
 
 export async function updateFolderName(id: string, newName: string): Promise<void> {
   return updateFolder(id, { name: newName });
+}
+
+export async function reorderFolders(orderedIds: string[]): Promise<void> {
+  const db = await initDB();
+  const folders = await db.getAll('folders');
+  const folderMap = new Map(folders.map(folder => [folder.id, folder]));
+  const tx = db.transaction('folders', 'readwrite');
+  await Promise.all(
+    orderedIds.map((id, index) => {
+      const folder = folderMap.get(id);
+      return folder ? tx.store.put({ ...folder, order: index }) : Promise.resolve();
+    })
+  );
+  await tx.done;
 }
 
 export async function deleteFolder(id: string): Promise<void> {
