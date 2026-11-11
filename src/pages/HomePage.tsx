@@ -263,7 +263,7 @@ export function HomePage() {
           </div>
           {/* 主内容卡片容器 */}
           <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.1)] border border-purple-500/20 p-2 md:p-3">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
               <div>
                 <h2 className="text-lg font-bold text-cyan-200 flex items-center gap-2">
                   <span className="w-1 h-5 bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full inline-block" />
@@ -271,26 +271,26 @@ export function HomePage() {
                 </h2>
                 <p className="mt-1 text-sm text-purple-200/60">已导入 {datasets.length} 个数据集</p>
               </div>
-              <div className="flex items-center gap-2 md:gap-3">
+              <div className="grid grid-cols-3 gap-4 w-full max-w-xl ml-auto">
                 <Link
                   to="/comparison"
-                  className="shrink-0 inline-flex items-center justify-center w-32 h-10 px-4 bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-medium whitespace-nowrap rounded-lg hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
+                  className="w-full h-10 px-4 flex items-center justify-center text-sm font-medium whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
                 >
-                  对比分析
+                  <i className="ri-bar-chart-box-line mr-1"></i>对比分析
                 </Link>
                 <button
                   onClick={handleImport}
                   disabled={isImporting || dbLoading}
-                  className="shrink-0 inline-flex items-center justify-center w-32 h-10 px-4 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium whitespace-nowrap rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
+                  className="w-full h-10 px-4 flex items-center justify-center text-sm font-medium whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
                 >
-                  {isImporting ? '导入中...' : '导 入 数 据'}
+                  <i className="ri-upload-cloud-2-line mr-1"></i>{isImporting ? '导入中...' : '导入数据'}
                 </button>
                 <button
                   onClick={handleOpenCreateFolder}
                   disabled={dbLoading}
-                  className="shrink-0 inline-flex items-center justify-center w-32 h-10 px-4 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium whitespace-nowrap rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
+                  className="w-full h-10 px-4 flex items-center justify-center text-sm font-medium whitespace-nowrap rounded-lg border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
                 >
-                  + 新建文件夹
+                  <i className="ri-folder-add-line mr-1"></i>新建文件夹
                 </button>
                 <input
                   ref={fileInputRef}
