@@ -4,3 +4,4 @@ export { ProjectListPage } from './ProjectListPage';
 export { AboutPage } from './AboutPage';
 export { default as PowerBIPage } from './PowerBIPage';
 export { WelcomePage } from './WelcomePage';
+export { ComparisonPage } from './ComparisonPage';

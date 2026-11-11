@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { HomePage, ProjectDetailPage, ProjectListPage, AboutPage, WelcomePage } from './pages';
+import { HomePage, ProjectDetailPage, ProjectListPage, AboutPage, WelcomePage, ComparisonPage } from './pages';
 import PowerBIPage from './pages/PowerBIPage';
 import { ImportModal } from './components';
 import { useDB } from './hooks/useDB';
@@ -75,6 +75,8 @@ function AppContent() {
         <Route path="/about" element={<AboutPage />} />
         {/* Power BI 看板页面 */}
         <Route path="/powerbi" element={<PowerBIPage />} />
+        {/* 对比分析页面 */}
+        <Route path="/comparison" element={<ComparisonPage />} />
         {/* 其他路由重定向到首页 */}
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>

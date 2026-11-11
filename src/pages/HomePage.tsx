@@ -37,6 +37,7 @@ export function HomePage() {
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
   const [movingDatasetId, setMovingDatasetId] = useState<string | null>(null);
+  const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
 
   // 按 currentFolderId 筛选，再根据搜索关键词过滤
   const visibleDatasets = currentFolderId === null
@@ -271,17 +272,23 @@ export function HomePage() {
                 <p className="mt-1 text-sm text-purple-200/60">已导入 {datasets.length} 个数据集</p>
               </div>
               <div className="flex items-center gap-2 md:gap-3">
+                <Link
+                  to="/comparison"
+                  className="inline-flex items-center justify-center w-32 h-10 px-4 py-2 bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-medium whitespace-nowrap rounded-lg hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
+                >
+                  对比分析
+                </Link>
                 <button
                   onClick={handleImport}
                   disabled={isImporting || dbLoading}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
+                  className="inline-flex items-center justify-center w-32 h-10 px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium whitespace-nowrap rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all"
                 >
                   {isImporting ? '导入中...' : '导 入 数 据'}
                 </button>
                 <button
                   onClick={handleOpenCreateFolder}
                   disabled={dbLoading}
-                  className="px-4 py-2 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
+                  className="inline-flex items-center justify-center w-32 h-10 px-4 py-2 border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-sm font-medium whitespace-nowrap rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all"
                 >
                   + 新建文件夹
                 </button>
@@ -365,6 +372,14 @@ export function HomePage() {
                 <span className="px-2 py-1 text-cyan-300 font-medium">
                   📁 {folders.find(f => f.id === currentFolderId)?.name ?? '未知文件夹'}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => { setCurrentFolderId(null); setSearchQuery(''); }}
+                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/60 hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] transition-all"
+                >
+                  <i className="ri-arrow-go-back-line text-base" aria-hidden="true"></i>
+                  返回首页
+                </button>
               </>
             )}
           </div>
@@ -382,8 +397,26 @@ export function HomePage() {
                 {folders.map(folder => (
                   <div
                     key={folder.id}
-                    className="group relative flex items-center gap-3 bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-2 hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                    className={`group relative flex items-center gap-3 bg-white/5 backdrop-blur-md rounded-xl border border-purple-500/20 p-2 hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer${dragOverFolderId === folder.id ? ' border-cyan-400 bg-cyan-500/10 shadow-[0_0_35px_rgba(34,211,238,0.35)] scale-[1.02]' : ''}`}
                     onClick={() => { setCurrentFolderId(folder.id); setSearchQuery(''); }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      setDragOverFolderId(folder.id);
+                    }}
+                    onDragLeave={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setDragOverFolderId(null);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const datasetId = e.dataTransfer.getData('text/plain');
+                      setDragOverFolderId(null);
+                      if (datasetId) {
+                        void handleMoveToFolder(datasetId, folder.id);
+                      }
+                    }}
                   >
                     <span className="text-2xl group-hover:scale-110 transition-transform">📁</span>
                     <div className="min-w-0 flex-1">
@@ -458,6 +491,11 @@ export function HomePage() {
                     key={dataset.id}
                     to={`/project/${dataset.id}`}
                     className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-2 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData('text/plain', dataset.id);
+                      e.dataTransfer.effectAllowed = 'move';
+                    }}
                   >
                     {/* 卡片顶部色条 */}
                     <div
@@ -703,17 +741,17 @@ export function HomePage() {
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                onClick={() => setDeletingFolder(null)}
-                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
-              >
-                取消
-              </button>
-              <button
-                type="button"
                 onClick={handleConfirmDeleteFolder}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
               >
                 确认删除
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeletingFolder(null)}
+                className="px-4 py-2 text-sm font-medium text-purple-200 bg-white/5 hover:bg-white/10 border border-purple-500/20 rounded-lg transition-colors"
+              >
+                取消
               </button>
             </div>
           </div>
