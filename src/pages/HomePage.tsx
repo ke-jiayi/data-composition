@@ -18,7 +18,7 @@ function formatNumber(num: number): string {
 }
 
 export function HomePage() {
-  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder, updateDataset, reorderFolders } = useDB();
+  const { isLoading: dbLoading, createDataset, saveData, getAllDatasets, deleteDataset, getAllFolders, createFolder, updateFolderName, deleteFolder, updateDataset, reorderFolders, reorderDatasets } = useDB();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
@@ -38,11 +38,22 @@ export function HomePage() {
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
   const [movingDatasetId, setMovingDatasetId] = useState<string | null>(null);
   const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
+  const [dragOverDatasetId, setDragOverDatasetId] = useState<string | null>(null);
 
   // 按 currentFolderId 筛选，再根据搜索关键词过滤
-  const visibleDatasets = currentFolderId === null
-    ? datasets.filter(d => !d.folderId)
-    : datasets.filter(d => d.folderId === currentFolderId);
+  const sortDatasets = (list: typeof datasets) =>
+    [...list].sort((a, b) => {
+      if (a.order == null && b.order == null) return b.createdAt - a.createdAt;
+      if (a.order == null) return 1;
+      if (b.order == null) return -1;
+      return a.order - b.order;
+    });
+
+  const visibleDatasets = sortDatasets(
+    currentFolderId === null
+      ? datasets.filter(d => !d.folderId)
+      : datasets.filter(d => d.folderId === currentFolderId)
+  );
   const filteredDatasets = searchQuery
     ? visibleDatasets.filter(
         (d) =>
@@ -197,6 +208,22 @@ export function HomePage() {
       await loadFolders();
     } catch (error) {
       console.error('调整文件夹顺序失败:', error);
+    }
+  };
+
+  // 同层级数据集卡片拖拽交换顺序
+  const handleReorderDatasets = async (sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return;
+    const sourceIndex = visibleDatasets.findIndex(d => d.id === sourceId);
+    const targetIndex = visibleDatasets.findIndex(d => d.id === targetId);
+    if (sourceIndex === -1 || targetIndex === -1) return;
+    const nextDatasets = [...visibleDatasets];
+    [nextDatasets[sourceIndex], nextDatasets[targetIndex]] = [nextDatasets[targetIndex], nextDatasets[sourceIndex]];
+    try {
+      await reorderDatasets(nextDatasets.map(d => d.id));
+      await loadDatasets();
+    } catch (error) {
+      console.error('调整数据集顺序失败:', error);
     }
   };
 
@@ -515,11 +542,30 @@ export function HomePage() {
                   <Link
                     key={dataset.id}
                     to={`/project/${dataset.id}`}
-                    className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-2 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                    className={`group relative overflow-hidden bg-gradient-to-b from-white/5 to-purple-500/5 rounded-xl border border-purple-500/20 p-2 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer ${dragOverDatasetId === dataset.id ? 'ring-2 ring-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.35)]' : ''}`}
                     draggable
                     onDragStart={(e) => {
                       e.dataTransfer.setData('text/plain', dataset.id);
                       e.dataTransfer.effectAllowed = 'move';
+                    }}
+                    onDragEnd={() => setDragOverDatasetId(null)}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      setDragOverDatasetId(dataset.id);
+                    }}
+                    onDragLeave={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setDragOverDatasetId(null);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const sourceDatasetId = e.dataTransfer.getData('text/plain');
+                      setDragOverDatasetId(null);
+                      if (sourceDatasetId) {
+                        void handleReorderDatasets(sourceDatasetId, dataset.id);
+                      }
                     }}
                   >
                     {/* 卡片顶部色条 */}

@@ -24,6 +24,7 @@ export interface Dataset {
   code?: string;
   conclusions?: string[];
   folderId?: string;
+  order?: number;
 }
 
 // 数据行类型
@@ -162,6 +163,20 @@ export async function getAllDatasets(): Promise<Dataset[]> {
   const db = await initDB();
   const datasets = await db.getAll('datasets');
   return datasets.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function reorderDatasets(orderedIds: string[]): Promise<void> {
+  const db = await initDB();
+  const datasets = await db.getAll('datasets');
+  const datasetMap = new Map(datasets.map(dataset => [dataset.id, dataset]));
+  const tx = db.transaction('datasets', 'readwrite');
+  await Promise.all(
+    orderedIds.map((id, index) => {
+      const dataset = datasetMap.get(id);
+      return dataset ? tx.store.put({ ...dataset, order: index }) : Promise.resolve();
+    })
+  );
+  await tx.done;
 }
 
 export async function updateDataset(dataset: Dataset): Promise<void> {

@@ -22,6 +22,7 @@ import {
   updateFolderName,
   deleteFolder,
   reorderFolders,
+  reorderDatasets,
   getDatasetsByFolderId,
 } from '../utils/db';
 
@@ -37,6 +38,7 @@ interface UseDBReturn {
   getAllDatasets: () => Promise<Dataset[]>;
   updateDataset: (dataset: Dataset) => Promise<void>;
   deleteDataset: (id: string) => Promise<void>;
+  reorderDatasets: (orderedIds: string[]) => Promise<void>;
 
   // 文件夹操作
   createFolder: (name: string) => Promise<Folder>;
@@ -101,6 +103,7 @@ export function useDB(): UseDBReturn {
     getAllDatasets: wrapOperation(getAllDatasets),
     updateDataset: wrapOperation(updateDataset),
     deleteDataset: wrapOperation(deleteDataset),
+    reorderDatasets: wrapOperation(reorderDatasets),
 
     // 文件夹操作
     createFolder: wrapOperation(createFolder),
